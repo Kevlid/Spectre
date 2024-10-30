@@ -22,7 +22,10 @@ export const PresenceUpdate: Event = {
 	async execute(client: KiwiClient, presence: Presence) {
 		if (presence.member.user.bot) return;
 
-		console.log(presence.status);
-		console.log(presence.activities);
+		console.log(
+			presence.user.username,
+			(await presence.member.fetch()).presence.status
+		); // online, idle, dnd, offline
+		console.log(presence.activities); // [Activity]
 	},
 };
