@@ -40,9 +40,9 @@ export const getActivityPage = async (
 			} else {
 				userStatus.forEach((status) => {
 					embedDescription.push(
-						`**<t:${Math.floor(
+						`**${status.name.toUpperCase()}** - <t:${Math.floor(
 							new Date(status.timestamp).getTime() / 1000
-						)}:R>: ${status.name.toUpperCase()}**`
+						)}:R>`
 					);
 				});
 			}
