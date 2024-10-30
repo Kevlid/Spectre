@@ -15,10 +15,12 @@ export const PresenceUpdate: Event = {
 	async execute(client: KiwiClient, presence: Presence) {
 		if (presence.member.user.bot) return;
 
-		console.log(
-			presence.user.username,
-			(await presence.member.fetch()).presence.status
-		); // online, idle, dnd, offline
-		console.log(presence.activities); // [Activity]
+		var member = await presence.member.fetch();
+
+		await client.db.repos.activityStatus.insert({
+			userId: member.id,
+			userName: member.user.username,
+			status: member.presence.status,
+		});
 	},
 };

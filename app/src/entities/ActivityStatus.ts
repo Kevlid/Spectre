@@ -3,7 +3,7 @@ import { Entity, PrimaryColumn, Column, CreateDateColumn } from 'typeorm';
 @Entity('activity_status')
 export class ActivityStatusEntity {
 	@PrimaryColumn({ name: 'user_id' })
-	userId: number;
+	userId: string;
 
 	@Column({ name: 'user_name' })
 	userName: string;

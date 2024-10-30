@@ -18,7 +18,7 @@ export class DatabaseManager {
 	public repos: {
 		activityConfig: Repository<ActivityConfigEntity>;
 		activityMessages: Repository<ActivityMessageEntity>;
-		actibityStatus: Repository<ActivityStatusEntity>;
+		activityStatus: Repository<ActivityStatusEntity>;
 		activityVoice: Repository<ActivityVoiceEntity>;
 		activityVoicestates: Repository<ActivityVoicestateEntity>;
 		guildModules: Repository<GuildModuleEntity>;
@@ -41,7 +41,7 @@ export class DatabaseManager {
 			activityMessages: await this.dataSource.getRepository(
 				ActivityMessageEntity
 			),
-			actibityStatus: await this.dataSource.getRepository(
+			activityStatus: await this.dataSource.getRepository(
 				ActivityStatusEntity
 			),
 			activityVoice: await this.dataSource.getRepository(
