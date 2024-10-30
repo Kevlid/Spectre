@@ -7,14 +7,7 @@ import { Event, EventList } from '../../../types/event';
  */
 export const PresenceUpdate: Event = {
 	name: EventList.PresenceUpdate,
-
-	/**
-	 * @param {KiwiClient} client
-	 * @param {VoiceState} oldVoiceState
-	 */
-	async getGuildId(presence: Presence) {
-		return presence.guild.id;
-	},
+	global: true,
 
 	/**
 	 * @param {KiwiClient} client
