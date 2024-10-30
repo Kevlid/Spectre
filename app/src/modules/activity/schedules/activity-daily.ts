@@ -83,7 +83,7 @@ export const ActivityDailySchedule: Schedule = {
 		var allStatus = await client.db.repos.activityStatus.find();
 
 		for (let status of allStatus) {
-			if (status.createdAt < oneMonthAgo) {
+			if (status.timestamp < oneMonthAgo) {
 				await client.db.repos.activityStatus.delete(status);
 			}
 		}

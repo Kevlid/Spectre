@@ -17,25 +17,37 @@ export const PresenceUpdate: Event = {
 
 		var member = await presence.member.fetch();
 
-		const statusCount = await client.db.repos.activityStatus.count({
+		var latestStatus = await client.db.repos.activityStatus.findOne({
 			where: { userId: member.id },
+			order: { timestamp: 'DESC' },
 		});
 
-		if (statusCount >= 50) {
-			const oldestStatus = await client.db.repos.activityStatus.find({
-				where: { userId: member.id },
-				order: { createdAt: 'ASC' },
-				take: 1,
-			});
-			if (oldestStatus.length > 0) {
-				await client.db.repos.activityStatus.remove(oldestStatus[0]);
-			}
+		if (latestStatus?.name !== member.presence.status) {
+			insertNewStatus(client, member);
 		}
-
-		await client.db.repos.activityStatus.insert({
-			userId: member.id,
-			userName: member.user.username,
-			status: member.presence.status,
-		});
 	},
 };
+
+async function insertNewStatus(client: KiwiClient, member) {
+	var statusCount = await client.db.repos.activityStatus.count({
+		where: { userId: member.id },
+	});
+
+	if (statusCount >= 25) {
+		var oldestStatus = await client.db.repos.activityStatus.find({
+			where: { userId: member.id },
+			order: { timestamp: 'ASC' },
+			take: 1,
+		});
+		if (oldestStatus.length > 0) {
+			await client.db.repos.activityStatus.remove(oldestStatus[0]);
+		}
+	}
+
+	await client.db.repos.activityStatus.insert({
+		userId: member.id,
+		userName: member.user.username,
+		name: member.presence.status,
+		timestamp: new Date(),
+	});
+}

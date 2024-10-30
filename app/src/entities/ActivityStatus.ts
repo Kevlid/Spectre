@@ -16,9 +16,9 @@ export class ActivityStatusEntity {
 	@Column({ name: 'user_name' })
 	userName: string;
 
-	@Column({ name: 'status' })
-	status: string;
+	@Column({ name: 'name' })
+	name: string;
 
-	@CreateDateColumn({ name: 'created_at' })
-	createdAt: Date;
+	@CreateDateColumn({ name: 'timestamp' })
+	timestamp: Date;
 }

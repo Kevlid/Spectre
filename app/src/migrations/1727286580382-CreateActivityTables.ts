@@ -218,13 +218,13 @@ export class CreateActivityTables1727286580382 implements MigrationInterface {
 						isNullable: false,
 					},
 					{
-						name: 'status',
+						name: 'name',
 						type: 'varchar',
 						length: '32',
 						isNullable: false,
 					},
 					{
-						name: 'created_at',
+						name: 'timestamp',
 						type: 'datetime',
 						isNullable: false,
 						default: 'CURRENT_TIMESTAMP',
