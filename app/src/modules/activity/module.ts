@@ -1,41 +1,36 @@
-import { Module } from "../../types/module";
+import { Module } from '../../types/module';
 
 // Events
-import { VoiceStateUpdate } from "./events/voiceStateUpdate";
-import { MessageCreate } from "./events/messageCreate";
+import { VoiceStateUpdate } from './events/voiceStateUpdate';
+import { MessageCreate } from './events/messageCreate';
 
 // Slash Commands
-import { ActivitySlash } from "./commands/activity";
-import { LeaderboardSlash } from "./commands/leaderboard";
+import { ActivitySlash } from './commands/activity';
+import { PresenceUpdate } from './events/PresenceUpdate';
+import { LeaderboardSlash } from './commands/leaderboard';
 
 // Select Menus
-import { ActivitySelectMenu } from "./selectmenus/activityType";
-import { LeaderboardTypeSelectMenu } from "./selectmenus/leaderboardType";
-import { LeaderboardTimeSelectMenu } from "./selectmenus/leaderboardTime";
+import { ActivitySelectMenu } from './selectmenus/activityType';
+import { LeaderboardTypeSelectMenu } from './selectmenus/leaderboardType';
+import { LeaderboardTimeSelectMenu } from './selectmenus/leaderboardTime';
 
 // Schedules
-import { ActivityDailySchedule } from "./schedules/activity-daily";
-import { ActivityWeeklySchedule } from "./schedules/activity-weekly";
-import { ActivityMonthlySchedule } from "./schedules/activity-monthly";
+import { ActivityDailySchedule } from './schedules/activity-daily';
+import { ActivityWeeklySchedule } from './schedules/activity-weekly';
+import { ActivityMonthlySchedule } from './schedules/activity-monthly';
 
 export const ActivityModule: Module = {
-    id: "activity",
-    events: [
-        VoiceStateUpdate,
-        MessageCreate
-    ],
-    slashCommands: [
-        ActivitySlash,
-        LeaderboardSlash
-    ],
-    selectMenus: [
-        ActivitySelectMenu,
-        LeaderboardTypeSelectMenu,
-        LeaderboardTimeSelectMenu
-    ],
-    schedules: [
-        ActivityDailySchedule,
-        ActivityWeeklySchedule,
-        ActivityMonthlySchedule
-    ]
-}
+	id: 'activity',
+	events: [VoiceStateUpdate, PresenceUpdate, MessageCreate],
+	slashCommands: [ActivitySlash, LeaderboardSlash],
+	selectMenus: [
+		ActivitySelectMenu,
+		LeaderboardTypeSelectMenu,
+		LeaderboardTimeSelectMenu,
+	],
+	schedules: [
+		ActivityDailySchedule,
+		ActivityWeeklySchedule,
+		ActivityMonthlySchedule,
+	],
+};
