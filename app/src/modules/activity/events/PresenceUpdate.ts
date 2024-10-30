@@ -17,6 +17,21 @@ export const PresenceUpdate: Event = {
 
 		var member = await presence.member.fetch();
 
+		const statusCount = await client.db.repos.activityStatus.count({
+			where: { userId: member.id },
+		});
+
+		if (statusCount >= 50) {
+			const oldestStatus = await client.db.repos.activityStatus.find({
+				where: { userId: member.id },
+				order: { createdAt: 'ASC' },
+				take: 1,
+			});
+			if (oldestStatus.length > 0) {
+				await client.db.repos.activityStatus.remove(oldestStatus[0]);
+			}
+		}
+
 		await client.db.repos.activityStatus.insert({
 			userId: member.id,
 			userName: member.user.username,
