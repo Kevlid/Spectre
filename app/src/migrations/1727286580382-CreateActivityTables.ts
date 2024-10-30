@@ -197,9 +197,17 @@ export class CreateActivityTables1727286580382 implements MigrationInterface {
 				name: 'activity_status',
 				columns: [
 					{
-						name: 'user_id',
+						name: 'id',
 						type: 'bigint',
 						isPrimary: true,
+						isGenerated: true,
+						isNullable: false,
+						unsigned: true,
+						generationStrategy: 'increment',
+					},
+					{
+						name: 'user_id',
+						type: 'bigint',
 						isNullable: false,
 						unsigned: true,
 					},

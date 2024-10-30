@@ -1,8 +1,16 @@
-import { Entity, PrimaryColumn, Column, CreateDateColumn } from 'typeorm';
+import {
+	Entity,
+	PrimaryGeneratedColumn,
+	Column,
+	CreateDateColumn,
+} from 'typeorm';
 
 @Entity('activity_status')
 export class ActivityStatusEntity {
-	@PrimaryColumn({ name: 'user_id' })
+	@PrimaryGeneratedColumn({ name: 'id' })
+	id: number;
+
+	@Column({ name: 'user_id' })
 	userId: string;
 
 	@Column({ name: 'user_name' })
