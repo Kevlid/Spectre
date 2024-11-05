@@ -23,6 +23,13 @@
             "@entities/*": ["./entities/*"],
             "@managers/*": ["./managers/*"],
             "@types/*": ["./types/*"]
-        }
+        },
+
+        "plugins": [
+            {
+            "name": "typescript-plugin-paths",
+            "transform": "typescript-transform-paths"
+            }
+        ]
     }
 }
