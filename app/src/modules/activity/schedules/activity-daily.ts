@@ -1,7 +1,7 @@
 import { RecurrenceRule } from 'node-schedule';
 import { TextChannel } from 'discord.js';
-import { Schedule } from '../../../types/schedule';
-import { KiwiClient } from '../../../client';
+import { Schedule } from '@/types/schedule';
+import { KiwiClient } from '@/client';
 
 import { getActivityConfig } from '../utils/getActivityConfig';
 import { updateVoiceState } from '../utils/updateVoiceState';

@@ -1,17 +1,13 @@
-import { Module } from "../../types/module";
+import { Module } from '@/types/module';
 
 // Slash Commands
-import { ListSlash } from "./commands/list";
+import { ListSlash } from './commands/list';
 
 // Buttons
-import { UpdateListButton } from "./buttons/updateList";
+import { UpdateListButton } from './buttons/updateList';
 
 export const ListModule: Module = {
-    id: "list",
-    slashCommands: [
-        ListSlash
-    ],
-    buttons: [
-        UpdateListButton
-    ]
-}
+	id: 'list',
+	slashCommands: [ListSlash],
+	buttons: [UpdateListButton],
+};

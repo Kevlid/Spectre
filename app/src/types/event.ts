@@ -1,4 +1,4 @@
-import { KiwiClient } from '../client';
+import { KiwiClient } from '@/client';
 import { Module } from './module';
 
 export enum EventList {

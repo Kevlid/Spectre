@@ -1,6 +1,6 @@
 import { ActionRowBuilder, StringSelectMenuBuilder, User } from 'discord.js';
-import { KiwiClient } from '../../../client';
-import { Emojis } from '../../../emojis';
+import { KiwiClient } from '@/client';
+import { Emojis } from '@/emojis';
 
 import { ActivitySelectMenu as ActivitySM } from '../selectmenus/activityType';
 import { getVoice } from './getVoice';

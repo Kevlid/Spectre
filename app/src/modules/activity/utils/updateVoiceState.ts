@@ -1,12 +1,19 @@
-import { KiwiClient } from "../../../client";
+import { KiwiClient } from '@/client';
 
-export const updateVoiceState = async (client: KiwiClient, guildId: string, userId: string, channelId: string) => {
-    client.db.repos.activityVoicestates.update(
-        { 
-            guildId,
-            userId
-        }, { 
-            channelId, 
-            joinedAt: new Date()
-        });
-}
+export const updateVoiceState = async (
+	client: KiwiClient,
+	guildId: string,
+	userId: string,
+	channelId: string
+) => {
+	client.db.repos.activityVoicestates.update(
+		{
+			guildId,
+			userId,
+		},
+		{
+			channelId,
+			joinedAt: new Date(),
+		}
+	);
+};

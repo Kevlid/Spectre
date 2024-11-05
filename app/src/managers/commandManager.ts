@@ -1,94 +1,92 @@
-import { REST } from "@discordjs/rest";
-import { Routes } from "discord-api-types/v10";
-import { env } from "../env";
-import { KiwiClient } from "../client";
+import { REST } from '@discordjs/rest';
+import { Routes } from 'discord-api-types/v10';
+import { env } from '@/env';
+import { KiwiClient } from '@/client';
 import {
-    PrefixCommand,
-    SlashCommand,
-    UserCommand,
-    CommandOptions
-} from "../types/command";
-import { Collection, Message } from "discord.js";
-import { EventList } from "../types/event";
+	PrefixCommand,
+	SlashCommand,
+	UserCommand,
+	CommandOptions,
+} from '@/types/command';
+import { Collection, Message } from 'discord.js';
+import { EventList } from '@/types/event';
 
 export class CommandManager {
-    public client: KiwiClient;
-    public PrefixCommands: Collection<string, PrefixCommand>;
-    public SlashCommands: Collection<string, SlashCommand>;
-    public UserCommands: Collection<string, UserCommand>;
-    private RestAPI: REST;
+	public client: KiwiClient;
+	public PrefixCommands: Collection<string, PrefixCommand>;
+	public SlashCommands: Collection<string, SlashCommand>;
+	public UserCommands: Collection<string, UserCommand>;
+	private RestAPI: REST;
 
-    public staffServerCommands: any[];
-    
-    constructor(client: KiwiClient) {
-        this.client = client;
+	public staffServerCommands: any[];
 
-        this.PrefixCommands = new Collection();
-        this.SlashCommands = new Collection();
-        this.UserCommands = new Collection();
-        this.RestAPI = new REST({ version: '10' }).setToken(env.CLIENT_TOKEN);
+	constructor(client: KiwiClient) {
+		this.client = client;
 
-        this.staffServerCommands = [];
+		this.PrefixCommands = new Collection();
+		this.SlashCommands = new Collection();
+		this.UserCommands = new Collection();
+		this.RestAPI = new REST({ version: '10' }).setToken(env.CLIENT_TOKEN);
 
-        this.client.on(EventList.InteractionCreate, this.onInteraction.bind(this));
-        this.client.on(EventList.MessageCreate, this.onMessage.bind(this));
-    }
+		this.staffServerCommands = [];
 
-    loadPrefix(command: PrefixCommand) {
-        this.PrefixCommands.set(command.config.name, command);
-    }
+		this.client.on(
+			EventList.InteractionCreate,
+			this.onInteraction.bind(this)
+		);
+		this.client.on(EventList.MessageCreate, this.onMessage.bind(this));
+	}
 
-    loadSlash(command: SlashCommand) {
-        this.SlashCommands.set(command.config.name, command);
-    }
+	loadPrefix(command: PrefixCommand) {
+		this.PrefixCommands.set(command.config.name, command);
+	}
 
-    loadUser(command: UserCommand) {
-        this.UserCommands.set(command.config.name, command);
-    }
+	loadSlash(command: SlashCommand) {
+		this.SlashCommands.set(command.config.name, command);
+	}
 
-    async register(commands: any[], guildId?: string) {        
-        if (!guildId) {
-            this.RestAPI.put(
-                Routes.applicationCommands(env.CLIENT_ID),
-                { body: commands }
-            );
-        } else {
-            this.RestAPI.put(
-                Routes.applicationGuildCommands(env.CLIENT_ID, guildId),
-                { body: commands }
-            )
-        }
-    }
+	loadUser(command: UserCommand) {
+		this.UserCommands.set(command.config.name, command);
+	}
 
-    async unregisterAll(guildId?: string) {
-        try {
-            if (!guildId) {
-                this.RestAPI.put(
-                    Routes.applicationCommands(env.CLIENT_ID),
-                    { body: [] }
-                )
-            }
-            else {
-                this.RestAPI.put(
-                    Routes.applicationGuildCommands(env.CLIENT_ID, guildId),
-                    { body: [] }
-                )
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
+	async register(commands: any[], guildId?: string) {
+		if (!guildId) {
+			this.RestAPI.put(Routes.applicationCommands(env.CLIENT_ID), {
+				body: commands,
+			});
+		} else {
+			this.RestAPI.put(
+				Routes.applicationGuildCommands(env.CLIENT_ID, guildId),
+				{ body: commands }
+			);
+		}
+	}
 
-    async onInteraction(interaction: any) {
+	async unregisterAll(guildId?: string) {
+		try {
+			if (!guildId) {
+				this.RestAPI.put(Routes.applicationCommands(env.CLIENT_ID), {
+					body: [],
+				});
+			} else {
+				this.RestAPI.put(
+					Routes.applicationGuildCommands(env.CLIENT_ID, guildId),
+					{ body: [] }
+				);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	}
 
-        if (interaction.isChatInputCommand()) {
+	async onInteraction(interaction: any) {
+		if (interaction.isChatInputCommand()) {
+			let command = this.SlashCommands.get(interaction.commandName);
 
-            let command = this.SlashCommands.get(interaction.commandName);
+			if (!command) return;
 
-            if (!command) return;
-
-            try {
-                /*if (interaction.guildId) {
+			try {
+				/*if (interaction.guildId) {
                     if (command.premissionLevel) {
                         let hasHigherPermission = false;
 
@@ -114,41 +112,53 @@ export class CommandManager {
                         }
                     }
                 }*/
-                if (interaction.guildId && command.module && !command.module?.default) {
-                    let isEnabled = await this.client.db.repos.guildModules
-                        .findOneBy({ guildId: interaction.guildId, moduleId: command.module.id });
-                    if (!isEnabled) {
-                        interaction.reply({ content: `This command is disabled!`, ephemeral: true });
-                        return;
-                    }
-                }
-                await command.execute(interaction, this.client);
-            } catch (error) {
-                console.error(error);
-                await interaction.reply({ content: 'There is an issue!', ephemeral: true });
-            }
+				if (
+					interaction.guildId &&
+					command.module &&
+					!command.module?.default
+				) {
+					let isEnabled =
+						await this.client.db.repos.guildModules.findOneBy({
+							guildId: interaction.guildId,
+							moduleId: command.module.id,
+						});
+					if (!isEnabled) {
+						interaction.reply({
+							content: `This command is disabled!`,
+							ephemeral: true,
+						});
+						return;
+					}
+				}
+				await command.execute(interaction, this.client);
+			} catch (error) {
+				console.error(error);
+				await interaction.reply({
+					content: 'There is an issue!',
+					ephemeral: true,
+				});
+			}
+		} else if (interaction.isAutocomplete()) {
+			let command = this.SlashCommands.get(interaction.commandName);
 
-        } else if (interaction.isAutocomplete()) {
+			if (!command) return;
 
-            let command = this.SlashCommands.get(interaction.commandName);
+			try {
+				await command.autocomplete(interaction, this.client);
+			} catch (error) {
+				console.error(error);
+				await interaction.reply({
+					content: 'There is an issue!',
+					ephemeral: true,
+				}); // Fix this to respond in autocomplete
+			}
+		} else if (interaction.isUserContextMenuCommand()) {
+			const command = this.UserCommands.get(interaction.commandName);
 
-            if (!command) return;
+			if (!command) return;
 
-            try {
-                await command.autocomplete(interaction, this.client);
-            } catch (error) {
-                console.error(error);
-                await interaction.reply({ content: 'There is an issue!', ephemeral: true }); // Fix this to respond in autocomplete
-            }
-
-        } else if (interaction.isUserContextMenuCommand()) {
-
-            const command = this.UserCommands.get(interaction.commandName);
-
-            if (!command) return;
-
-            try {
-                /*if (interaction.guild) {
+			try {
+				/*if (interaction.guild) {
                     if (command.premissionLevel) {
                         let hasHigherPermission = false;
 
@@ -174,42 +184,54 @@ export class CommandManager {
                         }
                     }
                 }*/
-                    if (interaction.guildId && command.module && !command.module?.default) {
-                    let isEnabled = await this.client.db.repos.guildModules
-                        .findOneBy({ guildId: interaction.guildId, moduleId: command.module.id });
-                    if (!isEnabled) {
-                        interaction.reply({ content: `This command is disabled!`, ephemeral: true });
-                        return;
-                    }
-                }
-                await command.execute(interaction, this.client);
-            } catch (error) {
-                console.error(error);
-                await interaction.reply({ content: 'There is an issue!', ephemeral: true });
-            }
-        }
-    }
+				if (
+					interaction.guildId &&
+					command.module &&
+					!command.module?.default
+				) {
+					let isEnabled =
+						await this.client.db.repos.guildModules.findOneBy({
+							guildId: interaction.guildId,
+							moduleId: command.module.id,
+						});
+					if (!isEnabled) {
+						interaction.reply({
+							content: `This command is disabled!`,
+							ephemeral: true,
+						});
+						return;
+					}
+				}
+				await command.execute(interaction, this.client);
+			} catch (error) {
+				console.error(error);
+				await interaction.reply({
+					content: 'There is an issue!',
+					ephemeral: true,
+				});
+			}
+		}
+	}
 
-    async onMessage(message: Message) {
+	async onMessage(message: Message) {
+		if (message.author.bot) return;
+		if (!message.content.startsWith(env.PREFIX)) return;
 
-        if (message.author.bot) return;
-        if (!message.content.startsWith(env.PREFIX)) return;
+		let args = message.content.slice(env.PREFIX.length).trim().split(/ +/);
+		let commandName = args.shift()?.toLowerCase();
+		if (!commandName) return;
 
-        let args = message.content.slice(env.PREFIX.length).trim().split(/ +/);
-        let commandName = args.shift()?.toLowerCase();
-        if (!commandName) return;
+		let command = this.PrefixCommands.get(commandName);
+		if (!command) return;
 
-        let command = this.PrefixCommands.get(commandName);
-        if (!command) return;
+		let commandOptions: CommandOptions = {
+			commandName: commandName,
+			auther: message.author.id,
+			args,
+		};
 
-        let commandOptions: CommandOptions = {
-            commandName: commandName,
-            auther: message.author.id,
-            args
-        }
-
-        try {
-            /*if (message.guildId) {
+		try {
+			/*if (message.guildId) {
                 if (command.premissionLevel) {
                     let hasHigherPermission = false;
 
@@ -235,18 +257,21 @@ export class CommandManager {
                     }
                 }
             }*/
-                if (message.guildId && command.module && !command.module?.default) {
-                let isEnabled = await await this.client.db.repos.guildModules
-                    .findOneBy({ guildId: message.guildId, moduleId: command.module.id });
-                if (!isEnabled) {
-                    message.reply({ content: `This command is disabled!` });
-                    return;
-                }
-            }
-            await command.execute(message, commandOptions, this.client);
-        } catch (error) {
-            console.error(error);
-            await message.reply('There is an issue!');
-        }
-    }
+			if (message.guildId && command.module && !command.module?.default) {
+				let isEnabled =
+					await await this.client.db.repos.guildModules.findOneBy({
+						guildId: message.guildId,
+						moduleId: command.module.id,
+					});
+				if (!isEnabled) {
+					message.reply({ content: `This command is disabled!` });
+					return;
+				}
+			}
+			await command.execute(message, commandOptions, this.client);
+		} catch (error) {
+			console.error(error);
+			await message.reply('There is an issue!');
+		}
+	}
 }

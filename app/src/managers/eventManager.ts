@@ -1,8 +1,8 @@
 import { Collection } from 'discord.js';
-import { KiwiClient } from '../client';
-import { Event, EventList } from '../types/event';
+import { KiwiClient } from '@/client';
+import { Event, EventList } from '@/types/event';
 
-import { ClientModules } from '../modules/modules';
+import { ClientModules } from '@/modules/modules';
 
 export class EventManager {
 	private client: KiwiClient;
