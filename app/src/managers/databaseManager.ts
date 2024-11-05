@@ -5,6 +5,7 @@ import { dataSource } from '@/datasource';
 
 import { ActivityConfigEntity } from '@/entities/ActivityConfig';
 import { ActivityMessageEntity } from '@/entities/ActivityMessage';
+import { ActivityPresenceEntity } from '@/entities/ActivityPresence';
 import { ActivityStatusEntity } from '@/entities/ActivityStatus';
 import { ActivityVoiceEntity } from '@/entities/ActivityVoice';
 import { ActivityVoicestateEntity } from '@/entities/ActivityVoicestate';
@@ -18,6 +19,7 @@ export class DatabaseManager {
 	public repos: {
 		activityConfig: Repository<ActivityConfigEntity>;
 		activityMessages: Repository<ActivityMessageEntity>;
+		activityPresence: Repository<ActivityPresenceEntity>;
 		activityStatus: Repository<ActivityStatusEntity>;
 		activityVoice: Repository<ActivityVoiceEntity>;
 		activityVoicestates: Repository<ActivityVoicestateEntity>;
@@ -40,6 +42,9 @@ export class DatabaseManager {
 			),
 			activityMessages: await this.dataSource.getRepository(
 				ActivityMessageEntity
+			),
+			activityPresence: await this.dataSource.getRepository(
+				ActivityPresenceEntity
 			),
 			activityStatus: await this.dataSource.getRepository(
 				ActivityStatusEntity

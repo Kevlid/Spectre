@@ -25,6 +25,29 @@ export const PresenceUpdate: Event = {
 		if (latestStatus?.name !== member.presence.status) {
 			insertNewStatus(client, member);
 		}
+
+		for (var activity of member.presence.activities) {
+			var existingActivity =
+				await client.db.repos.activityPresence.findOne({
+					where: {
+						starTimestamp: activity.createdTimestamp,
+						userId: member.id,
+					},
+				});
+
+			if (!existingActivity) {
+				await client.db.repos.activity.insert({
+					userId: member.id,
+					userName: member.user.username,
+					name: activity.name,
+					startTimestamp: activity.createdTimestamp,
+				});
+			} else if (activity.type === 'STOPPED') {
+				await client.db.repos.activity.update(existingActivity.id, {
+					endTimestamp: new Date(),
+				});
+			}
+		}
 	},
 };
 

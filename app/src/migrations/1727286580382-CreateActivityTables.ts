@@ -233,6 +233,54 @@ export class CreateActivityTables1727286580382 implements MigrationInterface {
 			}),
 			true
 		);
+
+		await queryRunner.createTable(
+			new Table({
+				name: 'activity_presence',
+				columns: [
+					{
+						name: 'id',
+						type: 'bigint',
+						isPrimary: true,
+						isGenerated: true,
+						isNullable: false,
+						unsigned: true,
+						generationStrategy: 'increment',
+					},
+					{
+						name: 'user_id',
+						type: 'bigint',
+						isNullable: false,
+						unsigned: true,
+					},
+					{
+						name: 'user_name',
+						type: 'varchar',
+						length: '32',
+						isNullable: false,
+					},
+					{
+						name: 'name',
+						type: 'varchar',
+						length: '32',
+						isNullable: false,
+					},
+					{
+						name: 'start_timestamp',
+						type: 'datetime',
+						isNullable: false,
+						default: 'CURRENT_TIMESTAMP',
+					},
+					{
+						name: 'end_timestamp',
+						type: 'datetime',
+						isNullable: true,
+						default: 'CURRENT_TIMESTAMP',
+					},
+				],
+			}),
+			true
+		);
 	}
 
 	public async down(queryRunner: QueryRunner): Promise<void> {
