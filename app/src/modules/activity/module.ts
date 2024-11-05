@@ -19,6 +19,20 @@ import { ActivityDailySchedule } from './schedules/activity-daily';
 import { ActivityWeeklySchedule } from './schedules/activity-weekly';
 import { ActivityMonthlySchedule } from './schedules/activity-monthly';
 
+// Functions
+import { createMessageLeaderboard } from './utils/createMessageLeaderboard';
+import { createVoiceLeaderboard } from './utils/createVoiceLeaderboard';
+import { getActivityConfig } from './utils/getActivityConfig';
+import { getActivityPage } from './utils/getActivityPage';
+import { getLeaderboardPage } from './utils/getLeaderboardPage';
+import { getVoice } from './utils/getVoice';
+import { getVoiceState } from './utils/getVoiceState';
+import { grantMostActiveRole } from './utils/grantMostActiveRole';
+import { removeVoiceState } from './utils/removeVoiceState';
+import { saveVoice } from './utils/saveVoice';
+import { saveVoiceState } from './utils/saveVoiceState';
+import { updateVoiceState } from './utils/updateVoiceState';
+
 export const ActivityModule: Module = {
 	id: 'activity',
 	events: [VoiceStateUpdate, PresenceUpdate, MessageCreate],
@@ -33,4 +47,18 @@ export const ActivityModule: Module = {
 		ActivityWeeklySchedule,
 		ActivityMonthlySchedule,
 	],
+	functions: {
+		createMessageLeaderboard,
+		createVoiceLeaderboard,
+		getActivityConfig,
+		getActivityPage,
+		getLeaderboardPage,
+		getVoice,
+		getVoiceState,
+		grantMostActiveRole,
+		removeVoiceState,
+		saveVoice,
+		saveVoiceState,
+		updateVoiceState,
+	},
 };
