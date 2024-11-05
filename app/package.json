@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "ts-node -r tsconfig-paths/register src/index.ts",
     "watch": "tsc --watch",
+    "watch:dev": "nodemon --watch src --ext ts,js,json --exec npm run dev",
     "build": "tsc --build",
     "start": "node dist/index.js",
     "typeorm": "npx typeorm",
@@ -12,6 +13,7 @@
     "migrate:revert": "npm run typeorm -- migration:revert -d dist/datasource.js"
   },
   "devDependencies": {
+    "nodemon": "^3.1.7",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.4.4"
   },
