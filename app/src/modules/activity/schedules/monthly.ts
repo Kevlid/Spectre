@@ -6,19 +6,17 @@ import { KiwiClient } from '@/client';
 import { getActivityConfig } from '../utils/getActivityConfig';
 import { updateVoiceState } from '../utils/updateVoiceState';
 import { saveVoice } from '../utils/saveVoice';
-import { grantMostActiveRole } from '../utils/grantMostActiveRole';
 import { createVoiceLeaderboard } from '../utils/createVoiceLeaderboard';
 
 var timeRule = new RecurrenceRule();
 timeRule.tz = 'UTC';
 timeRule.minute = 0;
 timeRule.hour = 0;
-timeRule.dayOfWeek = 1;
+timeRule.date = 1;
 
-export const ActivityWeeklySchedule: Schedule = {
+export const monthlySchedule: Schedule = {
 	rule: timeRule,
 	execute: async (client: KiwiClient, guildId: string) => {
-		console.log('Weekly Activity');
 		var voiceStates = await client.db.repos.activityVoicestates.findBy({
 			guildId: guildId,
 		});
@@ -40,10 +38,9 @@ export const ActivityWeeklySchedule: Schedule = {
 			);
 		}
 
-		await grantMostActiveRole(client, guildId, 'weekly');
 		var actConf = await getActivityConfig(client, guildId);
 		if (actConf?.logChannel) {
-			let lb = await createVoiceLeaderboard(client, guildId, 'weekly');
+			let lb = await createVoiceLeaderboard(client, guildId, 'monthly');
 			var channel = client.channels.cache.get(
 				actConf.logChannel
 			) as TextChannel;
@@ -57,7 +54,7 @@ export const ActivityWeeklySchedule: Schedule = {
 				guildId: guildId,
 			},
 			{
-				weeklySeconds: 0,
+				monthlySeconds: 0,
 			}
 		);
 
@@ -66,7 +63,7 @@ export const ActivityWeeklySchedule: Schedule = {
 				guildId: guildId,
 			},
 			{
-				weeklyMessages: 0,
+				monthlyMessages: 0,
 			}
 		);
 	},

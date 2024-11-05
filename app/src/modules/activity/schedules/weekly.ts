@@ -11,13 +11,14 @@ import { createVoiceLeaderboard } from '../utils/createVoiceLeaderboard';
 
 var timeRule = new RecurrenceRule();
 timeRule.tz = 'UTC';
-timeRule.hour = 0;
 timeRule.minute = 0;
+timeRule.hour = 0;
+timeRule.dayOfWeek = 1;
 
-export const ActivityDailySchedule: Schedule = {
+export const weeklySchedule: Schedule = {
 	rule: timeRule,
 	execute: async (client: KiwiClient, guildId: string) => {
-		// Saves everyones voice activity
+		console.log('Weekly Activity');
 		var voiceStates = await client.db.repos.activityVoicestates.findBy({
 			guildId: guildId,
 		});
@@ -39,13 +40,10 @@ export const ActivityDailySchedule: Schedule = {
 			);
 		}
 
-		// Grant the most active role to the most active user
-		await grantMostActiveRole(client, guildId, 'daily');
-
-		// Sends the leaderboard to the log channel before its reset
+		await grantMostActiveRole(client, guildId, 'weekly');
 		var actConf = await getActivityConfig(client, guildId);
 		if (actConf?.logChannel) {
-			let lb = await createVoiceLeaderboard(client, guildId, 'daily');
+			let lb = await createVoiceLeaderboard(client, guildId, 'weekly');
 			var channel = client.channels.cache.get(
 				actConf.logChannel
 			) as TextChannel;
@@ -54,38 +52,22 @@ export const ActivityDailySchedule: Schedule = {
 			}
 		}
 
-		// Updates the daily seconds to 0
 		client.db.repos.activityVoice.update(
 			{
 				guildId: guildId,
 			},
 			{
-				dailySeconds: 0,
+				weeklySeconds: 0,
 			}
 		);
 
-		// Updates the daily messages to 0
 		client.db.repos.activityMessages.update(
 			{
 				guildId: guildId,
 			},
 			{
-				dailyMessages: 0,
+				weeklyMessages: 0,
 			}
 		);
-
-		// Clean up old status records
-		// Remove all records older than 1 month
-		// TODO: Test so it works as it should
-		var oneMonthAgo = new Date();
-		oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-
-		var allStatus = await client.db.repos.activityStatus.find();
-
-		for (let status of allStatus) {
-			if (status.timestamp < oneMonthAgo) {
-				await client.db.repos.activityStatus.delete(status);
-			}
-		}
 	},
 };

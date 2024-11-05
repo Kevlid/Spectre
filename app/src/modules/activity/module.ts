@@ -15,9 +15,9 @@ import { LeaderboardTypeSelectMenu } from './selectmenus/leaderboardType';
 import { LeaderboardTimeSelectMenu } from './selectmenus/leaderboardTime';
 
 // Schedules
-import { ActivityDailySchedule } from './schedules/activity-daily';
-import { ActivityWeeklySchedule } from './schedules/activity-weekly';
-import { ActivityMonthlySchedule } from './schedules/activity-monthly';
+import { dailySchedule } from './schedules/daily';
+import { weeklySchedule } from './schedules/weekly';
+import { monthlySchedule } from './schedules/monthly';
 
 // Functions
 import { createMessageLeaderboard } from './utils/createMessageLeaderboard';
@@ -42,11 +42,7 @@ export const ActivityModule: Module = {
 		LeaderboardTypeSelectMenu,
 		LeaderboardTimeSelectMenu,
 	],
-	schedules: [
-		ActivityDailySchedule,
-		ActivityWeeklySchedule,
-		ActivityMonthlySchedule,
-	],
+	schedules: [dailySchedule, weeklySchedule, monthlySchedule],
 	functions: {
 		createMessageLeaderboard,
 		createVoiceLeaderboard,
