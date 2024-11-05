@@ -1,9 +1,10 @@
 {
   "name": "katt-app",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "scripts": {
-    "dev": "nodemon src/index.ts",
-    "build": "tsc",
+    "dev": "ts-node -r tsconfig-paths/register src/index.ts",
+    "watch": "tsc --watch",
+    "build": "tsc --build",
     "start": "node dist/index.js",
     "typeorm": "npx typeorm",
     "migrate:create": "npm run typeorm -- migration:create src/migrations/new",
@@ -11,7 +12,7 @@
     "migrate:revert": "npm run typeorm -- migration:revert -d dist/datasource.js"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.4.4"
   },
   "dependencies": {
@@ -23,7 +24,6 @@
     "mongodb": "^5.9.2",
     "mysql2": "^3.9.4",
     "node-schedule": "^2.1.1",
-    "typeorm": "^0.3.20",
-    "unofficial-valorant-api": "^2.3.1-stable.0"
+    "typeorm": "^0.3.20"
   }
 }
