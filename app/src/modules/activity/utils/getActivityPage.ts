@@ -48,7 +48,7 @@ export const getActivityPage = async (
 			} else {
 				userStatus.forEach((status) => {
 					embedFields.push({
-						name: `**${status.name}**`,
+						name: `**${client.capitalize(status.name)}**`,
 						value: `<t:${Math.floor(
 							new Date(status.timestamp).getTime() / 1000
 						)}:f> (<t:${Math.floor(
