@@ -63,8 +63,12 @@ async function addPresence(client: KiwiClient, member: GuildMember) {
 				userId: member.id,
 				userName: member.user.username,
 				name: activity.name,
+				type: activity.type,
 				startTimestamp: activity.timestamps.start,
 			});
+		} else if (existingActivity.endTimestamp) {
+			existingActivity.endTimestamp = null;
+			await client.db.repos.activityPresence.save(existingActivity);
 		}
 	}
 }

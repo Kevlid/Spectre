@@ -266,6 +266,11 @@ export class CreateActivityTables1727286580382 implements MigrationInterface {
 						isNullable: false,
 					},
 					{
+						name: 'type',
+						type: 'int',
+						isNullable: false,
+					},
+					{
 						name: 'start_timestamp',
 						type: 'timestamp',
 						precision: 3,

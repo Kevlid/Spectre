@@ -1,4 +1,9 @@
-import { ActionRowBuilder, StringSelectMenuBuilder, User } from 'discord.js';
+import {
+	ActionRowBuilder,
+	StringSelectMenuBuilder,
+	User,
+	ActivityType,
+} from 'discord.js';
 import { KiwiClient } from '@/client';
 import { Emojis } from '@/emojis';
 
@@ -29,12 +34,15 @@ export const getActivityPage = async (
 	var embeds = [];
 	var rows = [];
 
+	var embedDescription = [];
+	var embedFields = [];
+
 	switch (pageId) {
 		case 'status': {
 			var userStatus = await client.db.repos.activityStatus.findBy({
 				userId: user.id,
 			});
-			var embedDescription = [`### Status Activity`];
+			embedDescription.push(`### Status Activity`);
 			if (userStatus.length === 0) {
 				embedDescription.push(`**No Status Found**`);
 			} else {
@@ -44,6 +52,32 @@ export const getActivityPage = async (
 							new Date(status.timestamp).getTime() / 1000
 						)}:R>`
 					);
+				});
+			}
+			break;
+		}
+
+		case 'presence': {
+			console.log(user.id);
+			var userPresence = await client.db.repos.activityPresence.findBy({
+				userId: user.id,
+			});
+			console.log(userPresence);
+			embedDescription.push(`### Presence Activity`);
+			if (userPresence.length === 0) {
+				embedDescription.push(`**No Presence Found**`);
+			} else {
+				userPresence.forEach((presence) => {
+					embedFields.push({
+						name: `${ActivityType[presence.type]} **${
+							presence.name
+						}**`,
+						value: `<t:${Math.floor(
+							new Date(presence.startTimestamp).getTime() / 1000
+						)}:f> (<t:${Math.floor(
+							new Date(presence.startTimestamp).getTime() / 1000
+						)}:R>)`,
+					});
 				});
 			}
 			break;
@@ -80,18 +114,18 @@ export const getActivityPage = async (
 					voice.monthlySeconds / 60
 				);
 
-				var embedDescription = [
+				embedDescription.push(
 					`### Voice Activity`,
 					`${Emojis.ReplyTop} **Total:** ${totalFormattedHours} Hours / ${totalFormattedMinutes} Minutes`,
 					`${Emojis.ReplyMiddle} **Daily:** ${dailyFormattedHours} Hours / ${dailyFormattedMinutes} Minutes`,
 					`${Emojis.ReplyMiddle} **Weekly:** ${weeklyFormattedHours} Hours / ${weeklyFormattedMinutes} Minutes`,
-					`${Emojis.ReplyBottom} **Monthly:** ${monthlyFormattedHours} Hours / ${monthlyFormattedMinutes} Minutes`,
-				];
+					`${Emojis.ReplyBottom} **Monthly:** ${monthlyFormattedHours} Hours / ${monthlyFormattedMinutes} Minutes`
+				);
 			} else {
-				var embedDescription = [
+				embedDescription.push(
 					`### Voice Activity`,
-					`${Emojis.ReplyBottom} **No Voice Activity Found**`,
-				];
+					`${Emojis.ReplyBottom} **No Voice Activity Found**`
+				);
 			}
 			break;
 		}
@@ -101,18 +135,18 @@ export const getActivityPage = async (
 				{ guildId: guildId, userId: user.id }
 			);
 			if (!userMessages) {
-				var embedDescription = [
+				embedDescription.push(
 					`### Message Activity`,
-					`${Emojis.ReplyBottom} **No Messages Found**`,
-				];
+					`${Emojis.ReplyBottom} **No Messages Found**`
+				);
 			} else {
-				var embedDescription = [
+				embedDescription.push(
 					`### Message Activity`,
 					`${Emojis.ReplyTop} **Total:** ${userMessages.totalMessages} messages`,
 					`${Emojis.ReplyMiddle} **Daily:** ${userMessages.dailyMessages} messages`,
 					`${Emojis.ReplyMiddle} **Weekly:** ${userMessages.weeklyMessages} messages`,
-					`${Emojis.ReplyBottom} **Monthly:** ${userMessages.monthlyMessages} messages`,
-				];
+					`${Emojis.ReplyBottom} **Monthly:** ${userMessages.monthlyMessages} messages`
+				);
 			}
 			break;
 		}
@@ -128,6 +162,7 @@ export const getActivityPage = async (
 			},
 			description: embedDescription.join('\n'),
 			thumbnail: guild.iconURL(),
+			fields: embedFields,
 			footer: {
 				text: `Requested by ${client.capitalize(pageOwner.username)}`,
 				iconURL: pageOwner.avatarURL(),

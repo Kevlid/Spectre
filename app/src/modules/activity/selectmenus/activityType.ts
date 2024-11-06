@@ -21,7 +21,7 @@ export const ActivitySelectMenu: SelectMenu = {
 				.setValue('status'),
 			new StringSelectMenuOptionBuilder()
 				.setLabel('Presence Activity')
-				.setValue('precense'),
+				.setValue('presence'),
 			new StringSelectMenuOptionBuilder()
 				.setLabel('Voice Activity')
 				.setValue('voice'),

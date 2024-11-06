@@ -14,6 +14,9 @@ export class ActivityPresenceEntity {
 	@Column({ name: 'name' })
 	name: string;
 
+	@Column({ name: 'type' })
+	type: number;
+
 	@Column({ name: 'start_timestamp' })
 	startTimestamp: Date;
 
