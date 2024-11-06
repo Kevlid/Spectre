@@ -2,8 +2,8 @@ import { GuildMember, Presence } from 'discord.js';
 import { KiwiClient } from '@/client';
 import { Event, EventList } from '@/types/event';
 
-const maxStatusCount = 25;
-const maxPresenceCount = 25;
+const maxStatusCount = 15;
+const maxPresenceCount = 15;
 
 /**
  * @type {Event}

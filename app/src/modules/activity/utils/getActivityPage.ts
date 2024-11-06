@@ -47,22 +47,24 @@ export const getActivityPage = async (
 				embedDescription.push(`**No Status Found**`);
 			} else {
 				userStatus.forEach((status) => {
-					embedDescription.push(
-						`**${status.name.toUpperCase()}** - <t:${Math.floor(
+					embedFields.push({
+						name: `**${status.name}**`,
+						value: `<t:${Math.floor(
 							new Date(status.timestamp).getTime() / 1000
-						)}:R>`
-					);
+						)}:f> (<t:${Math.floor(
+							new Date(status.timestamp).getTime() / 1000
+						)}:R>)`,
+					});
 				});
 			}
 			break;
 		}
 
 		case 'presence': {
-			console.log(user.id);
 			var userPresence = await client.db.repos.activityPresence.findBy({
 				userId: user.id,
 			});
-			console.log(userPresence);
+
 			embedDescription.push(`### Presence Activity`);
 			if (userPresence.length === 0) {
 				embedDescription.push(`**No Presence Found**`);
