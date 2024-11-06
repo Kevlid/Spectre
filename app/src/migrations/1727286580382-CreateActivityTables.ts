@@ -65,7 +65,7 @@ export class CreateActivityTables1727286580382 implements MigrationInterface {
 					},
 					{
 						name: 'joined_at',
-						type: 'datetime',
+						type: 'timestamp',
 						isNullable: false,
 						default: 'CURRENT_TIMESTAMP',
 					},
@@ -124,7 +124,7 @@ export class CreateActivityTables1727286580382 implements MigrationInterface {
 					},
 					{
 						name: 'last_update',
-						type: 'datetime',
+						type: 'timestamp',
 						isNullable: false,
 						default: 'CURRENT_TIMESTAMP',
 					},
@@ -183,7 +183,7 @@ export class CreateActivityTables1727286580382 implements MigrationInterface {
 					},
 					{
 						name: 'last_update',
-						type: 'datetime',
+						type: 'timestamp',
 						isNullable: false,
 						default: 'CURRENT_TIMESTAMP',
 					},
@@ -225,7 +225,7 @@ export class CreateActivityTables1727286580382 implements MigrationInterface {
 					},
 					{
 						name: 'timestamp',
-						type: 'datetime',
+						type: 'timestamp',
 						isNullable: false,
 						default: 'CURRENT_TIMESTAMP',
 					},
@@ -267,15 +267,15 @@ export class CreateActivityTables1727286580382 implements MigrationInterface {
 					},
 					{
 						name: 'start_timestamp',
-						type: 'datetime',
+						type: 'timestamp',
+						precision: 3,
 						isNullable: false,
-						default: 'CURRENT_TIMESTAMP',
 					},
 					{
 						name: 'end_timestamp',
-						type: 'datetime',
+						type: 'timestamp',
+						precision: 3,
 						isNullable: true,
-						default: 'CURRENT_TIMESTAMP',
 					},
 				],
 			}),
@@ -289,5 +289,6 @@ export class CreateActivityTables1727286580382 implements MigrationInterface {
 		await queryRunner.dropTable('activity_voicestates');
 		await queryRunner.dropTable('activity_messages');
 		await queryRunner.dropTable('activity_status');
+		await queryRunner.dropTable('activity_presence');
 	}
 }

@@ -15,7 +15,7 @@ export class ActivityPresenceEntity {
 	name: string;
 
 	@Column({ name: 'start_timestamp' })
-	starTimestamp: Date;
+	startTimestamp: Date;
 
 	@Column({ name: 'end_timestamp' })
 	endTimestamp: Date;
