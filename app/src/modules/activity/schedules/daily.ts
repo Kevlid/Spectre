@@ -74,17 +74,23 @@ export const dailySchedule: Schedule = {
 			}
 		);
 
-		// Clean up old status records
+		// Clean up old status and presence records
 		// Remove all records older than 1 month
 		// TODO: Test so it works as it should
 		var oneMonthAgo = new Date();
 		oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
 		var allStatus = await client.db.repos.activityStatus.find();
-
 		for (let status of allStatus) {
 			if (status.timestamp < oneMonthAgo) {
 				await client.db.repos.activityStatus.delete(status);
+			}
+		}
+
+		var allPresence = await client.db.repos.activityPresence.find();
+		for (let presence of allPresence) {
+			if (presence.startTimestamp < oneMonthAgo) {
+				await client.db.repos.activityPresence.delete(presence);
 			}
 		}
 	},
