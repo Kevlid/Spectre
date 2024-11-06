@@ -12,26 +12,38 @@ export const LeaderboardSlash: SlashCommand = {
 	config: new SlashCommandBuilder()
 		.setName('leaderboard')
 		.setDescription('View server leaderboards')
-		.addStringOption((option) =>
-			option
-				.setName('type')
-				.setDescription('The leaderboard type')
-				.setRequired(false)
-				.addChoices(
-					{ name: 'Voice', value: 'voice' },
-					{ name: 'Message', value: 'message' }
+		.addSubcommand((subcommand) =>
+			subcommand
+				.setName('voice')
+				.setDescription('View voice leaderboard')
+				.addStringOption((option) =>
+					option
+						.setName('time')
+						.setDescription('The leaderboard time')
+						.setRequired(false)
+						.addChoices(
+							{ name: 'Total', value: 'total' },
+							{ name: 'Daily', value: 'daily' },
+							{ name: 'Weekly', value: 'weekly' },
+							{ name: 'Monthly', value: 'monthly' }
+						)
 				)
 		)
-		.addStringOption((option) =>
-			option
-				.setName('time')
-				.setDescription('The leaderboard time')
-				.setRequired(false)
-				.addChoices(
-					{ name: 'Total', value: 'total' },
-					{ name: 'Daily', value: 'daily' },
-					{ name: 'Weekly', value: 'weekly' },
-					{ name: 'Monthly', value: 'monthly' }
+		.addSubcommand((subcommand) =>
+			subcommand
+				.setName('message')
+				.setDescription('View message leaderboard')
+				.addStringOption((option) =>
+					option
+						.setName('time')
+						.setDescription('The leaderboard time')
+						.setRequired(false)
+						.addChoices(
+							{ name: 'Total', value: 'total' },
+							{ name: 'Daily', value: 'daily' },
+							{ name: 'Weekly', value: 'weekly' },
+							{ name: 'Monthly', value: 'monthly' }
+						)
 				)
 		),
 
@@ -43,7 +55,7 @@ export const LeaderboardSlash: SlashCommand = {
 		interaction: ChatInputCommandInteraction,
 		client: KiwiClient
 	): Promise<void> {
-		var type = interaction.options.getString('type') || 'voice';
+		var type = interaction.options.getSubcommand();
 		var time = interaction.options.getString('time') || 'total';
 
 		var page = await getLeaderboardPage(client, {
