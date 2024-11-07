@@ -6,7 +6,7 @@ import { MessageCreate } from './events/messageCreate';
 
 // Slash Commands
 import { ActivitySlash } from './commands/activity';
-import { PresenceUpdate } from './events/presenceUpdate';
+import { PresenceUpdate } from './events/presenceUpdates';
 import { LeaderboardSlash } from './commands/leaderboard';
 
 // Select Menus
