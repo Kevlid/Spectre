@@ -19,10 +19,7 @@
         "baseUrl": "./src",
         "outDir": "./dist",
         "paths": {
-            "@/*": ["./*"],
-            "@entities/*": ["./entities/*"],
-            "@managers/*": ["./managers/*"],
-            "@types/*": ["./types/*"]
+            "@/*": ["./*"]
         },
 
         "plugins": [
