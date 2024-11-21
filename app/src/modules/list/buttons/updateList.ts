@@ -26,10 +26,10 @@ export const UpdateListButton: Button = {
 		});
 		var users = interaction.message.content.split('\n');
 
-		let index = users.indexOf(options.optionOne);
+		let beforeMovePlace = users.indexOf(options.optionOne);
 
-		if (index !== -1) {
-			users.splice(index, 1);
+		if (beforeMovePlace !== -1) {
+			users.splice(beforeMovePlace, 1);
 			users.push(options.optionOne);
 		}
 
@@ -61,8 +61,9 @@ export const UpdateListButton: Button = {
 			var customId = await client.createCustomId({
 				customId: RevertListButton.customId,
 				valueOne: interaction.channelId,
-				valueThree: options.optionOne,
 				valueTwo: interaction.message.id,
+				valueThree: options.optionOne,
+				valueFour: beforeMovePlace.toString(),
 			});
 			var revertButton =
 				new ActionRowBuilder<ButtonBuilder>().addComponents(
