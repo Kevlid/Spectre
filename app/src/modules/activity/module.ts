@@ -6,7 +6,7 @@ import { MessageCreate } from './events/messageCreate';
 
 // Slash Commands
 import { ActivitySlash } from './commands/activity';
-import { PresenceUpdate } from './events/presenceUpdate';
+//import { PresenceUpdate } from './events/presenceUpdate';
 import { LeaderboardSlash } from './commands/leaderboard';
 
 // Select Menus
@@ -35,7 +35,7 @@ import { updateVoiceState } from './utils/updateVoiceState';
 
 export const ActivityModule: Module = {
 	id: 'activity',
-	events: [VoiceStateUpdate, PresenceUpdate, MessageCreate],
+	events: [VoiceStateUpdate, MessageCreate],
 	slashCommands: [ActivitySlash, LeaderboardSlash],
 	selectMenus: [
 		ActivitySelectMenu,
