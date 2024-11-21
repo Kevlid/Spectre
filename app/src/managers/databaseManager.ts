@@ -11,7 +11,6 @@ import { ActivityVoiceEntity } from '@/entities/ActivityVoice';
 import { ActivityVoicestateEntity } from '@/entities/ActivityVoicestate';
 import { GuildModuleEntity } from '@/entities/GuildModule';
 import { ListConfigEntity } from '@/entities/ListConfig';
-import { MemberLevelEntity } from '@/entities/MemberLevel';
 
 export class DatabaseManager {
 	public dataSource: DataSource;
@@ -25,7 +24,6 @@ export class DatabaseManager {
 		activityVoicestates: Repository<ActivityVoicestateEntity>;
 		guildModules: Repository<GuildModuleEntity>;
 		listConfig: Repository<ListConfigEntity>;
-		memberLevels: Repository<MemberLevelEntity>;
 	};
 
 	constructor(client: KiwiClient) {
@@ -59,9 +57,6 @@ export class DatabaseManager {
 				GuildModuleEntity
 			),
 			listConfig: await this.dataSource.getRepository(ListConfigEntity),
-			memberLevels: await this.dataSource.getRepository(
-				MemberLevelEntity
-			),
 		};
 	}
 
