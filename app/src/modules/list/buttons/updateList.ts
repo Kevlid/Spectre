@@ -1,6 +1,15 @@
-import { ButtonInteraction, TextChannel, EmbedBuilder } from 'discord.js';
+import {
+	ButtonInteraction,
+	TextChannel,
+	EmbedBuilder,
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+} from 'discord.js';
 import { KiwiClient } from '@/client';
 import { Button, CustomOptions } from '@/types/component';
+
+import { RevertListButton } from './revertList';
 
 /**
  * @type {Button}
@@ -48,7 +57,21 @@ export const UpdateListButton: Button = {
 					iconURL: interaction.guild.iconURL(),
 				})
 				.setTimestamp(new Date());
-			log.send({ embeds: [em] });
+
+			var customId = await client.createCustomId({
+				customId: RevertListButton.customId,
+				valueOne: interaction.channelId,
+				valueThree: options.optionOne,
+				valueTwo: interaction.message.id,
+			});
+			var revertButton =
+				new ActionRowBuilder<ButtonBuilder>().addComponents(
+					new ButtonBuilder()
+						.setStyle(ButtonStyle.Danger)
+						.setCustomId(customId)
+						.setLabel('Revert')
+				);
+			log.send({ components: [revertButton], embeds: [em] });
 		}
 	},
 };

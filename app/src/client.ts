@@ -87,18 +87,24 @@ export class KiwiClient extends Client {
 		valueOne?: string;
 		valueTwo?: string;
 		valueThree?: string;
+		valueFour?: string;
 		userId?: string;
 		ownerId?: string;
 	}): string {
 		var optionOne = options.valueOne || '';
 		var optionTwo = options.valueTwo || '';
 		var optionThree = options.valueThree || '';
+		var optionFour = options.valueFour || '';
 		var userId = options.userId || '';
 		var ownerId = options.ownerId || '';
-		return `+${options.customId}+?${optionOne}?&${optionTwo}&$${optionThree}$%${userId}%=${ownerId}=`;
+		return `+${options.customId}+?${optionOne}?&${optionTwo}&$${optionThree}$£${optionFour}£%${userId}%=${ownerId}=`;
 	}
 
-	public createMessageUrl(channelId: string, messageId: string): string {
-		return `https://discord.com/channels/${this.user.id}/${channelId}/${messageId}`;
+	public createMessageUrl(
+		guildId: string,
+		channelId: string,
+		messageId: string
+	): string {
+		return `https://discord.com/channels/${guildId}/${channelId}/${messageId}`;
 	}
 }

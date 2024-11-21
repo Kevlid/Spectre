@@ -35,6 +35,7 @@ export class ComponentManager {
 			var optionOne = interaction.customId.split('?')[1];
 			var optionTwo = interaction.customId.split('&')[1];
 			var optionThree = interaction.customId.split('$')[1];
+			var optionFour = interaction.customId.split('£')[1];
 			var userId = interaction.customId.split('%')[1];
 			var ownerId = interaction.customId.split('=')[1];
 
@@ -76,6 +77,7 @@ export class ComponentManager {
 						optionOne,
 						optionTwo,
 						optionThree,
+						optionFour,
 						userId,
 						ownerId,
 					},
@@ -93,6 +95,7 @@ export class ComponentManager {
 			var optionOne = interaction.customId.split('?')[1];
 			var optionTwo = interaction.customId.split('&')[1];
 			var optionThree = interaction.customId.split('$')[1];
+			var optionFour = interaction.customId.split('£')[1];
 			var userId = interaction.customId.split('%')[1];
 			var ownerId = interaction.customId.split('=')[1];
 
@@ -134,6 +137,7 @@ export class ComponentManager {
 						optionOne,
 						optionTwo,
 						optionThree,
+						optionFour,
 						userId,
 						ownerId,
 					},

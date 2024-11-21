@@ -50,6 +50,7 @@ export interface CustomOptions {
 	optionOne?: string;
 	optionTwo?: string;
 	optionThree?: string;
+	optionFour?: string;
 	userId?: string;
 	ownerId?: string;
 }
