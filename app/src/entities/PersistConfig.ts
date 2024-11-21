@@ -1,17 +1,17 @@
 import { Entity, PrimaryColumn, Column, OneToMany } from 'typeorm';
-import { PersistConfigRole } from './PersistConfigRole';
+import { PersistConfigRoleEntity } from './PersistConfigRole';
 
 @Entity('persist_config')
-export class PersistConfig {
-	@PrimaryColumn('bigint', { unsigned: true })
-	guild_id: string;
+export class PersistConfigEntity {
+	@PrimaryColumn({ name: 'guild_id' })
+	guildId: string;
 
-	@Column('bigint', { nullable: true, unsigned: true, default: null })
-	log_channel: string | null;
+	@Column({ name: 'log_channel' })
+	log_channel: string;
 
-	@Column('boolean', { default: false })
+	@Column({ name: 'nicknames' })
 	nicknames: boolean;
 
-	@OneToMany(() => PersistConfigRole, (role) => role.persistConfig)
-	roles: PersistConfigRole[];
+	@OneToMany(() => PersistConfigRoleEntity, (role) => role.persistConfig)
+	roles: PersistConfigRoleEntity[];
 }

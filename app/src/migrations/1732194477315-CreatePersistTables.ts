@@ -85,7 +85,7 @@ export class CreatePersistTables1732194477315 implements MigrationInterface {
 						unsigned: true,
 					},
 					{
-						name: 'nickname',
+						name: 'nick_name',
 						type: 'varchar',
 						length: '32',
 						isNullable: false,
@@ -110,7 +110,7 @@ export class CreatePersistTables1732194477315 implements MigrationInterface {
 
 		await queryRunner.createTable(
 			new Table({
-				name: 'persist_roles',
+				name: 'persist_user_roles',
 				columns: [
 					{
 						name: 'guild_id',
@@ -142,6 +142,6 @@ export class CreatePersistTables1732194477315 implements MigrationInterface {
 		await queryRunner.dropTable('persist_config');
 		await queryRunner.dropTable('persist_config_roles');
 		await queryRunner.dropTable('persist_nicknames');
-		await queryRunner.dropTable('persist_roles');
+		await queryRunner.dropTable('persist_user_roles');
 	}
 }

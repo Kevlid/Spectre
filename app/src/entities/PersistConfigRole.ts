@@ -5,20 +5,23 @@ import {
 	ManyToOne,
 	JoinColumn,
 } from 'typeorm';
-import { PersistConfig } from './PersistConfig';
+import { PersistConfigEntity } from './PersistConfig';
 
 @Entity('persist_config_roles')
-export class PersistConfigRole {
-	@PrimaryGeneratedColumn('increment', { type: 'bigint' })
+export class PersistConfigRoleEntity {
+	@PrimaryGeneratedColumn({ name: 'id' })
 	id: number;
 
-	@Column({ type: 'bigint', nullable: false, unsigned: true })
-	guild_id: number;
+	@Column({ name: 'guild_id' })
+	guildId: number;
 
-	@Column({ type: 'bigint', nullable: false, unsigned: true })
-	role_id: number;
+	@Column({ name: 'role_id' })
+	roleId: number;
 
-	@ManyToOne(() => PersistConfig, (persistConfig) => persistConfig.roles)
+	@ManyToOne(
+		() => PersistConfigEntity,
+		(persistConfig) => persistConfig.roles
+	)
 	@JoinColumn({ name: 'guild_id' })
-	persistConfig: PersistConfig;
+	persistConfig: PersistConfigEntity;
 }
