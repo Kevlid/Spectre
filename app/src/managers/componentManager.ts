@@ -34,6 +34,7 @@ export class ComponentManager {
 			var customId = interaction.customId.split('+')[1];
 			var optionOne = interaction.customId.split('?')[1];
 			var optionTwo = interaction.customId.split('&')[1];
+			var optionThree = interaction.customId.split('$')[1];
 			var userId = interaction.customId.split('%')[1];
 			var ownerId = interaction.customId.split('=')[1];
 
@@ -70,7 +71,14 @@ export class ComponentManager {
 			try {
 				await selectMenu.execute(
 					interaction,
-					{ customId, optionOne, optionTwo, userId, ownerId },
+					{
+						customId,
+						optionOne,
+						optionTwo,
+						optionThree,
+						userId,
+						ownerId,
+					},
 					this.client
 				);
 			} catch (error) {
@@ -84,6 +92,7 @@ export class ComponentManager {
 			var customId = interaction.customId.split('+')[1];
 			var optionOne = interaction.customId.split('?')[1];
 			var optionTwo = interaction.customId.split('&')[1];
+			var optionThree = interaction.customId.split('$')[1];
 			var userId = interaction.customId.split('%')[1];
 			var ownerId = interaction.customId.split('=')[1];
 
@@ -120,7 +129,14 @@ export class ComponentManager {
 			try {
 				await button.execute(
 					interaction,
-					{ customId, optionOne, optionTwo, userId, ownerId },
+					{
+						customId,
+						optionOne,
+						optionTwo,
+						optionThree,
+						userId,
+						ownerId,
+					},
 					this.client
 				);
 			} catch (error) {

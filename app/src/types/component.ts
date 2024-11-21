@@ -49,6 +49,7 @@ export interface CustomOptions {
 	customId: string;
 	optionOne?: string;
 	optionTwo?: string;
+	optionThree?: string;
 	userId?: string;
 	ownerId?: string;
 }
