@@ -68,20 +68,80 @@ export class CreatePersistTables1732194477315 implements MigrationInterface {
 
 		await queryRunner.createTable(
 			new Table({
-				name: 'persist_roles',
-				columns: [],
+				name: 'persist_nicknames',
+				columns: [
+					{
+						name: 'guild_id',
+						type: 'bigint',
+						isPrimary: true,
+						isNullable: false,
+						unsigned: true,
+					},
+					{
+						name: 'user_id',
+						type: 'bigint',
+						isPrimary: true,
+						isNullable: false,
+						unsigned: true,
+					},
+					{
+						name: 'nickname',
+						type: 'varchar',
+						length: '32',
+						isNullable: false,
+					},
+					{
+						name: 'created_at',
+						type: 'timestamp',
+						default: 'CURRENT_TIMESTAMP',
+						isNullable: false,
+					},
+					{
+						name: 'updated_at',
+						type: 'timestamp',
+						default: 'CURRENT_TIMESTAMP',
+						onUpdate: 'CURRENT_TIMESTAMP',
+						isNullable: false,
+					},
+				],
 			}),
 			true
 		);
 
 		await queryRunner.createTable(
 			new Table({
-				name: 'persist_nicknames',
-				columns: [],
+				name: 'persist_roles',
+				columns: [
+					{
+						name: 'guild_id',
+						type: 'bigint',
+						isPrimary: true,
+						isNullable: false,
+						unsigned: true,
+					},
+					{
+						name: 'role_id',
+						type: 'bigint',
+						isPrimary: true,
+						isNullable: false,
+						unsigned: true,
+					},
+					{
+						name: 'created_at',
+						type: 'timestamp',
+						default: 'CURRENT_TIMESTAMP',
+						isNullable: false,
+					},
+				],
 			}),
 			true
 		);
 	}
 
-	public async down(queryRunner: QueryRunner): Promise<void> {}
+	public async down(queryRunner: QueryRunner): Promise<void> {
+		await queryRunner.dropTable('persist_config');
+		await queryRunner.dropTable('persist_config_roles');
+		await queryRunner.dropTable('persist_nicknames');
+		await queryRunner.dropTable('persist_roles');
+	}
 }
