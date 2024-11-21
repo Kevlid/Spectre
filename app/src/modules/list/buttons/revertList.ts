@@ -16,7 +16,6 @@ export const RevertListButton: Button = {
 			guildId: interaction.guild.id,
 		});
 
-		console.log(options);
 		var listChannel = (await interaction.guild.channels.fetch(
 			options.optionOne
 		)) as TextChannel;
