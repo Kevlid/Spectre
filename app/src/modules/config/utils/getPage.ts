@@ -48,21 +48,6 @@ export const getPage = async (
 			break;
 		}
 
-		case 'permissions': {
-			var embedDescription = [
-				`### Permissions Module`,
-				`${Emojis.ReplyTop} **Enabled:** ${
-					isEnabled ? 'True' : 'False'
-				}`,
-			];
-			rows.push(
-				new ActionRowBuilder<ButtonBuilder>().addComponents(
-					generateModuleButtons(client, { pageId, pageOwner })
-				)
-			);
-			break;
-		}
-
 		case 'activity': {
 			var actConf = await client.db.repos.activityConfig.findOneBy({
 				guildId: guildId,

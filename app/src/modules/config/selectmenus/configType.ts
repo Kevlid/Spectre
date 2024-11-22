@@ -21,9 +21,6 @@ export const ConfigSelectMenu: SelectMenu = {
 				.setDescription('The server overview')
 				.setValue('overview'),
 			new StringSelectMenuOptionBuilder()
-				.setLabel('Permissions')
-				.setValue('permissions'),
-			new StringSelectMenuOptionBuilder()
 				.setLabel('Activity')
 				.setValue('activity'),
 			new StringSelectMenuOptionBuilder()
@@ -31,7 +28,10 @@ export const ConfigSelectMenu: SelectMenu = {
 				.setValue('verification'),
 			new StringSelectMenuOptionBuilder()
 				.setLabel('List')
-				.setValue('list')
+				.setValue('list'),
+			new StringSelectMenuOptionBuilder()
+				.setLabel('Persist')
+				.setValue('persist')
 		),
 	execute: async (
 		interaction: StringSelectMenuInteraction,
