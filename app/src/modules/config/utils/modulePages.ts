@@ -17,15 +17,11 @@ import { ConfigRoleSelectMenu as RoleSM } from '../selectmenus/configRole';
 
 import { generateModuleButtons } from './generateModuleButtons';
 
-interface Pages {
-	[key: string]: (
-		client: KiwiClient,
-		config: {
-			guildId: string;
-			pageId: string;
-			pageOwner?: User;
-		}
-	) => Promise<void> | undefined;
+interface config {
+	guildId: string;
+	pageId: string;
+	pageOwner?: User;
+	isEnabled?: boolean;
 }
 
 export class modulePages {
@@ -38,12 +34,23 @@ export class modulePages {
 	}
 
 	public async beforeAll() {
-		// Code here
+		console.log(this.client, 'Before');
 	}
 
 	public async afterAll() {}
 
-	public async getPage(id: string) {}
+	public async getPage(id: string, config: config) {}
+}
+
+interface Pages {
+	[key: string]: (
+		client: KiwiClient,
+		config: {
+			guildId: string;
+			pageId: string;
+			pageOwner?: User;
+		}
+	) => Promise<void> | undefined;
 }
 
 const pages: Pages = {

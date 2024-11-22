@@ -106,6 +106,11 @@ export class DatabaseManager {
 	}
 
 	public async isModuleEnabled(guildId: string, moduleId: string) {
-		return await this.repos.guildModules.findOneBy({ guildId, moduleId });
+		var moduleStatus = await this.repos.guildModules.findOneBy({
+			guildId,
+			moduleId,
+		});
+		if (moduleStatus) return true;
+		return false;
 	}
 }
