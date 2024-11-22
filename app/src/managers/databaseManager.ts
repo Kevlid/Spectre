@@ -11,6 +11,10 @@ import { ActivityVoiceEntity } from '@/entities/ActivityVoice';
 import { ActivityVoicestateEntity } from '@/entities/ActivityVoicestate';
 import { GuildModuleEntity } from '@/entities/GuildModule';
 import { ListConfigEntity } from '@/entities/ListConfig';
+import { PersistConfigEntity } from '@/entities/PersistConfig';
+import { PersistConfigRoleEntity } from '@/entities/PersistConfigRole';
+import { PersistNicknameEntity } from '@/entities/PersistNickname';
+import { PersistUserRoleEntity } from '@/entities/PresistUserRole';
 
 export class DatabaseManager {
 	public dataSource: DataSource;
@@ -24,6 +28,9 @@ export class DatabaseManager {
 		activityVoicestates: Repository<ActivityVoicestateEntity>;
 		guildModules: Repository<GuildModuleEntity>;
 		listConfig: Repository<ListConfigEntity>;
+		persistConfig: Repository<PersistConfigEntity>;
+		persistNickname: Repository<PersistNicknameEntity>;
+		persistUserRole: Repository<PersistUserRoleEntity>;
 	};
 
 	constructor(client: KiwiClient) {
@@ -57,6 +64,15 @@ export class DatabaseManager {
 				GuildModuleEntity
 			),
 			listConfig: await this.dataSource.getRepository(ListConfigEntity),
+			persistConfig: await this.dataSource.getRepository(
+				PersistConfigEntity
+			),
+			persistNickname: await this.dataSource.getRepository(
+				PersistNicknameEntity
+			),
+			persistUserRole: await this.dataSource.getRepository(
+				PersistUserRoleEntity
+			),
 		};
 	}
 
