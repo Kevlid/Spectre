@@ -7,7 +7,10 @@ export class PersistConfigEntity {
 	guildId: string;
 
 	@Column({ name: 'log_channel' })
-	log_channel: string;
+	logChannel: string;
+
+	@Column({ name: 'required_role' })
+	requiredRole: string;
 
 	@Column({ name: 'nicknames' })
 	nicknames: boolean;
