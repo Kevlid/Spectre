@@ -177,6 +177,46 @@ export const getPage = async (
 			);
 			break;
 		}
+
+		case 'persist': {
+			var persistConf = await client.db.repos.persistConfig.findOneBy({
+				guildId: guildId,
+			});
+			console.log(persistConf);
+			var embedDescription = [
+				`### Persist Module`,
+				`${Emojis.ReplyTop} **Enabled:** ${
+					isEnabled ? 'True' : 'False'
+				}`,
+				`${Emojis.ReplyBottom} **Log Channel:** ${
+					persistConf?.logChannel
+						? `<#${persistConf.logChannel}>`
+						: 'None'
+				}`,
+			];
+			rows.push(
+				new ActionRowBuilder<ButtonBuilder>().addComponents(
+					generateModuleButtons(client, { pageId, pageOwner })
+				),
+				new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
+					client.Pages.generateSelectMenu({
+						customId: client.createCustomId({
+							customId: ChannelSM.customId,
+							valueOne: pageId,
+							valueTwo: 'logChannel',
+							ownerId: pageOwner.id,
+						}),
+						placeholder: 'Log Channel',
+						channelTypes: [ChannelType.GuildText],
+						defaults: persistConf?.logChannel
+							? [persistConf.logChannel]
+							: [],
+						type: 'channel',
+					})
+				)
+			);
+			break;
+		}
 	}
 
 	embeds.push(
