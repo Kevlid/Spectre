@@ -94,6 +94,15 @@ export class DatabaseManager {
 			listConf.guildId = guildId;
 			await this.repos.listConfig.save(listConf);
 		}
+
+		var persistConfig = await this.repos.persistConfig.findOne({
+			where: { guildId },
+		});
+		if (!persistConfig) {
+			let perConf = new PersistConfigEntity();
+			perConf.guildId = guildId;
+			await this.repos.persistConfig.save(perConf);
+		}
 	}
 
 	public async isModuleEnabled(guildId: string, moduleId: string) {
