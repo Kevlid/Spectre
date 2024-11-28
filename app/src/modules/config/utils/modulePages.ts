@@ -1,39 +1,40 @@
 import { KiwiClient } from '@/client';
-import { Guild, User } from 'discord.js';
+import { EmbedBuilder, Guild, StringSelectMenuBuilder, User } from 'discord.js';
 
-interface Config {
-	guildId: string;
-	pageId: string;
-	pageOwner?: User;
-	guild?: Guild;
-	isEnabled?: boolean;
+import { optionPages, Config } from './optionPages';
+
+import { ConfigModuleSelectMenu } from '../selectmenus/configModule';
+
+export async function getPage(client: KiwiClient, config: Config) {
+	config = await optionPages.setupConfig(client, config);
+
+	var pageData = await optionPages.pages
+		.find((page) => page.moduleId === config.moduleId && !page.pageId)
+		.execute(client, config);
+
+	var description = Array.isArray(pageData.description)
+		? pageData.description.join('\n')
+		: pageData.description;
+
+	var em = new EmbedBuilder()
+		.setTitle('Server Configuration')
+		.setThumbnail(config.guild.iconURL())
+		.setFooter({
+			text: `Requested by ${client.capitalize(
+				config.pageOwner.username
+			)}`,
+			iconURL: config.pageOwner.displayAvatarURL(),
+		})
+		.setDescription(description);
+
+	// TODO: Get all modules in the other file
+	var allModules = 
+
+	var configModuleSM = new StringSelectMenuBuilder()
+		.setPlaceholder('Select a module')
+		.addOptions(;
+
+	return {
+		embeds: [em],
+	};
 }
-
-interface Page {
-	id: string;
-	execute: (client: KiwiClient, config: Config) => Promise<void>;
-}
-
-interface ModulePages {
-	setupConfig?: (client: KiwiClient, config: Config) => Promise<Config>;
-	pages: Array<Page>;
-}
-
-export const modulePages: ModulePages = {
-	setupConfig: async (client, config) => {
-		config.guild = await client.guilds.fetch(config.guildId);
-		config.isEnabled = await client.db.isModuleEnabled(
-			config.guildId,
-			config.pageId
-		);
-		return config;
-	},
-	pages: [
-		{
-			id: 'overview',
-			execute: async (client, config) => {
-				const { guildId, pageId, pageOwner, guild, isEnabled } = config;
-			},
-		},
-	],
-};

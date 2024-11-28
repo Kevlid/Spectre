@@ -1,30 +1,30 @@
 import { KiwiClient } from '@/client';
 import { Guild, User } from 'discord.js';
 
-interface Config {
+export interface Config {
 	guildId: string;
-	pageId: string;
-	moduleId?: string;
+	moduleId: string;
+	pageId?: string;
 	pageOwner?: User;
 	guild?: Guild;
 	guildOwner?: User;
 	isEnabled?: boolean;
 }
 
-interface PageOptions {
-	description?: string[] | string;
-	rows?: any[];
+interface OptionPages {
+	setupConfig?: (client: KiwiClient, options: Config) => Promise<Config>;
+	pages: Array<Page>;
 }
 
 interface Page {
-	id: string;
-	option?: string;
-	execute: (client: KiwiClient, config: Config) => Promise<PageOptions>;
+	moduleId: string;
+	pageId?: string;
+	execute: (client: KiwiClient, config: Config) => Promise<PageData>;
 }
 
-interface OptionPages {
-	setupConfig?: (client: KiwiClient, config: Config) => Promise<Config>;
-	pages: Array<Page>;
+interface PageData {
+	description?: string[] | string;
+	rows?: any[];
 }
 
 export const optionPages: OptionPages = {
@@ -41,22 +41,7 @@ export const optionPages: OptionPages = {
 	},
 	pages: [
 		{
-			id: 'overview',
-			execute: async (client, config) => {
-				const { guild, guildOwner } = config;
-
-				var description = [
-					`### Guild Overview`,
-					`**Owner:** ${guildOwner.displayName} (${guildOwner.username})`,
-					`**Members:** ${guild.memberCount}`,
-					`**Ping:** ${Math.round(client.ws.ping)}ms`,
-				];
-
-				return { description };
-			},
-		},
-		{
-			id: 'activity',
+			moduleId: 'activity',
 			execute: async (client, config) => {
 				const { isEnabled } = config;
 
@@ -69,8 +54,8 @@ export const optionPages: OptionPages = {
 			},
 		},
 		{
-			id: 'activity',
-			option: 'logChannel',
+			moduleId: 'activity',
+			pageId: 'logChannel',
 			execute: async (client, config) => {
 				const { guildId, isEnabled } = config;
 
@@ -91,8 +76,8 @@ export const optionPages: OptionPages = {
 			},
 		},
 		{
-			id: 'activity',
-			option: 'dailyActiveRole',
+			moduleId: 'activity',
+			pageId: 'dailyActiveRole',
 			execute: async (client, config) => {
 				const { guildId } = config;
 
@@ -113,8 +98,8 @@ export const optionPages: OptionPages = {
 			},
 		},
 		{
-			id: 'activity',
-			option: 'weeklyActiveRole',
+			moduleId: 'activity',
+			pageId: 'weeklyActiveRole',
 			execute: async (client, config) => {
 				const { guildId } = config;
 

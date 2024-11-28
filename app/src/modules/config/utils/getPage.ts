@@ -10,7 +10,7 @@ import {
 import { KiwiClient } from '@/client';
 import { Emojis } from '@/emojis';
 
-import { ConfigSelectMenu } from '../selectmenus/configType';
+import { ConfigSelectMenu } from '../selectmenus/configModule';
 import { ConfigChannelSelectMenu as ChannelSM } from '../selectmenus/configChannel';
 import { ConfigRoleSelectMenu as RoleSM } from '../selectmenus/configRole';
 

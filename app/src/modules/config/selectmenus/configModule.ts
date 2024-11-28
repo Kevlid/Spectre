@@ -6,13 +6,13 @@ import {
 import { KiwiClient } from '@/client';
 
 import { CustomOptions, SelectMenu } from '@/types/component';
-import { getPage } from '../utils/getPage';
+import { getPage } from '../utils/modulePages';
 
 /**
  * @type {SelectMenu}
  */
-export const ConfigSelectMenu: SelectMenu = {
-	customId: 'config-type',
+export const ConfigModuleSelectMenu: SelectMenu = {
+	customId: 'config-module',
 	config: new StringSelectMenuBuilder()
 		.setPlaceholder('Modules')
 		.addOptions(
@@ -40,9 +40,10 @@ export const ConfigSelectMenu: SelectMenu = {
 	) => {
 		var page = await getPage(client, {
 			guildId: interaction.guildId,
-			pageId: interaction.values[0],
+			moduleId: interaction.values[0],
 			pageOwner: interaction.user,
 		});
+
 		interaction.update({
 			embeds: [...page.embeds],
 			components: [...page.rows],
