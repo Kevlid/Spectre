@@ -28,7 +28,7 @@ export const ConfigModuleSelectMenu: SelectMenu = {
 
 		interaction.update({
 			embeds: [...page.embeds],
-			components: [...page.rows],
+			//components: [...page.rows],
 		});
 	},
 };

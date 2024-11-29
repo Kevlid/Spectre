@@ -16,13 +16,14 @@
   "devDependencies": {
     "nodemon": "^3.1.7",
     "tsc-watch": "^4.6.0",
-    "typescript": "^5.4.4"
+    "typescript": "^5.7.2"
   },
   "dependencies": {
-    "@discordjs/rest": "^2.2.0",
+    "@discordjs/builders": "^1.9.0",
+    "@discordjs/rest": "^2.4.0",
     "@discordjs/voice": "^0.17.0",
-    "discord-api-types": "^0.37.79",
-    "discord.js": "^14.12.1",
+    "discord-api-types": "^0.37.110",
+    "discord.js": "^14.16.3",
     "dotenv": "^16.4.5",
     "mongodb": "^5.9.2",
     "mysql2": "^3.9.4",

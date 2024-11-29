@@ -1,16 +1,21 @@
 import { KiwiClient } from '@/client';
 import {
 	ActionRowBuilder,
+	AnyComponentBuilder,
+	ChannelSelectMenuBuilder,
 	EmbedBuilder,
 	Guild,
+	RoleSelectMenuBuilder,
 	StringSelectMenuBuilder,
 	User,
+	UserSelectMenuBuilder,
 } from 'discord.js';
 
 import { optionPages, Config } from './optionPages';
 
 import { ConfigModuleSelectMenu as ConfigModuleSM } from '../selectmenus/configModule';
 import { ConfigOptionSelectMenu as ConfigOptionSM } from '../selectmenus/configOption';
+import { ButtonBuilder } from '@discordjs/builders';
 
 export async function getPage(client: KiwiClient, config: Config) {
 	config = await optionPages.setupConfig(client, config);
@@ -102,7 +107,7 @@ export async function getPage(client: KiwiClient, config: Config) {
 	return {
 		embeds: [em],
 		rows: [
-			...pageData.rows,
+			new ActionRowBuilder().addComponents(pageData.componenets),
 			new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
 				configModuleSM
 			),
@@ -110,5 +115,14 @@ export async function getPage(client: KiwiClient, config: Config) {
 				configOptionSM
 			),
 		],
+	} as {
+		embeds: EmbedBuilder[];
+		rows: ActionRowBuilder<
+			| RoleSelectMenuBuilder
+			| UserSelectMenuBuilder
+			| StringSelectMenuBuilder
+			| ChannelSelectMenuBuilder
+			| ButtonBuilder
+		>[];
 	};
 }

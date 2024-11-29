@@ -11,7 +11,7 @@ export class EventManager {
 	constructor(client: KiwiClient) {
 		this.client = client;
 		this.Events = new Collection();
-		this.client.on(EventList.Ready, this.onReady);
+		this.client.on(EventList.Ready, this.onReady.bind(this));
 	}
 
 	private async onReady(client: KiwiClient) {

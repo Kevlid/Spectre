@@ -1,5 +1,5 @@
 import { KiwiClient } from '@/client';
-import { Guild, User } from 'discord.js';
+import { ActionRowBuilder, AnyComponentBuilder, Guild, User } from 'discord.js';
 
 export interface Config {
 	guildId: string;
@@ -24,7 +24,7 @@ interface Page {
 
 interface PageData {
 	description?: string[] | string;
-	rows?: any[];
+	componenets?: AnyComponentBuilder;
 }
 
 import { createOverviewButtons } from './createOverviewButtons';
@@ -53,9 +53,9 @@ export const optionPages: OptionPages = {
 					`**Enabled:** ${isEnabled ? 'True' : 'False'}`,
 				];
 
-				var { components } = createOverviewButtons(client, config);
+				var overviewButtons = createOverviewButtons(client, config);
 
-				return { description, rows: [components] };
+				return { description, componenets: [...overviewButtons] };
 			},
 		},
 		{
@@ -135,9 +135,9 @@ export const optionPages: OptionPages = {
 					`**Enabled:** ${isEnabled ? 'True' : 'False'}`,
 				];
 
-				var { components } = createOverviewButtons(client, config);
+				var overviewButtons = createOverviewButtons(client, config);
 
-				return { description, rows: [components] };
+				return { description, componenets: [...overviewButtons] };
 			},
 		},
 	],
