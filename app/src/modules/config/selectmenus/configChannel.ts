@@ -56,7 +56,8 @@ export const ConfigChannelSelectMenu: SelectMenu = {
 
 		var page = await getPage(client, {
 			guildId: interaction.guildId,
-			pageId: options.optionOne,
+			moduleId: options.moduleId,
+			optionId: options.optionId,
 			pageOwner: interaction.user,
 		});
 		interaction.update({

@@ -3,7 +3,7 @@ import { KiwiClient } from '@/client';
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '@/types/command';
 
-import { getPage } from '../utils/modulePages';
+import { getPage } from '../utils/getPage';
 
 /**
  * @type {SlashCommand}

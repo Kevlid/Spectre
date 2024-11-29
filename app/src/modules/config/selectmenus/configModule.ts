@@ -6,7 +6,7 @@ import {
 import { KiwiClient } from '@/client';
 
 import { CustomOptions, SelectMenu } from '@/types/component';
-import { getPage } from '../utils/modulePages';
+import { getPage } from '../utils/getPage';
 
 /**
  * @type {SelectMenu}
