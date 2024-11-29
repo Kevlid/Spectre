@@ -16,8 +16,12 @@ export async function getPage(client: KiwiClient, config: Config) {
 	config = await optionPages.setupConfig(client, config);
 
 	var pageData = await optionPages.pages
-		.find((page) => page.moduleId === config.moduleId && !page.optionId)
-		.execute(client, config);
+		.find(
+			(page) =>
+				page.moduleId === config.moduleId &&
+				page.optionId === config.optionId
+		)
+		.getPageData(client, config);
 
 	var description = Array.isArray(pageData.description)
 		? pageData.description.join('\n')

@@ -32,6 +32,7 @@ export const ConfigSlash: SlashCommand = {
 		var page = await getPage(client, {
 			guildId: interaction.guildId,
 			moduleId: 'activity',
+			optionId: 'overview',
 			pageOwner: interaction.user,
 		});
 

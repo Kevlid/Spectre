@@ -19,7 +19,7 @@ interface OptionPages {
 interface Page {
 	moduleId: string;
 	optionId?: string;
-	execute: (client: KiwiClient, config: Config) => Promise<PageData>;
+	getPageData: (client: KiwiClient, config: Config) => Promise<PageData>;
 }
 
 interface PageData {
@@ -42,7 +42,8 @@ export const optionPages: OptionPages = {
 	pages: [
 		{
 			moduleId: 'activity',
-			execute: async (client, config) => {
+			optionId: 'overview',
+			getPageData: async (client, config) => {
 				const { isEnabled } = config;
 
 				var description = [
@@ -56,7 +57,7 @@ export const optionPages: OptionPages = {
 		{
 			moduleId: 'activity',
 			optionId: 'logChannel',
-			execute: async (client, config) => {
+			getPageData: async (client, config) => {
 				const { guildId, isEnabled } = config;
 
 				var actConf = await client.db.repos.activityConfig.findOneBy({
@@ -78,7 +79,7 @@ export const optionPages: OptionPages = {
 		{
 			moduleId: 'activity',
 			optionId: 'dailyActiveRole',
-			execute: async (client, config) => {
+			getPageData: async (client, config) => {
 				const { guildId } = config;
 
 				var actConf = await client.db.repos.activityConfig.findOneBy({
@@ -100,7 +101,7 @@ export const optionPages: OptionPages = {
 		{
 			moduleId: 'activity',
 			optionId: 'weeklyActiveRole',
-			execute: async (client, config) => {
+			getPageData: async (client, config) => {
 				const { guildId } = config;
 
 				var actConf = await client.db.repos.activityConfig.findOneBy({
@@ -121,7 +122,8 @@ export const optionPages: OptionPages = {
 		},
 		{
 			moduleId: 'persist',
-			async execute(client, config) {
+			optionId: 'overview',
+			async getPageData(client, config) {
 				const { isEnabled } = config;
 
 				var description = [
