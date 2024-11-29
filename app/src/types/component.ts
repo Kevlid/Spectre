@@ -46,11 +46,6 @@ export interface Button {
 }
 
 export interface CustomOptions {
-	customId: string;
-	optionOne?: string;
-	optionTwo?: string;
-	optionThree?: string;
-	optionFour?: string;
-	userId?: string;
-	ownerId?: string;
+	customId?: string;
+	[key: string]: string;
 }

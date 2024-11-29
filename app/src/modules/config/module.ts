@@ -10,7 +10,8 @@ import { ConfigSlash } from './commands/config';
 // Select Menus
 import { ConfigChannelSelectMenu } from './selectmenus/configChannel';
 import { ConfigRoleSelectMenu } from './selectmenus/configRole';
-import { ConfigSelectMenu } from './selectmenus/configModule';
+import { ConfigModuleSelectMenu } from './selectmenus/configModule';
+import { ConfigOptionSelectMenu } from './selectmenus/configOption';
 
 // Buttons
 import { ConfigToggleButton } from './buttons/configToggle';
@@ -24,7 +25,8 @@ export const ConfigModule: Module = {
 	selectMenus: [
 		ConfigChannelSelectMenu,
 		ConfigRoleSelectMenu,
-		ConfigSelectMenu,
+		ConfigModuleSelectMenu,
+		ConfigOptionSelectMenu,
 	],
 	buttons: [ConfigToggleButton, ModuleInfoButton, ConfigCancelButton],
 	default: true,

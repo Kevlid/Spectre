@@ -11,8 +11,8 @@ import { getPage } from '../utils/modulePages';
 /**
  * @type {SelectMenu}
  */
-export const ConfigModuleSelectMenu: SelectMenu = {
-	customId: 'config-module',
+export const ConfigOptionSelectMenu: SelectMenu = {
+	customId: 'config-option',
 	execute: async (
 		interaction: StringSelectMenuInteraction,
 		options: CustomOptions,
@@ -20,9 +20,12 @@ export const ConfigModuleSelectMenu: SelectMenu = {
 	) => {
 		var page = await getPage(client, {
 			guildId: interaction.guildId,
-			moduleId: interaction.values[0],
+			moduleId: options.moduleId,
+			optionId: interaction.values[1],
 			pageOwner: interaction.user,
 		});
+
+		console.log('kkk');
 
 		interaction.update({
 			embeds: [...page.embeds],

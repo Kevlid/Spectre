@@ -3,7 +3,7 @@ import { KiwiClient } from '@/client';
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '@/types/command';
 
-import { getPage } from '../utils/getPage';
+import { getPage } from '../utils/modulePages';
 
 /**
  * @type {SlashCommand}
@@ -31,9 +31,10 @@ export const ConfigSlash: SlashCommand = {
 
 		var page = await getPage(client, {
 			guildId: interaction.guildId,
-			pageId: 'overview',
+			moduleId: 'activity',
 			pageOwner: interaction.user,
 		});
+
 		interaction.reply({
 			embeds: [...page.embeds],
 			components: [...page.rows],

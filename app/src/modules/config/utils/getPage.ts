@@ -10,7 +10,7 @@ import {
 import { KiwiClient } from '@/client';
 import { Emojis } from '@/emojis';
 
-import { ConfigSelectMenu } from '../selectmenus/configModule';
+import { ConfigModuleSelectMenu } from '../selectmenus/configModule';
 import { ConfigChannelSelectMenu as ChannelSM } from '../selectmenus/configChannel';
 import { ConfigRoleSelectMenu as RoleSM } from '../selectmenus/configRole';
 
@@ -216,10 +216,10 @@ export const getPage = async (
 		})
 	);
 
-	var { options } = ConfigSelectMenu.config as StringSelectMenuBuilder;
+	var { options } = ConfigModuleSelectMenu.config as StringSelectMenuBuilder;
 	var moduleSelectMenu = client.Pages.generateSelectMenu({
 		customId: client.createCustomId({
-			customId: ConfigSelectMenu.customId,
+			customId: ConfigModuleSelectMenu.customId,
 			ownerId: pageOwner.id,
 		}),
 		placeholder: 'Select a module',

@@ -82,7 +82,7 @@ export class KiwiClient extends Client {
 		return str.charAt(0).toUpperCase() + str.slice(1);
 	}
 
-	public createCustomId(options: {
+	public createCustomIdV1(options: {
 		customId: string;
 		valueOne?: string;
 		valueTwo?: string;
@@ -98,6 +98,15 @@ export class KiwiClient extends Client {
 		var userId = options.userId || '';
 		var ownerId = options.ownerId || '';
 		return `+${options.customId}+?${optionOne}?&${optionTwo}&$${optionThree}$£${optionFour}£%${userId}%=${ownerId}=`;
+	}
+
+	createCustomId(options): string {
+		var customId = '';
+		for (const key in options) {
+			if (customId.includes('&')) continue;
+			customId += `&${key}=${options[key]}`;
+		}
+		return customId;
 	}
 
 	public createMessageUrl(

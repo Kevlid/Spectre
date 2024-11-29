@@ -1,6 +1,6 @@
 import { Collection, MessageComponentInteraction } from 'discord.js';
 import { KiwiClient } from '@/client';
-import { SelectMenu, Button } from '@/types/component';
+import { SelectMenu, Button, CustomOptions } from '@/types/component';
 import { EventList } from '@/types/event';
 
 export class ComponentManager {
@@ -30,19 +30,19 @@ export class ComponentManager {
 	}
 
 	async onInteraction(interaction: MessageComponentInteraction) {
-		if (interaction.isAnySelectMenu()) {
-			var customId = interaction.customId.split('+')[1];
-			var optionOne = interaction.customId.split('?')[1];
-			var optionTwo = interaction.customId.split('&')[1];
-			var optionThree = interaction.customId.split('$')[1];
-			var optionFour = interaction.customId.split('£')[1];
-			var userId = interaction.customId.split('%')[1];
-			var ownerId = interaction.customId.split('=')[1];
+		if (!interaction.isMessageComponent()) return;
 
-			let selectMenu = this.SelectMenus.get(customId);
+		const config: CustomOptions = {};
+		for (const x of interaction.customId.split('&')) {
+			const [key, value] = x.split('=');
+			config[key] = value;
+		}
+
+		if (interaction.isAnySelectMenu()) {
+			let selectMenu = this.SelectMenus.get(config.customId);
 			if (!selectMenu) return;
 
-			if (ownerId != interaction.user.id && ownerId != null) {
+			if (config.ownerId && config.ownerId != interaction.user.id) {
 				interaction.reply({
 					content: "This isn't yours",
 					ephemeral: true,
@@ -70,19 +70,7 @@ export class ComponentManager {
 			}
 
 			try {
-				await selectMenu.execute(
-					interaction,
-					{
-						customId,
-						optionOne,
-						optionTwo,
-						optionThree,
-						optionFour,
-						userId,
-						ownerId,
-					},
-					this.client
-				);
+				await selectMenu.execute(interaction, config, this.client);
 			} catch (error) {
 				console.error(error);
 				await interaction.reply({
@@ -91,18 +79,10 @@ export class ComponentManager {
 				});
 			}
 		} else if (interaction.isButton()) {
-			var customId = interaction.customId.split('+')[1];
-			var optionOne = interaction.customId.split('?')[1];
-			var optionTwo = interaction.customId.split('&')[1];
-			var optionThree = interaction.customId.split('$')[1];
-			var optionFour = interaction.customId.split('£')[1];
-			var userId = interaction.customId.split('%')[1];
-			var ownerId = interaction.customId.split('=')[1];
-
-			let button = this.Buttons.get(customId);
+			let button = this.Buttons.get(config.customId);
 			if (!button) return;
 
-			if (ownerId != interaction.user.id && ownerId) {
+			if (config.ownerId && config.ownerId != interaction.user.id) {
 				interaction.reply({
 					content: "This isn't yours",
 					ephemeral: true,
@@ -130,19 +110,7 @@ export class ComponentManager {
 			}
 
 			try {
-				await button.execute(
-					interaction,
-					{
-						customId,
-						optionOne,
-						optionTwo,
-						optionThree,
-						optionFour,
-						userId,
-						ownerId,
-					},
-					this.client
-				);
+				await button.execute(interaction, config, this.client);
 			} catch (error) {
 				console.error(error);
 				await interaction.reply({

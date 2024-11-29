@@ -4,7 +4,7 @@ import { Guild, User } from 'discord.js';
 export interface Config {
 	guildId: string;
 	moduleId: string;
-	pageId?: string;
+	optionId?: string;
 	pageOwner?: User;
 	guild?: Guild;
 	guildOwner?: User;
@@ -18,7 +18,7 @@ interface OptionPages {
 
 interface Page {
 	moduleId: string;
-	pageId?: string;
+	optionId?: string;
 	execute: (client: KiwiClient, config: Config) => Promise<PageData>;
 }
 
@@ -55,7 +55,7 @@ export const optionPages: OptionPages = {
 		},
 		{
 			moduleId: 'activity',
-			pageId: 'logChannel',
+			optionId: 'logChannel',
 			execute: async (client, config) => {
 				const { guildId, isEnabled } = config;
 
@@ -77,7 +77,7 @@ export const optionPages: OptionPages = {
 		},
 		{
 			moduleId: 'activity',
-			pageId: 'dailyActiveRole',
+			optionId: 'dailyActiveRole',
 			execute: async (client, config) => {
 				const { guildId } = config;
 
@@ -99,7 +99,7 @@ export const optionPages: OptionPages = {
 		},
 		{
 			moduleId: 'activity',
-			pageId: 'weeklyActiveRole',
+			optionId: 'weeklyActiveRole',
 			execute: async (client, config) => {
 				const { guildId } = config;
 
@@ -114,6 +114,19 @@ export const optionPages: OptionPages = {
 							? `<@&${actConf.weeklyActiveRole}>`
 							: 'None'
 					}`,
+				];
+
+				return { description };
+			},
+		},
+		{
+			moduleId: 'persist',
+			async execute(client, config) {
+				const { isEnabled } = config;
+
+				var description = [
+					`### Persist Module`,
+					`**Enabled:** ${isEnabled ? 'True' : 'False'}`,
 				];
 
 				return { description };
