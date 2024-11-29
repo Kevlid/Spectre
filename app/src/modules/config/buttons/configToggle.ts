@@ -25,14 +25,13 @@ export const ConfigToggleButton: Button = {
 		} else {
 			module = new GuildModuleEntity();
 			module.guildId = interaction.guild.id;
-			module.moduleId = options.optionOne;
+			module.moduleId = options.moduleId;
 			await client.db.repos.guildModules.save(module);
 		}
 
 		var page = await getPage(client, {
 			guildId: interaction.guildId,
 			moduleId: options.moduleId,
-			optionId: 'overview',
 			pageOwner: interaction.user,
 		});
 		interaction.update({

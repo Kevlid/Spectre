@@ -36,8 +36,6 @@ export const ConfigSlash: SlashCommand = {
 			pageOwner: interaction.user,
 		});
 
-		console.log(page.rows);
-
 		interaction.reply({
 			embeds: [...page.embeds],
 			components: [...page.rows],
