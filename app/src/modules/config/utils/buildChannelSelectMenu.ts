@@ -29,7 +29,7 @@ export const buildChannelSelectMenu = (
 
 	SelectMenu.setPlaceholder('Select a channel');
 
-	SelectMenu.setMinValues(1);
+	SelectMenu.setMinValues(0);
 	if (config.maxValues) {
 		SelectMenu.setMaxValues(config.maxValues);
 	} else {
