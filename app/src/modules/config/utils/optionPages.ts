@@ -25,6 +25,7 @@ interface Page {
 interface PageData {
 	description?: string[] | string;
 	componenets?: AnyComponentBuilder;
+	rows?: AnyComponentBuilder[];
 }
 
 import { createOverviewButtons } from './createOverviewButtons';
@@ -55,7 +56,7 @@ export const optionPages: OptionPages = {
 
 				var overviewButtons = createOverviewButtons(client, config);
 
-				return { description, componenets: [...overviewButtons] };
+				return { description, rows: [overviewButtons] };
 			},
 		},
 		{
@@ -137,7 +138,7 @@ export const optionPages: OptionPages = {
 
 				var overviewButtons = createOverviewButtons(client, config);
 
-				return { description, componenets: [...overviewButtons] };
+				return { description, rows: [overviewButtons] };
 			},
 		},
 	],

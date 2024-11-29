@@ -104,10 +104,18 @@ export async function getPage(client: KiwiClient, config: Config) {
 		}
 	}
 
+	var rows = new Array();
+	if (pageData.rows && pageData.rows.length > 0) {
+		for (var row of pageData.rows) {
+			rows.push(new ActionRowBuilder().addComponents(row));
+		}
+	}
+
 	return {
 		embeds: [em],
 		rows: [
-			new ActionRowBuilder().addComponents(pageData.componenets),
+			...rows,
+			//new ActionRowBuilder().addComponents(pageData.componenets),
 			new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
 				configModuleSM
 			),

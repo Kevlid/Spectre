@@ -30,7 +30,7 @@ export const ConfigOptionSelectMenu: SelectMenu = {
 
 		interaction.update({
 			embeds: [...page.embeds],
-			//components: [...page.rows],
+			components: [...page.rows],
 		});
 	},
 };

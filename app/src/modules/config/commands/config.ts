@@ -40,7 +40,7 @@ export const ConfigSlash: SlashCommand = {
 
 		interaction.reply({
 			embeds: [...page.embeds],
-			components: page.rows,
+			components: [...page.rows],
 		});
 	},
 };
