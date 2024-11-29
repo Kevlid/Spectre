@@ -18,15 +18,12 @@ export const ConfigOptionSelectMenu: SelectMenu = {
 		options: CustomOptions,
 		client: KiwiClient
 	) => {
-		console.log(interaction.values[0], options.moduleId);
 		var page = await getPage(client, {
 			guildId: interaction.guildId,
 			moduleId: options.moduleId,
 			optionId: interaction.values[0],
 			pageOwner: interaction.user,
 		});
-
-		console.log('kkk');
 
 		interaction.update({
 			embeds: [...page.embeds],
