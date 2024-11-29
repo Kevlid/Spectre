@@ -181,7 +181,7 @@ export const configOptions: ConfigOptions = {
 				var weeklyActiveRoleSM = buildRoleSelectMenu(client, {
 					moduleId: 'activity',
 					optionId: 'dailyActiveRole',
-					defaultRoles: [actConf?.dailyActiveRole],
+					defaultRoles: [actConf?.weeklyActiveRole],
 				});
 
 				return { description, rows: [[weeklyActiveRoleSM]] };
