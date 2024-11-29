@@ -42,7 +42,7 @@ export const buildChannelSelectMenu = (
 		SelectMenu.setChannelTypes([ChannelType.GuildText]);
 	}
 
-	if (config.defaultChannels) {
+	if (config.defaultChannels && config.defaultChannels[0]) {
 		SelectMenu.setDefaultChannels(config.defaultChannels);
 	}
 
