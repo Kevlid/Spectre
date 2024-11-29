@@ -6,6 +6,7 @@ import {
 import { KiwiClient } from '@/client';
 import { CustomOptions, SelectMenu } from '@/types/component';
 
+import { configOptions } from '../utils/configOptions';
 import { getPage } from '../utils/getPage';
 
 /**
@@ -18,41 +19,13 @@ export const ConfigChannelSelectMenu: SelectMenu = {
 		options: CustomOptions,
 		client: KiwiClient
 	) => {
-		switch (options.optionOne) {
-			case 'activity': {
-				var actConf = await client.db.repos.activityConfig.findOne({
-					where: { guildId: interaction.guild.id },
-				});
-
-				if (options.optionTwo == 'logChannel') {
-					if (interaction.values[0]) {
-						actConf.logChannel = interaction.values[0];
-					} else {
-						actConf.logChannel = null;
-					}
-				}
-
-				await client.db.repos.activityConfig.save(actConf);
-				break;
-			}
-
-			case 'list': {
-				var listConf = await client.db.repos.listConfig.findOne({
-					where: { guildId: interaction.guild.id },
-				});
-
-				if (options.optionTwo == 'logChannel') {
-					if (interaction.values[0]) {
-						listConf.logChannel = interaction.values[0];
-					} else {
-						listConf.logChannel = null;
-					}
-				}
-
-				await client.db.repos.listConfig.save(listConf);
-				break;
-			}
-		}
+		await configOptions.pages
+			.find(
+				(page) =>
+					page.moduleId === options.moduleId &&
+					page.optionId === options.optionId
+			)
+			.updateOption(client, interaction.guildId, interaction.values[0]);
 
 		var page = await getPage(client, {
 			guildId: interaction.guildId,
@@ -60,6 +33,7 @@ export const ConfigChannelSelectMenu: SelectMenu = {
 			optionId: options.optionId,
 			pageOwner: interaction.user,
 		});
+
 		interaction.update({
 			embeds: [...page.embeds],
 			components: [...page.rows],

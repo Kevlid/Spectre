@@ -11,7 +11,7 @@ export interface Config {
 	isEnabled?: boolean;
 }
 
-interface OptionPages {
+interface ConfigOptions {
 	setupConfig?: (client: KiwiClient, options: Config) => Promise<Config>;
 	pages: Array<Page>;
 }
@@ -20,6 +20,11 @@ interface Page {
 	moduleId: string;
 	optionId?: string;
 	getPageData: (client: KiwiClient, config: Config) => Promise<PageData>;
+	updateOption?: (
+		client: KiwiClient,
+		guildId: string,
+		value: string
+	) => Promise<void>;
 }
 
 interface PageData {
@@ -29,8 +34,9 @@ interface PageData {
 }
 
 import { createOverviewButtons } from './createOverviewButtons';
+import { buildChannelSelectMenu } from './buildChannelSelectMenu';
 
-export const optionPages: OptionPages = {
+export const configOptions: ConfigOptions = {
 	setupConfig: async (client, config) => {
 		config.guild = await client.guilds.fetch(config.guildId);
 		config.guildOwner = await client.users.fetch(config.guild.ownerId);
@@ -80,7 +86,23 @@ export const optionPages: OptionPages = {
 					}`,
 				];
 
-				return { description };
+				var channelSelectMenu = buildChannelSelectMenu(client, {
+					moduleId: 'activity',
+					optionId: 'logChannel',
+					defaultChannels: [actConf?.logChannel],
+				});
+
+				return { description, rows: [channelSelectMenu] };
+			},
+			updateOption: async (client, guildId, value) => {
+				var actConf = await client.db.repos.activityConfig.findOneBy({
+					guildId: guildId,
+				});
+
+				if (actConf) {
+					actConf.logChannel = value;
+					await client.db.repos.activityConfig.save(actConf);
+				}
 			},
 		},
 		{

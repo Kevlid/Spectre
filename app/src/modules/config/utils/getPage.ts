@@ -11,16 +11,16 @@ import {
 	UserSelectMenuBuilder,
 } from 'discord.js';
 
-import { optionPages, Config } from './optionPages';
+import { configOptions, Config } from './configOptions';
 
 import { ConfigModuleSelectMenu as ConfigModuleSM } from '../selectmenus/configModule';
 import { ConfigOptionSelectMenu as ConfigOptionSM } from '../selectmenus/configOption';
 import { ButtonBuilder } from '@discordjs/builders';
 
 export async function getPage(client: KiwiClient, config: Config) {
-	config = await optionPages.setupConfig(client, config);
+	config = await configOptions.setupConfig(client, config);
 
-	var pageData = await optionPages.pages
+	var pageData = await configOptions.pages
 		.find(
 			(page) =>
 				page.moduleId === config.moduleId &&
@@ -44,7 +44,7 @@ export async function getPage(client: KiwiClient, config: Config) {
 		})
 		.setDescription(description);
 
-	var allModules = optionPages.pages
+	var allModules = configOptions.pages
 		.map((page) => page.moduleId)
 		.filter((moduleId, index, self) => self.indexOf(moduleId) === index);
 
@@ -71,7 +71,7 @@ export async function getPage(client: KiwiClient, config: Config) {
 		}
 	}
 
-	var allOptions = optionPages.pages.filter(
+	var allOptions = configOptions.pages.filter(
 		(page) => page.moduleId === config.moduleId && page.optionId
 	);
 

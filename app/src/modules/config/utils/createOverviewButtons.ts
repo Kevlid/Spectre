@@ -1,7 +1,7 @@
 import { KiwiClient } from '@/client';
 import { ButtonBuilder, ButtonStyle, User } from 'discord.js';
 
-import { Config } from './optionPages';
+import { Config } from './configOptions';
 
 import { ConfigToggleButton } from '../buttons/configToggle';
 import { ModuleInfoButton } from '../buttons/moduleInfo';
