@@ -102,6 +102,7 @@ export async function getPage(client: KiwiClient, config: Config) {
 	return {
 		embeds: [em],
 		rows: [
+			...pageData.rows,
 			new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
 				configModuleSM
 			),
