@@ -1,5 +1,14 @@
 import { KiwiClient } from '@/client';
-import { ActionRowBuilder, AnyComponentBuilder, Guild, User } from 'discord.js';
+import {
+	AnyComponentBuilder,
+	ButtonBuilder,
+	ChannelSelectMenuBuilder,
+	Guild,
+	RoleSelectMenuBuilder,
+	StringSelectMenuBuilder,
+	User,
+	UserSelectMenuBuilder,
+} from 'discord.js';
 
 export interface Config {
 	guildId: string;
@@ -30,11 +39,18 @@ interface Page {
 interface PageData {
 	description?: string[] | string;
 	componenets?: AnyComponentBuilder;
-	rows?: AnyComponentBuilder[];
+	rows?: Array<
+		| RoleSelectMenuBuilder[]
+		| UserSelectMenuBuilder[]
+		| StringSelectMenuBuilder[]
+		| ChannelSelectMenuBuilder[]
+		| ButtonBuilder[]
+	>;
 }
 
 import { createOverviewButtons } from './createOverviewButtons';
 import { buildChannelSelectMenu } from './buildChannelSelectMenu';
+import { buildRoleSelectMenu } from './buildRoleSelectMenu';
 
 export const configOptions: ConfigOptions = {
 	setupConfig: async (client, config) => {
@@ -92,7 +108,7 @@ export const configOptions: ConfigOptions = {
 					defaultChannels: [actConf?.logChannel],
 				});
 
-				return { description, rows: [channelSelectMenu] };
+				return { description, rows: [[channelSelectMenu]] };
 			},
 			updateOption: async (client, guildId, value) => {
 				var actConf = await client.db.repos.activityConfig.findOneBy({
@@ -124,7 +140,23 @@ export const configOptions: ConfigOptions = {
 					}`,
 				];
 
-				return { description };
+				var dailyActiveRoleSM = buildRoleSelectMenu(client, {
+					moduleId: 'activity',
+					optionId: 'dailyActiveRole',
+					defaultRoles: [actConf?.dailyActiveRole],
+				});
+
+				return { description, rows: [[dailyActiveRoleSM]] };
+			},
+			updateOption: async (client, guildId, value) => {
+				var actConf = await client.db.repos.activityConfig.findOneBy({
+					guildId: guildId,
+				});
+
+				if (actConf) {
+					actConf.dailyActiveRole = value;
+					await client.db.repos.activityConfig.save(actConf);
+				}
 			},
 		},
 		{
@@ -146,7 +178,23 @@ export const configOptions: ConfigOptions = {
 					}`,
 				];
 
-				return { description };
+				var weeklyActiveRoleSM = buildRoleSelectMenu(client, {
+					moduleId: 'activity',
+					optionId: 'dailyActiveRole',
+					defaultRoles: [actConf?.dailyActiveRole],
+				});
+
+				return { description, rows: [[weeklyActiveRoleSM]] };
+			},
+			updateOption: async (client, guildId, value) => {
+				var actConf = await client.db.repos.activityConfig.findOneBy({
+					guildId: guildId,
+				});
+
+				if (actConf) {
+					actConf.dailyActiveRole = value;
+					await client.db.repos.activityConfig.save(actConf);
+				}
 			},
 		},
 		{
