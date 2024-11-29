@@ -47,7 +47,6 @@ export async function getPage(client: KiwiClient, config: Config) {
 	var allModules = optionPages.pages
 		.map((page) => page.moduleId)
 		.filter((moduleId, index, self) => self.indexOf(moduleId) === index);
-	console.log(allModules);
 
 	var configModuleSM = new StringSelectMenuBuilder()
 		.setCustomId(
