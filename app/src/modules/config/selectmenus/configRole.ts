@@ -2,6 +2,7 @@ import { RoleSelectMenuBuilder, RoleSelectMenuInteraction } from 'discord.js';
 import { KiwiClient } from '@/client';
 import { CustomOptions, SelectMenu } from '@/types/component';
 
+import { configOptions } from '../utils/configOptions';
 import { getPage } from '../utils/getPage';
 
 /**
@@ -14,37 +15,17 @@ export const ConfigRoleSelectMenu: SelectMenu = {
 		options: CustomOptions,
 		client: KiwiClient
 	) => {
-		switch (options.optionOne) {
-			case 'activity': {
-				if (options.optionTwo == 'dailyActiveRole') {
-					var actConf =
-						await client.db.repos.activityConfig.findOneBy({
-							guildId: interaction.guildId,
-						});
-					if (interaction.values[0]) {
-						actConf.dailyActiveRole = interaction.values[0];
-					} else {
-						actConf.dailyActiveRole = null;
-					}
-					await client.db.repos.activityConfig.save(actConf);
-				}
-
-				if (options.optionTwo == 'weeklyActiveRole') {
-					var actConf =
-						await client.db.repos.activityConfig.findOneBy({
-							guildId: interaction.guildId,
-						});
-					if (interaction.values[0]) {
-						actConf.weeklyActiveRole = interaction.values[0];
-					} else {
-						actConf.weeklyActiveRole = null;
-					}
-					await client.db.repos.activityConfig.save(actConf);
-				}
-
-				break;
-			}
-		}
+		await configOptions.pages
+			.find(
+				(page) =>
+					page.moduleId === options.moduleId &&
+					page.optionId === options.optionId
+			)
+			.updateOption(
+				client,
+				interaction.guildId,
+				interaction.values[0] || null
+			);
 
 		var page = await getPage(client, {
 			guildId: interaction.guildId,
@@ -52,6 +33,7 @@ export const ConfigRoleSelectMenu: SelectMenu = {
 			optionId: options.optionId,
 			pageOwner: interaction.user,
 		});
+
 		interaction.update({
 			embeds: [...page.embeds],
 			components: [...page.rows],

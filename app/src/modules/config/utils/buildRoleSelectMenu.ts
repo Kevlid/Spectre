@@ -1,20 +1,19 @@
 import { KiwiClient } from '@/client';
-import { ChannelSelectMenuBuilder, ChannelType } from 'discord.js';
+import { ChannelType, RoleSelectMenuBuilder } from 'discord.js';
 import { ConfigChannelSelectMenu } from '../selectmenus/configChannel';
 
 interface SelectMenuConfig {
 	moduleId: string;
 	optionId: string;
 	maxValues?: number;
-	channelTypes?: ChannelType[];
-	defaultChannels?: string[];
+	defaultRoles?: string[];
 }
 
-export const buildChannelSelectMenu = (
+export const buildRoleSelectMenu = (
 	client: KiwiClient,
 	config: SelectMenuConfig
-): ChannelSelectMenuBuilder => {
-	var SelectMenu = new ChannelSelectMenuBuilder();
+): RoleSelectMenuBuilder => {
+	var SelectMenu = new RoleSelectMenuBuilder();
 
 	SelectMenu.setCustomId(
 		client.createCustomId({
@@ -24,7 +23,7 @@ export const buildChannelSelectMenu = (
 		})
 	);
 
-	SelectMenu.setPlaceholder('Select a channel');
+	SelectMenu.setPlaceholder('Select a role');
 
 	SelectMenu.setMinValues(0);
 	if (config.maxValues) {
@@ -33,14 +32,8 @@ export const buildChannelSelectMenu = (
 		SelectMenu.setMaxValues(1);
 	}
 
-	if (config.channelTypes) {
-		SelectMenu.setChannelTypes(config.channelTypes);
-	} else {
-		SelectMenu.setChannelTypes([ChannelType.GuildText]);
-	}
-
-	if (config.defaultChannels && config.defaultChannels[0]) {
-		SelectMenu.setDefaultChannels(config.defaultChannels);
+	if (config.defaultRoles && config.defaultRoles[0]) {
+		SelectMenu.setDefaultRoles(config.defaultRoles);
 	}
 
 	return SelectMenu;
