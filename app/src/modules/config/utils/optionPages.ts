@@ -27,6 +27,8 @@ interface PageData {
 	rows?: any[];
 }
 
+import { createOverviewButtons } from './createOverviewButtons';
+
 export const optionPages: OptionPages = {
 	setupConfig: async (client, config) => {
 		config.guild = await client.guilds.fetch(config.guildId);
@@ -51,14 +53,16 @@ export const optionPages: OptionPages = {
 					`**Enabled:** ${isEnabled ? 'True' : 'False'}`,
 				];
 
-				return { description };
+				var { components } = createOverviewButtons(client, config);
+
+				return { description, rows: [components] };
 			},
 		},
 		{
 			moduleId: 'activity',
 			optionId: 'logChannel',
 			getPageData: async (client, config) => {
-				const { guildId, isEnabled } = config;
+				const { guildId } = config;
 
 				var actConf = await client.db.repos.activityConfig.findOneBy({
 					guildId: guildId,
@@ -131,7 +135,9 @@ export const optionPages: OptionPages = {
 					`**Enabled:** ${isEnabled ? 'True' : 'False'}`,
 				];
 
-				return { description };
+				var { components } = createOverviewButtons(client, config);
+
+				return { description, rows: [components] };
 			},
 		},
 	],
