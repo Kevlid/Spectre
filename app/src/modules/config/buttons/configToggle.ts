@@ -11,9 +11,6 @@ import { getPage } from '../utils/getPage';
  */
 export const ConfigToggleButton: Button = {
 	customId: 'config-toggle',
-	config: new ButtonBuilder()
-		.setLabel('Toggle')
-		.setStyle(ButtonStyle.Primary),
 	execute: async (
 		interaction: ButtonInteraction,
 		options: CustomOptions,
@@ -35,7 +32,7 @@ export const ConfigToggleButton: Button = {
 		var page = await getPage(client, {
 			guildId: interaction.guildId,
 			moduleId: options.moduleId,
-			optionId: options.optionId,
+			optionId: 'overview',
 			pageOwner: interaction.user,
 		});
 		interaction.update({

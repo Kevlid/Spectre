@@ -1,5 +1,5 @@
 import { KiwiClient } from '@/client';
-import { ButtonBuilder, User } from 'discord.js';
+import { ButtonBuilder, ButtonStyle, User } from 'discord.js';
 
 import { Config } from './optionPages';
 
@@ -11,10 +11,6 @@ export const createOverviewButtons = (
 	client: KiwiClient,
 	config: Config
 ): ButtonBuilder[] => {
-	var moduleToggleButton = ConfigToggleButton.config as ButtonBuilder;
-	var moduleInfoButton = ModuleInfoButton.config as ButtonBuilder;
-	var configCancelButton = ConfigCancelButton.config as ButtonBuilder;
-
 	return [
 		new ButtonBuilder()
 			.setCustomId(
@@ -25,7 +21,7 @@ export const createOverviewButtons = (
 				})
 			)
 			.setLabel('Toggle Module')
-			.setStyle(moduleToggleButton.data.style),
+			.setStyle(ButtonStyle.Primary),
 		new ButtonBuilder()
 			.setCustomId(
 				client.createCustomId({
@@ -35,7 +31,7 @@ export const createOverviewButtons = (
 				})
 			)
 			.setLabel('Information')
-			.setStyle(moduleInfoButton.data.style),
+			.setStyle(ButtonStyle.Success),
 		new ButtonBuilder()
 			.setCustomId(
 				client.createCustomId({
@@ -44,6 +40,6 @@ export const createOverviewButtons = (
 				})
 			)
 			.setLabel('Cancel')
-			.setStyle(configCancelButton.data.style),
+			.setStyle(ButtonStyle.Danger),
 	];
 };

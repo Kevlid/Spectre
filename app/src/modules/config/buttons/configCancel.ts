@@ -7,7 +7,6 @@ import { Button, CustomOptions } from '@/types/component';
  */
 export const ConfigCancelButton: Button = {
 	customId: 'config-cancel',
-	config: new ButtonBuilder().setLabel('Cancel').setStyle(ButtonStyle.Danger),
 	execute: async (
 		interaction: ButtonInteraction,
 		options: CustomOptions,

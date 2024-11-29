@@ -7,9 +7,6 @@ import { Button, CustomOptions } from '@/types/component';
  */
 export const ModuleInfoButton: Button = {
 	customId: 'config-module-info',
-	config: new ButtonBuilder()
-		.setLabel('Information')
-		.setStyle(ButtonStyle.Success),
 	execute: async (
 		interaction: ButtonInteraction,
 		options: CustomOptions,

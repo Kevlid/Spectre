@@ -40,6 +40,8 @@ export const optionPages: OptionPages = {
 				config.moduleId
 			);
 
+		if (!config.optionId) config.optionId = 'overview';
+
 		return config;
 	},
 	pages: [
