@@ -25,7 +25,11 @@ export const ConfigChannelSelectMenu: SelectMenu = {
 					page.moduleId === options.moduleId &&
 					page.optionId === options.optionId
 			)
-			.updateOption(client, interaction.guildId, interaction.values[0]);
+			.updateOption(
+				client,
+				interaction.guildId,
+				interaction.values[0] || null
+			);
 
 		var page = await getPage(client, {
 			guildId: interaction.guildId,
