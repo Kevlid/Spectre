@@ -18,7 +18,7 @@ export const ConfigModuleSelectMenu: SelectMenu = {
 		options: CustomOptions,
 		client: KiwiClient
 	) => {
-		console.log(1011);
+		console.log(options);
 		var page = await getPage(client, {
 			guildId: interaction.guildId,
 			moduleId: interaction.values[0],

@@ -15,6 +15,7 @@ import { PageManager } from './pageManager';
 import { CommandManager } from './managers/commandManager';
 import { ScheduleManager } from './managers/scheduleManager';
 import { ModuleManager } from './managers/moduleManager';
+import { CustomOptions } from './types/component';
 
 export class KiwiClient extends Client {
 	public Settings: {
@@ -100,13 +101,13 @@ export class KiwiClient extends Client {
 		return `+${options.customId}+?${optionOne}?&${optionTwo}&$${optionThree}$£${optionFour}£%${userId}%=${ownerId}=`;
 	}
 
-	createCustomId(options): string {
-		var customId = '';
-		for (const key in options) {
+	createCustomId(options: CustomOptions): string {
+		var customId = new Array<string>();
+		for (var [key, value] of Object.entries(options)) {
 			if (customId.includes('&')) continue;
-			customId += `&${key}=${options[key]}`;
+			customId.push(`${key}=${value}`);
 		}
-		return customId;
+		return customId.join('&');
 	}
 
 	public createMessageUrl(
