@@ -115,8 +115,6 @@ export const configOptions: ConfigOptions = {
 					guildId: guildId,
 				});
 
-				console.log(actConf);
-
 				if (actConf) {
 					actConf.logChannel = value;
 					await client.db.repos.activityConfig.save(actConf);
