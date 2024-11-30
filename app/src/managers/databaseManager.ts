@@ -12,6 +12,7 @@ import { ActivityVoicestateEntity } from '@/entities/ActivityVoicestate';
 import { GuildModuleEntity } from '@/entities/GuildModule';
 import { ListConfigEntity } from '@/entities/ListConfig';
 import { PersistConfigEntity } from '@/entities/PersistConfig';
+import { PersistConfigRequiredRoleEntity } from '@/entities/PersistConfigRequiredRole';
 import { PersistConfigRoleEntity } from '@/entities/PersistConfigRole';
 import { PersistNicknameEntity } from '@/entities/PersistNickname';
 import { PersistUserRoleEntity } from '@/entities/PresistUserRole';
@@ -29,6 +30,7 @@ export class DatabaseManager {
 		guildModules: Repository<GuildModuleEntity>;
 		listConfig: Repository<ListConfigEntity>;
 		persistConfig: Repository<PersistConfigEntity>;
+		persistConfigRequiredRole: Repository<PersistConfigRequiredRoleEntity>;
 		persistConfigRole: Repository<PersistConfigRoleEntity>;
 		persistNickname: Repository<PersistNicknameEntity>;
 		persistUserRole: Repository<PersistUserRoleEntity>;
@@ -67,6 +69,9 @@ export class DatabaseManager {
 			listConfig: await this.dataSource.getRepository(ListConfigEntity),
 			persistConfig: await this.dataSource.getRepository(
 				PersistConfigEntity
+			),
+			persistConfigRequiredRole: await this.dataSource.getRepository(
+				PersistConfigRequiredRoleEntity
 			),
 			persistConfigRole: await this.dataSource.getRepository(
 				PersistConfigRoleEntity

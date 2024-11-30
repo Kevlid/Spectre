@@ -21,16 +21,45 @@ export class CreatePersistTables1732194477315 implements MigrationInterface {
 						default: null,
 					},
 					{
-						name: 'required_role',
-						type: 'bigint',
-						isNullable: true,
-						unsigned: true,
-						default: null,
-					},
-					{
 						name: 'nicknames',
 						type: 'boolean',
 						default: false,
+					},
+				],
+			}),
+			true
+		);
+
+		await queryRunner.createTable(
+			new Table({
+				name: 'persist_config_required_roles',
+				columns: [
+					{
+						name: 'id',
+						type: 'bigint',
+						isPrimary: true,
+						isGenerated: true,
+						generationStrategy: 'increment',
+					},
+					{
+						name: 'guild_id',
+						type: 'bigint',
+						isNullable: false,
+						unsigned: true,
+					},
+					{
+						name: 'role_id',
+						type: 'bigint',
+						isNullable: false,
+						unsigned: true,
+					},
+				],
+				foreignKeys: [
+					{
+						columnNames: ['guild_id'],
+						referencedTableName: 'persist_config',
+						referencedColumnNames: ['guild_id'],
+						onDelete: 'CASCADE',
 					},
 				],
 			}),

@@ -320,12 +320,79 @@ export const configOptions: ConfigOptions = {
 		},
 		{
 			moduleId: 'persist',
+			optionId: 'requiredRoles',
+			async getPageData(client, config) {
+				const { guildId } = config;
+
+				var perConf = await client.db.repos.persistConfig.findOne({
+					where: {
+						guildId: guildId,
+					},
+					relations: ['requiredRoles'],
+				});
+
+				var roleIds: Array<string> =
+					perConf?.requiredRoles?.map((role) => role.roleId) || [];
+
+				var roles = perConf?.requiredRoles
+					?.map((r) => `<@&${r.roleId}>`)
+					.join(', ');
+
+				var description = [
+					`### Persist Module`,
+					`**Required Roles:** ${roles ? `${roles}` : 'None'}`,
+				];
+
+				var requiredRolesSM = buildRoleSelectMenu(client, {
+					moduleId: 'persist',
+					optionId: 'requiredRoles',
+					maxValues: 10,
+					defaultRoles: [...roleIds],
+				});
+
+				return { description, rows: [[requiredRolesSM]] };
+			},
+			updateOption: async (client, guildId, values: string[]) => {
+				var perConf = await client.db.repos.persistConfig.findOne({
+					where: {
+						guildId,
+					},
+					relations: ['persistRoles'],
+				});
+
+				var oldRoles = perConf.requiredRoles?.filter(
+					(role) => !values.includes(role.roleId)
+				);
+
+				for (let oldRole of oldRoles) {
+					client.db.repos.persistConfigRequiredRole.delete(oldRole);
+				}
+
+				for (let value of values) {
+					if (
+						!perConf.requiredRoles?.some(
+							(role) => role.roleId === value
+						)
+					) {
+						let role = new PersistConfigRoleEntity();
+						role.roleId = value;
+						role.persistConfig = perConf;
+						client.db.repos.persistConfigRequiredRole.save(role);
+					}
+				}
+			},
+		},
+		{
+			moduleId: 'persist',
 			optionId: 'persistRoles',
 			async getPageData(client, config) {
 				const { guildId } = config;
 
-				var perConf = await client.db.repos.persistConfig.findOneBy({
-					guildId: guildId,
+				var perConf = await client.db.repos.persistConfig.findOne({
+					where: {
+						guildId: guildId,
+					},
+					relations: ['persistRoles'],
 				});
 
 				var roleIds: Array<string> =
@@ -350,28 +417,33 @@ export const configOptions: ConfigOptions = {
 				return { description, rows: [[persistRolesSM]] };
 			},
 			updateOption: async (client, guildId, values: string[]) => {
-				var perConf = await client.db.repos.persistConfig.findOneBy({
-					guildId: guildId,
+				var perConf = await client.db.repos.persistConfig.findOne({
+					where: {
+						guildId,
+					},
+					relations: ['persistRoles'],
 				});
 
-				perConf.persistRoles = perConf.persistRoles.filter((role) =>
-					values.includes(role.roleId)
+				var oldRoles = perConf.persistRoles?.filter(
+					(role) => !values.includes(role.roleId)
 				);
 
-				values.forEach((value) => {
+				for (let oldRole of oldRoles) {
+					client.db.repos.persistConfigRole.delete(oldRole);
+				}
+
+				for (let value of values) {
 					if (
-						!perConf.persistRoles.some(
+						!perConf.persistRoles?.some(
 							(role) => role.roleId === value
 						)
 					) {
 						let role = new PersistConfigRoleEntity();
 						role.roleId = value;
-						role.persistConfig;
-						perConf.persistRoles.push(role);
+						role.persistConfig = perConf;
+						client.db.repos.persistConfigRole.save(role);
 					}
-				});
-
-				await client.db.repos.persistConfig.save(perConf);
+				}
 			},
 		},
 	],
