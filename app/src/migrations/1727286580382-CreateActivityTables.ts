@@ -64,6 +64,26 @@ export class CreateActivityTables1727286580382 implements MigrationInterface {
 						unsigned: true,
 					},
 					{
+						name: 'saved_total_seconds',
+						type: 'boolean',
+						default: false,
+					},
+					{
+						name: 'saved_daily_seconds',
+						type: 'boolean',
+						default: false,
+					},
+					{
+						name: 'saved_weekly_seconds',
+						type: 'boolean',
+						default: false,
+					},
+					{
+						name: 'saved_monthly_seconds',
+						type: 'boolean',
+						default: false,
+					},
+					{
 						name: 'joined_at',
 						type: 'timestamp',
 						isNullable: false,
