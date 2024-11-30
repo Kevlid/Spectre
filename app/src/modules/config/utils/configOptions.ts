@@ -312,8 +312,6 @@ export const configOptions: ConfigOptions = {
 					guildId: guildId,
 				});
 
-				console.log(value);
-
 				if (perConf) {
 					perConf.logChannel = value;
 					await client.db.repos.persistConfig.save(perConf);
