@@ -44,16 +44,22 @@ export class CreateActivityTables1727286580382 implements MigrationInterface {
 				name: 'activity_voicestates',
 				columns: [
 					{
+						name: '_id',
+						type: 'int',
+						isPrimary: true,
+						isGenerated: true,
+						generationStrategy: 'increment',
+						unsigned: true,
+					},
+					{
 						name: 'guild_id',
 						type: 'bigint',
-						isPrimary: true,
 						isNullable: false,
 						unsigned: true,
 					},
 					{
 						name: 'user_id',
 						type: 'bigint',
-						isPrimary: true,
 						isNullable: false,
 						unsigned: true,
 					},
