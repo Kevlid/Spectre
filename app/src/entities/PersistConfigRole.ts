@@ -13,14 +13,14 @@ export class PersistConfigRoleEntity {
 	id: number;
 
 	@Column({ name: 'guild_id' })
-	guildId: number;
+	guildId: string;
 
 	@Column({ name: 'role_id' })
-	roleId: number;
+	roleId: string;
 
 	@ManyToOne(
 		() => PersistConfigEntity,
-		(persistConfig) => persistConfig.roles
+		(persistConfig) => persistConfig.persistRoles
 	)
 	@JoinColumn({ name: 'guild_id' })
 	persistConfig: PersistConfigEntity;

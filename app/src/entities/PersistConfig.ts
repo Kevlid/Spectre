@@ -16,5 +16,5 @@ export class PersistConfigEntity {
 	nicknames: boolean;
 
 	@OneToMany(() => PersistConfigRoleEntity, (role) => role.persistConfig)
-	roles: PersistConfigRoleEntity[];
+	persistRoles: PersistConfigRoleEntity[];
 }

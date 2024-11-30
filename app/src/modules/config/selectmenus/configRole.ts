@@ -24,7 +24,7 @@ export const ConfigRoleSelectMenu: SelectMenu = {
 			.updateOption(
 				client,
 				interaction.guildId,
-				interaction.values[0] || null
+				interaction.values || [null]
 			);
 
 		var page = await getPage(client, {

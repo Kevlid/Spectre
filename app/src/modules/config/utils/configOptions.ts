@@ -32,7 +32,7 @@ interface Page {
 	updateOption?: (
 		client: KiwiClient,
 		guildId: string,
-		value: string
+		value: string[]
 	) => Promise<void>;
 }
 
@@ -51,6 +51,7 @@ interface PageData {
 import { createOverviewButtons } from './createOverviewButtons';
 import { buildChannelSelectMenu } from './buildChannelSelectMenu';
 import { buildRoleSelectMenu } from './buildRoleSelectMenu';
+import { PersistConfigRoleEntity } from '@/entities/PersistConfigRole';
 
 export const configOptions: ConfigOptions = {
 	setupConfig: async (client, config) => {
@@ -110,7 +111,9 @@ export const configOptions: ConfigOptions = {
 
 				return { description, rows: [[channelSelectMenu]] };
 			},
-			updateOption: async (client, guildId, value) => {
+			updateOption: async (client, guildId, values) => {
+				var value = values[0];
+
 				var actConf = await client.db.repos.activityConfig.findOneBy({
 					guildId: guildId,
 				});
@@ -148,7 +151,9 @@ export const configOptions: ConfigOptions = {
 
 				return { description, rows: [[dailyActiveRoleSM]] };
 			},
-			updateOption: async (client, guildId, value) => {
+			updateOption: async (client, guildId, values) => {
+				var value = values[0];
+
 				var actConf = await client.db.repos.activityConfig.findOneBy({
 					guildId: guildId,
 				});
@@ -186,7 +191,9 @@ export const configOptions: ConfigOptions = {
 
 				return { description, rows: [[weeklyActiveRoleSM]] };
 			},
-			updateOption: async (client, guildId, value) => {
+			updateOption: async (client, guildId, values) => {
+				var value = values[0];
+
 				var actConf = await client.db.repos.activityConfig.findOneBy({
 					guildId: guildId,
 				});
@@ -240,7 +247,9 @@ export const configOptions: ConfigOptions = {
 
 				return { description, rows: [[channelSelectMenu]] };
 			},
-			updateOption: async (client, guildId, value) => {
+			updateOption: async (client, guildId, values) => {
+				var value = values[0];
+
 				var listConf = await client.db.repos.listConfig.findOneBy({
 					guildId: guildId,
 				});
@@ -294,17 +303,75 @@ export const configOptions: ConfigOptions = {
 
 				return { description, rows: [[channelSelectMenu]] };
 			},
-			updateOption: async (client, guildId, value) => {
-				var persistConf = await client.db.repos.persistConfig.findOneBy(
-					{
-						guildId: guildId,
-					}
+			updateOption: async (client, guildId, values) => {
+				var value = values[0];
+
+				var perConf = await client.db.repos.persistConfig.findOneBy({
+					guildId: guildId,
+				});
+
+				console.log(value);
+
+				if (perConf) {
+					perConf.logChannel = value;
+					await client.db.repos.persistConfig.save(perConf);
+				}
+			},
+		},
+		{
+			moduleId: 'persist',
+			optionId: 'persistRoles',
+			async getPageData(client, config) {
+				const { guildId } = config;
+
+				var perConf = await client.db.repos.persistConfig.findOneBy({
+					guildId: guildId,
+				});
+
+				var roleIds: Array<string> =
+					perConf?.persistRoles?.map((role) => role.roleId) || [];
+
+				var roles = perConf?.persistRoles
+					?.map((r) => `<@&${r.roleId}>`)
+					.join(', ');
+
+				var description = [
+					`### Persist Module`,
+					`**Persist Roles:** ${roles ? `${roles}` : 'None'}`,
+				];
+
+				var persistRolesSM = buildRoleSelectMenu(client, {
+					moduleId: 'persist',
+					optionId: 'persistRoles',
+					maxValues: 10,
+					defaultRoles: [...roleIds],
+				});
+
+				return { description, rows: [[persistRolesSM]] };
+			},
+			updateOption: async (client, guildId, values: string[]) => {
+				var perConf = await client.db.repos.persistConfig.findOneBy({
+					guildId: guildId,
+				});
+
+				perConf.persistRoles = perConf.persistRoles.filter((role) =>
+					values.includes(role.roleId)
 				);
 
-				if (persistConf) {
-					persistConf.logChannel = value;
-					await client.db.repos.activityConfig.save(persistConf);
-				}
+				values.forEach((value) => {
+					if (
+						!perConf.persistRoles.some(
+							(role) => role.roleId === value
+						)
+					) {
+						let role = new PersistConfigRoleEntity();
+						role.roleId = value;
+						role.persistConfig;
+						perConf.persistRoles.push(role);
+					}
+				});
+
+				await client.db.repos.persistConfig.save(perConf);
 			},
 		},
 	],

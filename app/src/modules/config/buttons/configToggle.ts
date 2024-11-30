@@ -18,7 +18,7 @@ export const ConfigToggleButton: Button = {
 	) => {
 		var module = await client.db.repos.guildModules.findOneBy({
 			guildId: interaction.guild.id,
-			moduleId: options.optionOne,
+			moduleId: options.moduleId,
 		});
 		if (module) {
 			await client.db.repos.guildModules.delete(module);

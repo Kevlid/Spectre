@@ -29,6 +29,7 @@ export class DatabaseManager {
 		guildModules: Repository<GuildModuleEntity>;
 		listConfig: Repository<ListConfigEntity>;
 		persistConfig: Repository<PersistConfigEntity>;
+		persistConfigRole: Repository<PersistConfigRoleEntity>;
 		persistNickname: Repository<PersistNicknameEntity>;
 		persistUserRole: Repository<PersistUserRoleEntity>;
 	};
@@ -66,6 +67,9 @@ export class DatabaseManager {
 			listConfig: await this.dataSource.getRepository(ListConfigEntity),
 			persistConfig: await this.dataSource.getRepository(
 				PersistConfigEntity
+			),
+			persistConfigRole: await this.dataSource.getRepository(
+				PersistConfigRoleEntity
 			),
 			persistNickname: await this.dataSource.getRepository(
 				PersistNicknameEntity
