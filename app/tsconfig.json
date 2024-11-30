@@ -10,22 +10,15 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "resolveJsonModule": true,
-        //"sourceMap": true,
-        //"noImplicitThis": true,
-        //"strictPropertyInitialization": false,
-        //"useUnknownInCatchVariables": false,
-        //"forceConsistentCasingInFileNames": true,
-
         "baseUrl": "./src",
         "outDir": "./dist",
         "paths": {
             "@/*": ["./*"]
         },
-
         "plugins": [
             {
-            "name": "typescript-plugin-paths",
-            "transform": "typescript-transform-paths"
+                "name": "typescript-plugin-paths",
+                "transform": "typescript-transform-paths"
             }
         ]
     }

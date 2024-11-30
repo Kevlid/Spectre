@@ -8,4 +8,4 @@ services:
     build:
       context: .
       dockerfile: ./app/.docker/Dockerfile
-    command: [ "npm", "run", "dev" ]
+    command: [ "npm", "run", "start" ]
