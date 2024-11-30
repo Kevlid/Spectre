@@ -29,6 +29,7 @@ export const buildButton = (
 
 	if (config.label) button.setLabel(config.label);
 	if (config.style) button.setStyle(config.style);
+	else button.setStyle(ButtonStyle.Primary);
 	if (config.disabled) button.setDisabled(true);
 
 	return button;

@@ -2,6 +2,7 @@ import { KiwiClient } from '@/client';
 import {
 	AnyComponentBuilder,
 	ButtonBuilder,
+	ButtonStyle,
 	ChannelSelectMenuBuilder,
 	Guild,
 	RoleSelectMenuBuilder,
@@ -354,14 +355,19 @@ export const configOptions: ConfigOptions = {
 
 				var description = [
 					`### Persist Module`,
-					`*Nicknames:** ${perConf?.nicknames ? `True` : 'False'}`,
+					`**Nicknames:** ${perConf?.nicknames ? `True` : 'False'}`,
 				];
 
 				var nicknamesButton = buildButton(client, {
 					moduleId: config.moduleId,
 					optionId: config.optionId,
 					value: perConf?.nicknames ? 'true' : 'false',
-					label: 'Toggle Nicknames',
+					label: `${
+						perConf?.nicknames ? 'Disable' : 'Enable'
+					} Nicknames`,
+					style: perConf?.nicknames
+						? ButtonStyle.Danger
+						: ButtonStyle.Success,
 				});
 
 				return { description, rows: [[nicknamesButton]] };
@@ -374,8 +380,8 @@ export const configOptions: ConfigOptions = {
 				});
 
 				if (perConf) {
-					console.log(perConf);
-					perConf.nicknames = client.getBoolean(value);
+					console.log(perConf, value);
+					perConf.nicknames = perConf?.nicknames ? false : true;
 					await client.db.repos.persistConfig.save(perConf);
 				}
 			},

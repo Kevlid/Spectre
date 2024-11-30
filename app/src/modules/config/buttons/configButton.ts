@@ -27,6 +27,7 @@ export const ConfigButton: Button = {
 		var page = await getPage(client, {
 			guildId: interaction.guildId,
 			moduleId: options.moduleId,
+			optionId: options.optionId,
 			pageOwner: interaction.user,
 		});
 		interaction.update({

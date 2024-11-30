@@ -14,6 +14,7 @@ import { ConfigModuleSelectMenu } from './selectmenus/configModule';
 import { ConfigOptionSelectMenu } from './selectmenus/configOption';
 
 // Buttons
+import { ConfigButton } from './buttons/configButton';
 import { ConfigDisableButton } from './buttons/configDisable';
 import { ConfigEnableButton } from './buttons/configEnable';
 
@@ -27,6 +28,6 @@ export const ConfigModule: Module = {
 		ConfigModuleSelectMenu,
 		ConfigOptionSelectMenu,
 	],
-	buttons: [ConfigDisableButton, ConfigEnableButton],
+	buttons: [ConfigButton, ConfigDisableButton, ConfigEnableButton],
 	default: true,
 };
