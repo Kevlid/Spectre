@@ -7,8 +7,9 @@ import {
 	SlashCommand,
 	UserCommand,
 	CommandOptions,
+	ConfigOptionTypes,
 } from '@/types/command';
-import { Collection, Message } from 'discord.js';
+import { Collection, Message, User } from 'discord.js';
 import { EventList } from '@/types/event';
 
 export class CommandManager {
@@ -39,6 +40,9 @@ export class CommandManager {
 
 	loadPrefix(command: PrefixCommand) {
 		this.PrefixCommands.set(command.config.name, command);
+		for (let alias of command.config.alises || []) {
+			this.PrefixCommands.set(alias, command);
+		}
 	}
 
 	loadSlash(command: SlashCommand) {
@@ -86,32 +90,6 @@ export class CommandManager {
 			if (!command) return;
 
 			try {
-				/*if (interaction.guildId) {
-                    if (command.premissionLevel) {
-                        let hasHigherPermission = false;
-
-                        let permissionLevel = await this.client.DatabaseManager.getPermissionLevel(interaction.guildId, interaction.userId);
-                        if (permissionLevel >= command.premissionLevel) {
-                            hasHigherPermission = true;
-                        }
-
-                        interaction.member.roles.cache.forEach(async (role) => {
-                            let permissionLevel = await this.client.DatabaseManager.getPermissionLevel(interaction.guildId, role.id);
-                            if (permissionLevel >= command.premissionLevel) {
-                                hasHigherPermission = true;
-                            }
-                        });
-
-                        if (interaction.guild.ownerId === interaction.user.id) {
-                            hasHigherPermission = true;
-                        }
-
-                        if (!hasHigherPermission) {
-                            await interaction.reply({ content: `You need permission level ${command.premissionLevel} to use this command!`, ephemeral: true });
-                            return;
-                        }
-                    }
-                }*/
 				if (
 					interaction.guildId &&
 					command.module &&
@@ -158,32 +136,6 @@ export class CommandManager {
 			if (!command) return;
 
 			try {
-				/*if (interaction.guild) {
-                    if (command.premissionLevel) {
-                        let hasHigherPermission = false;
-
-                        let userPermissionLevel = await this.client.DatabaseManager.getPermissionLevel(interaction.guildId, interaction.userId);
-                        if (userPermissionLevel >= command.premissionLevel) {
-                            hasHigherPermission = true;
-                        }
-
-                        interaction.member.roles.cache.forEach(async (role) => {
-                            let permissionLevel = await this.client.DatabaseManager.getPermissionLevel(interaction.guildId, role.id);
-                            if (permissionLevel >= command.premissionLevel) {
-                                hasHigherPermission = true;
-                            }
-                        });
-
-                        if (interaction.guild.ownerId === interaction.user.id) {
-                            hasHigherPermission = true;
-                        }
-
-                        if (!hasHigherPermission) {
-                            await interaction.reply({ content: `You need permission level ${command.premissionLevel} to use this command!`, ephemeral: true });
-                            return;
-                        }
-                    }
-                }*/
 				if (
 					interaction.guildId &&
 					command.module &&
@@ -217,46 +169,70 @@ export class CommandManager {
 		if (message.author.bot) return;
 		if (!message.content.startsWith(env.PREFIX)) return;
 
-		let args = message.content.slice(env.PREFIX.length).trim().split(/ +/);
-		let commandName = args.shift()?.toLowerCase();
+		let textArgs = message.content
+			.slice(env.PREFIX.length)
+			.trim()
+			.split(/ +/);
+		let commandName = textArgs.shift()?.toLowerCase();
 		if (!commandName) return;
 
 		let command = this.PrefixCommands.get(commandName);
 		if (!command) return;
 
-		let commandOptions: CommandOptions = {
+		if (command.config.autoDelete) {
+			message.delete();
+		}
+
+		var commandOptions: CommandOptions = {
 			commandName: commandName,
 			auther: message.author.id,
-			args,
 		};
 
+		var count = 0;
+		var args = new Array();
+		for (let option of command.config.options) {
+			if (!textArgs[count]) {
+				message.reply({
+					content: `You must provide a ${option.name}`,
+				});
+				return;
+			}
+			if (option.type === ConfigOptionTypes.TEXT) {
+				args.push(textArgs[count]);
+			} else {
+				var id = await this.client.getId(message, textArgs[count]);
+				if (!id) {
+					message.reply({
+						content: `You must provide a valid ${option.name}`,
+					});
+					return;
+				}
+			}
+
+			var entry;
+			if (option.type === ConfigOptionTypes.USER) {
+				entry = await this.client.users.fetch(id);
+				args.push(entry);
+			} else if (option.type === ConfigOptionTypes.MEMBER) {
+				entry = await message.guild?.members.fetch(id);
+				args.push(entry);
+			} else if (option.type === ConfigOptionTypes.CHANNEL) {
+				entry = await message.guild?.channels.fetch(id);
+				args.push(entry);
+			} else if (option.type === ConfigOptionTypes.ROLE) {
+				entry = await message.guild?.roles.fetch(id);
+				args.push(entry);
+			}
+			if (!entry) {
+				message.reply({
+					content: `You must provide a valid ${option.name}`,
+				});
+				return;
+			}
+			count++;
+		}
+
 		try {
-			/*if (message.guildId) {
-                if (command.premissionLevel) {
-                    let hasHigherPermission = false;
-
-                    let permissionLevel = await this.client.DatabaseManager.getPermissionLevel(message.guildId, message.author.id);
-                    if (permissionLevel >= command.premissionLevel) {
-                        hasHigherPermission = true;
-                    }
-
-                    message.member.roles.cache.forEach(async (role) => {
-                        let permissionLevel = await this.client.DatabaseManager.getPermissionLevel(message.guildId, role.id);
-                        if (permissionLevel >= command.premissionLevel) {
-                            hasHigherPermission = true;
-                        }
-                    });
-
-                    if (message.guild.ownerId === message.author.id) {
-                        hasHigherPermission = true;
-                    }
-
-                    if (!hasHigherPermission) {
-                        await message.reply({ content: `You need permission level ${command.premissionLevel} to use this command!`});
-                        return;
-                    }
-                }
-            }*/
 			if (message.guildId && command.module && !command.module?.default) {
 				let isEnabled =
 					await await this.client.db.repos.guildModules.findOneBy({
@@ -267,8 +243,25 @@ export class CommandManager {
 					message.reply({ content: `This command is disabled!` });
 					return;
 				}
+				var passedChecks = command.checks(
+					this.client,
+					message,
+					commandOptions,
+					...args
+				);
+				if (!passedChecks) {
+					message.reply({
+						content: `You do not have permission to use this command!`,
+					});
+					return;
+				}
 			}
-			await command.execute(message, commandOptions, this.client);
+			await command.execute(
+				this.client,
+				message,
+				commandOptions,
+				...args
+			);
 		} catch (error) {
 			console.error(error);
 			await message.reply('There is an issue!');
