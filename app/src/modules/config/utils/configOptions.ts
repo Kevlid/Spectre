@@ -55,6 +55,7 @@ import { buildRoleSelectMenu } from './buildRoleSelectMenu';
 import { PersistConfigRoleEntity } from '@/entities/PersistConfigRole';
 import { PersistConfigRequiredRoleEntity } from '@/entities/PersistConfigRequiredRole';
 import { toggleModule } from './toggleModule';
+import { buildButton } from './buildButton';
 
 export const configOptions: ConfigOptions = {
 	setupConfig: async (client, config) => {
@@ -356,7 +357,14 @@ export const configOptions: ConfigOptions = {
 					`*Nicknames:** ${perConf?.nicknames ? `True` : 'False'}`,
 				];
 
-				return { description, rows: [[]] };
+				var nicknamesButton = buildButton(client, {
+					moduleId: config.moduleId,
+					optionId: config.optionId,
+					value: perConf?.nicknames ? 'true' : 'false',
+					label: 'Toggle Nicknames',
+				});
+
+				return { description, rows: [[nicknamesButton]] };
 			},
 			updateOption: async (client, guildId, values) => {
 				var value = values[0];
@@ -366,6 +374,7 @@ export const configOptions: ConfigOptions = {
 				});
 
 				if (perConf) {
+					console.log(perConf);
 					perConf.nicknames = client.getBoolean(value);
 					await client.db.repos.persistConfig.save(perConf);
 				}
