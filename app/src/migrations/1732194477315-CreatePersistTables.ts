@@ -175,8 +175,9 @@ export class CreatePersistTables1732194477315 implements MigrationInterface {
 	}
 
 	public async down(queryRunner: QueryRunner): Promise<void> {
-		await queryRunner.dropTable('persist_config');
+		await queryRunner.dropTable('persist_config_required_roles');
 		await queryRunner.dropTable('persist_config_roles');
+		await queryRunner.dropTable('persist_config');
 		await queryRunner.dropTable('persist_nicknames');
 		await queryRunner.dropTable('persist_user_roles');
 	}
