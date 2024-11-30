@@ -243,7 +243,8 @@ export class CommandManager {
 					message.reply({ content: `This command is disabled!` });
 					return;
 				}
-				var passedChecks = command.checks(
+
+				var passedChecks = await command.checks(
 					this.client,
 					message,
 					commandOptions,
