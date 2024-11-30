@@ -3,9 +3,9 @@ import { ButtonBuilder, ButtonStyle, User } from 'discord.js';
 
 import { Config } from './configOptions';
 
-import { ConfigToggleButton } from '../buttons/configToggle';
+import { ConfigEnableButton } from '../buttons/configEnable';
 import { ModuleInfoButton } from '../buttons/moduleInfo';
-import { ConfigCancelButton } from '../buttons/configCancel';
+import { ConfigDisableButton } from '../buttons/configDisable';
 
 export const createOverviewButtons = (
 	client: KiwiClient,
@@ -15,31 +15,24 @@ export const createOverviewButtons = (
 		new ButtonBuilder()
 			.setCustomId(
 				client.createCustomId({
-					customId: ConfigToggleButton.customId,
+					customId: ConfigEnableButton.customId,
 					moduleId: config.moduleId,
+					optionId: config.optionId,
 					ownerId: config.pageOwner.id,
 				})
 			)
-			.setLabel('Toggle Module')
+			.setLabel('Enable Module')
 			.setStyle(ButtonStyle.Primary),
 		new ButtonBuilder()
 			.setCustomId(
 				client.createCustomId({
-					customId: ModuleInfoButton.customId,
+					customId: ConfigDisableButton.customId,
 					moduleId: config.moduleId,
+					optionId: config.optionId,
 					ownerId: config.pageOwner.id,
 				})
 			)
-			.setLabel('Information')
-			.setStyle(ButtonStyle.Success),
-		new ButtonBuilder()
-			.setCustomId(
-				client.createCustomId({
-					customId: ConfigCancelButton.customId,
-					ownerId: config.pageOwner.id,
-				})
-			)
-			.setLabel('Cancel')
+			.setLabel('Disable Module')
 			.setStyle(ButtonStyle.Danger),
 	];
 };

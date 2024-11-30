@@ -32,7 +32,7 @@ interface Page {
 	updateOption?: (
 		client: KiwiClient,
 		guildId: string,
-		value: string[]
+		values: string[]
 	) => Promise<void>;
 }
 
@@ -54,6 +54,7 @@ import { buildRoleSelectMenu } from './buildRoleSelectMenu';
 
 import { PersistConfigRoleEntity } from '@/entities/PersistConfigRole';
 import { PersistConfigRequiredRoleEntity } from '@/entities/PersistConfigRequiredRole';
+import { toggleModule } from './toggleModule';
 
 export const configOptions: ConfigOptions = {
 	setupConfig: async (client, config) => {
@@ -84,6 +85,15 @@ export const configOptions: ConfigOptions = {
 				var overviewButtons = createOverviewButtons(client, config);
 
 				return { description, rows: [overviewButtons] };
+			},
+			updateOption: async (client, guildId, values) => {
+				var value = values[0];
+				toggleModule(
+					client,
+					guildId,
+					'activity',
+					client.getBoolean(value)
+				);
 			},
 		},
 		{
@@ -221,6 +231,10 @@ export const configOptions: ConfigOptions = {
 
 				return { description, rows: [overviewButtons] };
 			},
+			updateOption: async (client, guildId, values) => {
+				var value = values[0];
+				toggleModule(client, guildId, 'list', client.getBoolean(value));
+			},
 		},
 		{
 			moduleId: 'list',
@@ -277,6 +291,15 @@ export const configOptions: ConfigOptions = {
 
 				return { description, rows: [overviewButtons] };
 			},
+			updateOption: async (client, guildId, values) => {
+				var value = values[0];
+				toggleModule(
+					client,
+					guildId,
+					'persist',
+					client.getBoolean(value)
+				);
+			},
 		},
 		{
 			moduleId: 'persist',
@@ -314,6 +337,36 @@ export const configOptions: ConfigOptions = {
 
 				if (perConf) {
 					perConf.logChannel = value;
+					await client.db.repos.persistConfig.save(perConf);
+				}
+			},
+		},
+		{
+			moduleId: 'persist',
+			optionId: 'nicknames',
+			async getPageData(client, config) {
+				const { guildId } = config;
+
+				var perConf = await client.db.repos.persistConfig.findOneBy({
+					guildId: guildId,
+				});
+
+				var description = [
+					`### Persist Module`,
+					`*Nicknames:** ${perConf?.nicknames ? `True` : 'False'}`,
+				];
+
+				return { description, rows: [[]] };
+			},
+			updateOption: async (client, guildId, values) => {
+				var value = values[0];
+
+				var perConf = await client.db.repos.persistConfig.findOneBy({
+					guildId: guildId,
+				});
+
+				if (perConf) {
+					perConf.nicknames = client.getBoolean(value);
 					await client.db.repos.persistConfig.save(perConf);
 				}
 			},

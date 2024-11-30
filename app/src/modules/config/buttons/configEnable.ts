@@ -2,32 +2,27 @@ import { ButtonBuilder, ButtonStyle, ButtonInteraction } from 'discord.js';
 import { KiwiClient } from '@/client';
 import { Button, CustomOptions } from '@/types/component';
 
-import { GuildModuleEntity } from '@/entities/GuildModule';
-
 import { getPage } from '../utils/getPage';
+import { configOptions } from '../utils/configOptions';
 
 /**
  * @type {Button}
  */
-export const ConfigToggleButton: Button = {
-	customId: 'config-toggle',
+export const ConfigEnableButton: Button = {
+	customId: 'config-enable',
 	execute: async (
 		interaction: ButtonInteraction,
 		options: CustomOptions,
 		client: KiwiClient
 	) => {
-		var module = await client.db.repos.guildModules.findOneBy({
-			guildId: interaction.guild.id,
-			moduleId: options.moduleId,
-		});
-		if (module) {
-			await client.db.repos.guildModules.delete(module);
-		} else {
-			module = new GuildModuleEntity();
-			module.guildId = interaction.guild.id;
-			module.moduleId = options.moduleId;
-			await client.db.repos.guildModules.save(module);
-		}
+		console.log(options);
+		await configOptions.pages
+			.find(
+				(page) =>
+					page.moduleId === options.moduleId &&
+					page.optionId === options.optionId
+			)
+			.updateOption(client, interaction.guildId, ['true']);
 
 		var page = await getPage(client, {
 			guildId: interaction.guildId,

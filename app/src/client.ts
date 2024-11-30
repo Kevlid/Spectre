@@ -83,6 +83,10 @@ export class KiwiClient extends Client {
 		return str.charAt(0).toUpperCase() + str.slice(1);
 	}
 
+	public addSpace(value: string) {
+		return value.replace(/([A-Z])/g, ' $1').trim();
+	}
+
 	public createCustomIdV1(options: {
 		customId: string;
 		valueOne?: string;
@@ -101,7 +105,7 @@ export class KiwiClient extends Client {
 		return `+${options.customId}+?${optionOne}?&${optionTwo}&$${optionThree}$£${optionFour}£%${userId}%=${ownerId}=`;
 	}
 
-	createCustomId(options: CustomOptions): string {
+	public createCustomId(options: CustomOptions): string {
 		var customId = new Array<string>();
 		for (var [key, value] of Object.entries(options)) {
 			if (customId.includes('&')) continue;
@@ -110,8 +114,12 @@ export class KiwiClient extends Client {
 		return customId.join('&');
 	}
 
-	addSpace(value: string) {
-		return value.replace(/([A-Z])/g, ' $1').trim();
+	public getBoolean(value: string) {
+		if (value.toLowerCase() === 'true') {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public createMessageUrl(

@@ -14,9 +14,8 @@ import { ConfigModuleSelectMenu } from './selectmenus/configModule';
 import { ConfigOptionSelectMenu } from './selectmenus/configOption';
 
 // Buttons
-import { ConfigToggleButton } from './buttons/configToggle';
-import { ModuleInfoButton } from './buttons/moduleInfo';
-import { ConfigCancelButton } from './buttons/configCancel';
+import { ConfigDisableButton } from './buttons/configDisable';
+import { ConfigEnableButton } from './buttons/configEnable';
 
 export const ConfigModule: Module = {
 	id: 'config',
@@ -28,6 +27,6 @@ export const ConfigModule: Module = {
 		ConfigModuleSelectMenu,
 		ConfigOptionSelectMenu,
 	],
-	buttons: [ConfigToggleButton, ModuleInfoButton, ConfigCancelButton],
+	buttons: [ConfigDisableButton, ConfigEnableButton],
 	default: true,
 };
