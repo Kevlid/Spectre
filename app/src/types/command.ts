@@ -6,6 +6,10 @@ import {
 	ChatInputCommandInteraction,
 	AutocompleteInteraction,
 	Message,
+	User,
+	GuildMember,
+	Channel,
+	Role,
 } from 'discord.js';
 
 export interface PrefixCommand {
@@ -14,18 +18,38 @@ export interface PrefixCommand {
 	config: {
 		name: string;
 		description?: string;
+		alises?: string[];
+		autoDelete: boolean;
+		options?: {
+			name: string;
+			type: ConfigOptionTypes;
+		}[];
 	};
-	execute: (
+	checks?: (
+		client: KiwiClient,
 		message: Message,
-		commandOptions: CommandOptions,
-		client: KiwiClient
+		commandOptions: CommandOptions
+	) => Promise<boolean>;
+	execute: (
+		client: KiwiClient,
+		message: Message,
+		commandOptions: CommandOptions
 	) => Promise<void>;
+}
+
+export enum ConfigOptionTypes {
+	USER = 1,
+	MEMBER = 2,
+	CHANNEL = 3,
+	ROLE = 4,
+	TEXT = 5,
 }
 
 export interface CommandOptions {
 	commandName: string;
 	auther: string;
-	args: string[];
+	//args: string[];
+	[key: string]: User | GuildMember | Channel | Role | string;
 }
 
 export interface UserCommand {
