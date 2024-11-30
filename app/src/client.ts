@@ -5,6 +5,7 @@ import {
 	Collection,
 	ColorResolvable,
 	ClientPresenceStatus,
+	Message,
 } from 'discord.js';
 
 import { DatabaseManager } from './managers/databaseManager';
@@ -40,6 +41,7 @@ export class KiwiClient extends Client {
 				GatewayIntentBits.GuildModeration,
 				GatewayIntentBits.GuildVoiceStates,
 				GatewayIntentBits.GuildPresences,
+				GatewayIntentBits.MessageContent,
 				//GatewayIntentBits.AutoModerationExecution,
 				//GatewayIntentBits.AutoModerationConfiguration,
 			],
@@ -120,6 +122,25 @@ export class KiwiClient extends Client {
 		} else {
 			return false;
 		}
+	}
+
+	public async getId(message: Message, value: string): Promise<string> {
+		if (value.startsWith('<@') && value.endsWith('>')) {
+			value = value.slice(2, -1);
+			if (value.startsWith('!')) {
+				value = value.slice(1);
+			}
+		} else if (value.startsWith('<#') && value.endsWith('>')) {
+			value = value.slice(2, -1);
+		} else if (value.startsWith('<@&') && value.endsWith('>')) {
+			value = value.slice(3, -1);
+		} else if (value.includes('u') && message.reference) {
+			var messageReference = await message.fetchReference();
+			value = messageReference.author.id;
+		} else if (!/^\d{17,19}$/.test(value)) {
+			value = null;
+		}
+		return value;
 	}
 
 	public createMessageUrl(
