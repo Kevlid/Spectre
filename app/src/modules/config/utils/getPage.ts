@@ -59,7 +59,7 @@ export async function getPage(client: KiwiClient, config: Config) {
 		.addOptions(
 			allModules.map((moduleId) => {
 				return {
-					label: client.capitalize(moduleId),
+					label: client.capitalize(client.addSpace(moduleId)),
 					value: moduleId,
 				};
 			})
@@ -87,7 +87,7 @@ export async function getPage(client: KiwiClient, config: Config) {
 		.addOptions(
 			allOptions.map((page) => {
 				return {
-					label: client.capitalize(page.optionId),
+					label: client.capitalize(client.addSpace(page.optionId)),
 					value: page.optionId,
 				};
 			})

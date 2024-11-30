@@ -110,6 +110,10 @@ export class KiwiClient extends Client {
 		return customId.join('&');
 	}
 
+	addSpace(value: string) {
+		return value.replace(/([A-Z])/g, ' $1').trim();
+	}
+
 	public createMessageUrl(
 		guildId: string,
 		channelId: string,
