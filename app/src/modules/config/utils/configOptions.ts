@@ -367,7 +367,9 @@ export const configOptions: ConfigOptions = {
 				);
 
 				for (let oldRole of oldRoles) {
-					client.db.repos.persistConfigRequiredRole.delete(oldRole);
+					await client.db.repos.persistConfigRequiredRole.delete(
+						oldRole
+					);
 				}
 
 				for (let value of values) {
@@ -379,7 +381,9 @@ export const configOptions: ConfigOptions = {
 						let role = new PersistConfigRequiredRoleEntity();
 						role.roleId = value;
 						role.persistConfig = perConf;
-						client.db.repos.persistConfigRequiredRole.save(role);
+						await client.db.repos.persistConfigRequiredRole.save(
+							role
+						);
 					}
 				}
 			},
@@ -431,7 +435,7 @@ export const configOptions: ConfigOptions = {
 				);
 
 				for (let oldRole of oldRoles) {
-					client.db.repos.persistConfigRole.delete(oldRole);
+					await client.db.repos.persistConfigRole.delete(oldRole);
 				}
 
 				for (let value of values) {
@@ -443,7 +447,7 @@ export const configOptions: ConfigOptions = {
 						let role = new PersistConfigRoleEntity();
 						role.roleId = value;
 						role.persistConfig = perConf;
-						client.db.repos.persistConfigRole.save(role);
+						await client.db.repos.persistConfigRole.save(role);
 					}
 				}
 			},
