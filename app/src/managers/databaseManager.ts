@@ -11,6 +11,8 @@ import { ActivityVoiceEntity } from '@/entities/ActivityVoice';
 import { ActivityVoicestateEntity } from '@/entities/ActivityVoicestate';
 import { GuildModuleEntity } from '@/entities/GuildModule';
 import { ListConfigEntity } from '@/entities/ListConfig';
+import { ModerationConfigEntity } from '@/entities/ModerationConfig';
+import { ModerationConfigRoleEntity } from '@/entities/ModerationConfigRole';
 import { PersistConfigEntity } from '@/entities/PersistConfig';
 import { PersistConfigRequiredRoleEntity } from '@/entities/PersistConfigRequiredRole';
 import { PersistConfigRoleEntity } from '@/entities/PersistConfigRole';
@@ -29,6 +31,8 @@ export class DatabaseManager {
 		activityVoicestates: Repository<ActivityVoicestateEntity>;
 		guildModules: Repository<GuildModuleEntity>;
 		listConfig: Repository<ListConfigEntity>;
+		moderationConfig: Repository<ModerationConfigEntity>;
+		moderationConfigRole: Repository<ModerationConfigRoleEntity>;
 		persistConfig: Repository<PersistConfigEntity>;
 		persistConfigRequiredRole: Repository<PersistConfigRequiredRoleEntity>;
 		persistConfigRole: Repository<PersistConfigRoleEntity>;
@@ -67,6 +71,12 @@ export class DatabaseManager {
 				GuildModuleEntity
 			),
 			listConfig: await this.dataSource.getRepository(ListConfigEntity),
+			moderationConfig: await this.dataSource.getRepository(
+				ModerationConfigEntity
+			),
+			moderationConfigRole: await this.dataSource.getRepository(
+				ModerationConfigRoleEntity
+			),
 			persistConfig: await this.dataSource.getRepository(
 				PersistConfigEntity
 			),
@@ -102,6 +112,15 @@ export class DatabaseManager {
 			let listConf = new ListConfigEntity();
 			listConf.guildId = guildId;
 			await this.repos.listConfig.save(listConf);
+		}
+
+		var moderationConfig = await this.repos.moderationConfig.findOne({
+			where: { guildId },
+		});
+		if (!moderationConfig) {
+			let modConf = new ModerationConfigEntity();
+			modConf.guildId = guildId;
+			await this.repos.moderationConfig.save(modConf);
 		}
 
 		var persistConfig = await this.repos.persistConfig.findOne({
