@@ -4,7 +4,6 @@ import { ButtonBuilder, ButtonStyle, User } from 'discord.js';
 import { Config } from './configOptions';
 
 import { ConfigEnableButton } from '../buttons/configEnable';
-import { ModuleInfoButton } from '../buttons/moduleInfo';
 import { ConfigDisableButton } from '../buttons/configDisable';
 
 export const createOverviewButtons = (
