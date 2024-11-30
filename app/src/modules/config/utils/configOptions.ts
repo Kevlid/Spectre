@@ -198,6 +198,60 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
+			moduleId: 'list',
+			optionId: 'overview',
+			async getPageData(client, config) {
+				const { isEnabled } = config;
+
+				var description = [
+					`### List Module`,
+					`**Enabled:** ${isEnabled ? 'True' : 'False'}`,
+				];
+
+				var overviewButtons = createOverviewButtons(client, config);
+
+				return { description, rows: [overviewButtons] };
+			},
+		},
+		{
+			moduleId: 'list',
+			optionId: 'logChannel',
+			async getPageData(client, config) {
+				const { guildId } = config;
+
+				var actConf = await client.db.repos.activityConfig.findOneBy({
+					guildId: guildId,
+				});
+
+				var description = [
+					`### Activity Module`,
+					`**Log Channel:** ${
+						actConf?.logChannel
+							? `<#${actConf.logChannel}>`
+							: 'None'
+					}`,
+				];
+
+				var channelSelectMenu = buildChannelSelectMenu(client, {
+					moduleId: 'activity',
+					optionId: 'logChannel',
+					defaultChannels: [actConf?.logChannel],
+				});
+
+				return { description, rows: [[channelSelectMenu]] };
+			},
+			updateOption: async (client, guildId, value) => {
+				var listConf = await client.db.repos.listConfig.findOneBy({
+					guildId: guildId,
+				});
+
+				if (listConf) {
+					listConf.logChannel = value;
+					await client.db.repos.activityConfig.save(listConf);
+				}
+			},
+		},
+		{
 			moduleId: 'persist',
 			optionId: 'overview',
 			async getPageData(client, config) {
@@ -211,6 +265,46 @@ export const configOptions: ConfigOptions = {
 				var overviewButtons = createOverviewButtons(client, config);
 
 				return { description, rows: [overviewButtons] };
+			},
+		},
+		{
+			moduleId: 'persist',
+			optionId: 'logChannel',
+			async getPageData(client, config) {
+				const { guildId } = config;
+
+				var actConf = await client.db.repos.activityConfig.findOneBy({
+					guildId: guildId,
+				});
+
+				var description = [
+					`### Activity Module`,
+					`**Log Channel:** ${
+						actConf?.logChannel
+							? `<#${actConf.logChannel}>`
+							: 'None'
+					}`,
+				];
+
+				var channelSelectMenu = buildChannelSelectMenu(client, {
+					moduleId: 'activity',
+					optionId: 'logChannel',
+					defaultChannels: [actConf?.logChannel],
+				});
+
+				return { description, rows: [[channelSelectMenu]] };
+			},
+			updateOption: async (client, guildId, value) => {
+				var persistConf = await client.db.repos.persistConfig.findOneBy(
+					{
+						guildId: guildId,
+					}
+				);
+
+				if (persistConf) {
+					persistConf.logChannel = value;
+					await client.db.repos.activityConfig.save(persistConf);
+				}
 			},
 		},
 	],
