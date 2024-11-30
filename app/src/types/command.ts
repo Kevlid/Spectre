@@ -28,12 +28,14 @@ export interface PrefixCommand {
 	checks?: (
 		client: KiwiClient,
 		message: Message,
-		commandOptions: CommandOptions
+		commandOptions: CommandOptions,
+		...args: any[]
 	) => Promise<boolean>;
 	execute: (
 		client: KiwiClient,
 		message: Message,
-		commandOptions: CommandOptions
+		commandOptions: CommandOptions,
+		...args: any[]
 	) => Promise<void>;
 }
 
