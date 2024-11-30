@@ -115,6 +115,8 @@ export const configOptions: ConfigOptions = {
 					guildId: guildId,
 				});
 
+				console.log(actConf);
+
 				if (actConf) {
 					actConf.logChannel = value;
 					await client.db.repos.activityConfig.save(actConf);
@@ -219,23 +221,23 @@ export const configOptions: ConfigOptions = {
 			async getPageData(client, config) {
 				const { guildId } = config;
 
-				var actConf = await client.db.repos.activityConfig.findOneBy({
+				var listConf = await client.db.repos.listConfig.findOneBy({
 					guildId: guildId,
 				});
 
 				var description = [
-					`### Activity Module`,
+					`### List Module`,
 					`**Log Channel:** ${
-						actConf?.logChannel
-							? `<#${actConf.logChannel}>`
+						listConf?.logChannel
+							? `<#${listConf.logChannel}>`
 							: 'None'
 					}`,
 				];
 
 				var channelSelectMenu = buildChannelSelectMenu(client, {
-					moduleId: 'activity',
+					moduleId: 'list',
 					optionId: 'logChannel',
-					defaultChannels: [actConf?.logChannel],
+					defaultChannels: [listConf?.logChannel],
 				});
 
 				return { description, rows: [[channelSelectMenu]] };
@@ -273,23 +275,23 @@ export const configOptions: ConfigOptions = {
 			async getPageData(client, config) {
 				const { guildId } = config;
 
-				var actConf = await client.db.repos.activityConfig.findOneBy({
+				var perConf = await client.db.repos.persistConfig.findOneBy({
 					guildId: guildId,
 				});
 
 				var description = [
-					`### Activity Module`,
+					`### Persist Module`,
 					`**Log Channel:** ${
-						actConf?.logChannel
-							? `<#${actConf.logChannel}>`
+						perConf?.logChannel
+							? `<#${perConf.logChannel}>`
 							: 'None'
 					}`,
 				];
 
 				var channelSelectMenu = buildChannelSelectMenu(client, {
-					moduleId: 'activity',
+					moduleId: 'persist',
 					optionId: 'logChannel',
-					defaultChannels: [actConf?.logChannel],
+					defaultChannels: [perConf?.logChannel],
 				});
 
 				return { description, rows: [[channelSelectMenu]] };
