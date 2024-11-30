@@ -20,7 +20,7 @@ export class PersistConfigEntity {
 			cascade: true,
 		}
 	)
-	requiredRoles: PersistConfigRoleEntity[];
+	requiredRoles: PersistConfigRequiredRoleEntity[];
 
 	@OneToMany(() => PersistConfigRoleEntity, (role) => role.persistConfig, {
 		cascade: true,
