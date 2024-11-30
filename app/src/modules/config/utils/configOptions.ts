@@ -51,7 +51,9 @@ interface PageData {
 import { createOverviewButtons } from './createOverviewButtons';
 import { buildChannelSelectMenu } from './buildChannelSelectMenu';
 import { buildRoleSelectMenu } from './buildRoleSelectMenu';
+
 import { PersistConfigRoleEntity } from '@/entities/PersistConfigRole';
+import { PersistConfigRequiredRoleEntity } from '@/entities/PersistConfigRequiredRole';
 
 export const configOptions: ConfigOptions = {
 	setupConfig: async (client, config) => {
@@ -357,7 +359,7 @@ export const configOptions: ConfigOptions = {
 					where: {
 						guildId,
 					},
-					relations: ['persistRoles'],
+					relations: ['requiredRoles'],
 				});
 
 				var oldRoles = perConf.requiredRoles?.filter(
@@ -374,7 +376,7 @@ export const configOptions: ConfigOptions = {
 							(role) => role.roleId === value
 						)
 					) {
-						let role = new PersistConfigRoleEntity();
+						let role = new PersistConfigRequiredRoleEntity();
 						role.roleId = value;
 						role.persistConfig = perConf;
 						client.db.repos.persistConfigRequiredRole.save(role);
