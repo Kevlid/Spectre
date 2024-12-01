@@ -1,0 +1,36 @@
+import { PrefixCommand, ConfigOptionTypes } from '@/types/command';
+
+import { checkPermissions } from '../utils/checkPermissions';
+import { GuildMember, GuildTextBasedChannel, TextChannel } from 'discord.js';
+
+/**
+ * @type {PrefixCommand}
+ */
+export const CleanPrefix: PrefixCommand = {
+	config: {
+		name: 'clean',
+		description: 'Deletes x amount of messages from the channel',
+		alises: ['clear', 'prune'],
+		autoDelete: true,
+		options: [
+			{
+				name: 'amount',
+				type: ConfigOptionTypes.NUMBER,
+			},
+		],
+	},
+	async checks(client, message, commandOptions) {
+		return await checkPermissions(
+			client,
+			message.guildId,
+			message.author.id
+		);
+	},
+	async execute(client, message, commandOptions, amount: number) {
+		amount = Math.min(amount, 100);
+		console.log(amount);
+
+		var channel = message.channel as GuildTextBasedChannel;
+		channel.bulkDelete(amount, true);
+	},
+};
