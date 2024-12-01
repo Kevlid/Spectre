@@ -15,7 +15,6 @@ export const ConfigButton: Button = {
 		options: CustomOptions,
 		client: KiwiClient
 	) => {
-		console.log(options);
 		await configOptions.pages
 			.find(
 				(page) =>
