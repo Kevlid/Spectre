@@ -329,6 +329,46 @@ export const configOptions: ConfigOptions = {
 		},
 		{
 			moduleId: 'moderation',
+			optionId: 'logChannel',
+			async getPageData(client, config) {
+				const { guildId } = config;
+
+				var modConf = await client.db.repos.moderationConfig.findOneBy({
+					guildId: guildId,
+				});
+
+				var description = [
+					`### Moderation Module`,
+					`**Log Channel:** ${
+						modConf?.logChannel
+							? `<#${modConf.logChannel}>`
+							: 'None'
+					}`,
+				];
+
+				var channelSelectMenu = buildChannelSelectMenu(client, {
+					moduleId: 'moderation',
+					optionId: 'logChannel',
+					defaultChannels: [modConf?.logChannel],
+				});
+
+				return { description, rows: [[channelSelectMenu]] };
+			},
+			updateOption: async (client, guildId, values) => {
+				var value = values[0];
+
+				var modConf = await client.db.repos.moderationConfig.findOneBy({
+					guildId: guildId,
+				});
+
+				if (modConf) {
+					modConf.logChannel = value;
+					await client.db.repos.moderationConfig.save(modConf);
+				}
+			},
+		},
+		{
+			moduleId: 'moderation',
 			optionId: 'roles',
 			async getPageData(client, config) {
 				const { guildId } = config;
