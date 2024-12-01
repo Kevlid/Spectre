@@ -8,7 +8,7 @@ export const toggleModule = async (
 	moduleId: string,
 	value: boolean
 ) => {
-	if (value) {
+	if (!value) {
 		await client.db.repos.guildModules.delete({
 			guildId: guildId,
 			moduleId: moduleId,
