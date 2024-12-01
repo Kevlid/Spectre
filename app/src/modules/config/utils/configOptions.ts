@@ -49,14 +49,15 @@ interface PageData {
 	>;
 }
 
-import { createOverviewButtons } from './createOverviewButtons';
+import { toggleModule } from './toggleModule';
+
 import { buildChannelSelectMenu } from './buildChannelSelectMenu';
 import { buildRoleSelectMenu } from './buildRoleSelectMenu';
+import { buildButton } from './buildButton';
 
+import { ModerationConfigRoleEntity } from '@/entities/ModerationConfigRole';
 import { PersistConfigRoleEntity } from '@/entities/PersistConfigRole';
 import { PersistConfigRequiredRoleEntity } from '@/entities/PersistConfigRequiredRole';
-import { toggleModule } from './toggleModule';
-import { buildButton } from './buildButton';
 
 export const configOptions: ConfigOptions = {
 	setupConfig: async (client, config) => {
@@ -84,13 +85,19 @@ export const configOptions: ConfigOptions = {
 					`**Enabled:** ${isEnabled ? 'True' : 'False'}`,
 				];
 
-				var overviewButtons = createOverviewButtons(client, config);
+				var toggleModuleButton = buildButton(client, {
+					moduleId: config.moduleId,
+					optionId: config.optionId,
+					value: isEnabled ? 'false' : 'true',
+					label: `${isEnabled ? 'Disable' : 'Enable'} Module`,
+					style: isEnabled ? ButtonStyle.Danger : ButtonStyle.Success,
+				});
 
-				return { description, rows: [overviewButtons] };
+				return { description, rows: [[toggleModuleButton]] };
 			},
 			updateOption: async (client, guildId, values) => {
 				var value = values[0];
-				toggleModule(
+				await toggleModule(
 					client,
 					guildId,
 					'activity',
@@ -229,13 +236,24 @@ export const configOptions: ConfigOptions = {
 					`**Enabled:** ${isEnabled ? 'True' : 'False'}`,
 				];
 
-				var overviewButtons = createOverviewButtons(client, config);
+				var toggleModuleButton = buildButton(client, {
+					moduleId: config.moduleId,
+					optionId: config.optionId,
+					value: isEnabled ? 'false' : 'true',
+					label: `${isEnabled ? 'Disable' : 'Enable'} Module`,
+					style: isEnabled ? ButtonStyle.Danger : ButtonStyle.Success,
+				});
 
-				return { description, rows: [overviewButtons] };
+				return { description, rows: [[toggleModuleButton]] };
 			},
 			updateOption: async (client, guildId, values) => {
 				var value = values[0];
-				toggleModule(client, guildId, 'list', client.getBoolean(value));
+				await toggleModule(
+					client,
+					guildId,
+					'list',
+					client.getBoolean(value)
+				);
 			},
 		},
 		{
@@ -279,6 +297,97 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
+			moduleId: 'moderation',
+			optionId: 'overview',
+			async getPageData(client, config) {
+				const { isEnabled } = config;
+
+				var description = [
+					`### Moderation Module`,
+					`**Enabled:** ${isEnabled ? 'True' : 'False'}`,
+				];
+
+				var toggleModuleButton = buildButton(client, {
+					moduleId: config.moduleId,
+					optionId: config.optionId,
+					value: isEnabled ? 'false' : 'true',
+					label: `${isEnabled ? 'Disable' : 'Enable'} Module`,
+					style: isEnabled ? ButtonStyle.Danger : ButtonStyle.Success,
+				});
+
+				return { description, rows: [[toggleModuleButton]] };
+			},
+			updateOption: async (client, guildId, values) => {
+				var value = values[0];
+				await toggleModule(
+					client,
+					guildId,
+					'moderation',
+					client.getBoolean(value)
+				);
+			},
+		},
+		{
+			moduleId: 'moderation',
+			optionId: 'roles',
+			async getPageData(client, config) {
+				const { guildId } = config;
+
+				var modConf = await client.db.repos.moderationConfig.findOne({
+					where: {
+						guildId: guildId,
+					},
+					relations: ['roles'],
+				});
+
+				var roleIds: Array<string> =
+					modConf?.roles?.map((role) => role.roleId) || [];
+
+				var roles = modConf?.roles
+					?.map((r) => `<@&${r.roleId}>`)
+					.join(', ');
+
+				var description = [
+					`### Moderation Module`,
+					`**Roles:** ${roles ? `${roles}` : 'None'}`,
+				];
+
+				var moderationRolesSM = buildRoleSelectMenu(client, {
+					moduleId: 'moderation',
+					optionId: 'roles',
+					maxValues: 10,
+					defaultRoles: [...roleIds],
+				});
+
+				return { description, rows: [[moderationRolesSM]] };
+			},
+			updateOption: async (client, guildId, values: string[]) => {
+				var modConf = await client.db.repos.moderationConfig.findOne({
+					where: {
+						guildId,
+					},
+					relations: ['roles'],
+				});
+
+				var oldRoles = modConf.roles?.filter(
+					(role) => !values.includes(role.roleId)
+				);
+
+				for (let oldRole of oldRoles) {
+					await client.db.repos.moderationConfig.delete(oldRole);
+				}
+
+				for (let value of values) {
+					if (!modConf.roles?.some((role) => role.roleId === value)) {
+						let role = new ModerationConfigRoleEntity();
+						role.roleId = value;
+						role.moderationConfig = modConf;
+						await client.db.repos.persistConfigRole.save(role);
+					}
+				}
+			},
+		},
+		{
 			moduleId: 'persist',
 			optionId: 'overview',
 			async getPageData(client, config) {
@@ -289,13 +398,19 @@ export const configOptions: ConfigOptions = {
 					`**Enabled:** ${isEnabled ? 'True' : 'False'}`,
 				];
 
-				var overviewButtons = createOverviewButtons(client, config);
+				var toggleModuleButton = buildButton(client, {
+					moduleId: config.moduleId,
+					optionId: config.optionId,
+					value: isEnabled ? 'false' : 'true',
+					label: `${isEnabled ? 'Disable' : 'Enable'} Module`,
+					style: isEnabled ? ButtonStyle.Danger : ButtonStyle.Success,
+				});
 
-				return { description, rows: [overviewButtons] };
+				return { description, rows: [[toggleModuleButton]] };
 			},
 			updateOption: async (client, guildId, values) => {
 				var value = values[0];
-				toggleModule(
+				await toggleModule(
 					client,
 					guildId,
 					'persist',
@@ -380,7 +495,6 @@ export const configOptions: ConfigOptions = {
 				});
 
 				if (perConf) {
-					console.log(perConf, value);
 					perConf.nicknames = perConf?.nicknames ? false : true;
 					await client.db.repos.persistConfig.save(perConf);
 				}
