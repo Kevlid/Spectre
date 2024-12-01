@@ -382,7 +382,7 @@ export const configOptions: ConfigOptions = {
 						let role = new ModerationConfigRoleEntity();
 						role.roleId = value;
 						role.moderationConfig = modConf;
-						await client.db.repos.persistConfigRole.save(role);
+						await client.db.repos.moderationConfigRole.save(role);
 					}
 				}
 			},
