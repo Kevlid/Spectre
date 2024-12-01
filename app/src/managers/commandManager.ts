@@ -9,7 +9,7 @@ import {
 	CommandOptions,
 	ConfigOptionTypes,
 } from '@/types/command';
-import { Collection, Message, User } from 'discord.js';
+import { Collection, Message, TextChannel, User } from 'discord.js';
 import { EventList } from '@/types/event';
 
 export class CommandManager {
@@ -183,6 +183,8 @@ export class CommandManager {
 			message.delete();
 		}
 
+		var channel = message.channel as TextChannel;
+
 		var commandOptions: CommandOptions = {
 			commandName: commandName,
 			auther: message.author.id,
@@ -192,42 +194,51 @@ export class CommandManager {
 		var args = new Array();
 		for (let option of command.config.options) {
 			if (!textArgs[count]) {
-				message.reply({
+				channel.send({
 					content: `You must provide a ${option.name}`,
 				});
 				return;
 			}
 			if (option.type === ConfigOptionTypes.TEXT) {
 				args.push(textArgs[count]);
+			} else if (option.type === ConfigOptionTypes.NUMBER) {
+				var number = parseInt(textArgs[count]);
+				if (isNaN(number)) {
+					channel.send({
+						content: `You must provide a valid number`,
+					});
+					return;
+				}
+				args.push(number);
 			} else {
 				var id = await this.client.getId(message, textArgs[count]);
 				if (!id) {
-					message.reply({
+					channel.send({
 						content: `You must provide a valid ${option.name}`,
 					});
 					return;
 				}
-			}
 
-			var entry;
-			if (option.type === ConfigOptionTypes.USER) {
-				entry = await this.client.users.fetch(id);
-				args.push(entry);
-			} else if (option.type === ConfigOptionTypes.MEMBER) {
-				entry = await message.guild?.members.fetch(id);
-				args.push(entry);
-			} else if (option.type === ConfigOptionTypes.CHANNEL) {
-				entry = await message.guild?.channels.fetch(id);
-				args.push(entry);
-			} else if (option.type === ConfigOptionTypes.ROLE) {
-				entry = await message.guild?.roles.fetch(id);
-				args.push(entry);
-			}
-			if (!entry) {
-				message.reply({
-					content: `You must provide a valid ${option.name}`,
-				});
-				return;
+				var entry;
+				if (option.type === ConfigOptionTypes.USER) {
+					entry = await this.client.users.fetch(id);
+					args.push(entry);
+				} else if (option.type === ConfigOptionTypes.MEMBER) {
+					entry = await message.guild?.members.fetch(id);
+					args.push(entry);
+				} else if (option.type === ConfigOptionTypes.CHANNEL) {
+					entry = await message.guild?.channels.fetch(id);
+					args.push(entry);
+				} else if (option.type === ConfigOptionTypes.ROLE) {
+					entry = await message.guild?.roles.fetch(id);
+					args.push(entry);
+				}
+				if (!entry) {
+					channel.send({
+						content: `You must provide a valid ${option.name}`,
+					});
+					return;
+				}
 			}
 			count++;
 		}
@@ -240,7 +251,7 @@ export class CommandManager {
 						moduleId: command.module.id,
 					});
 				if (!isEnabled) {
-					message.reply({ content: `This command is disabled!` });
+					channel.send({ content: `This command is disabled!` });
 					return;
 				}
 
@@ -251,7 +262,7 @@ export class CommandManager {
 					...args
 				);
 				if (!passedChecks) {
-					message.reply({
+					channel.send({
 						content: `You do not have permission to use this command!`,
 					});
 					return;
@@ -265,7 +276,7 @@ export class CommandManager {
 			);
 		} catch (error) {
 			console.error(error);
-			await message.reply('There is an issue!');
+			await channel.send('There is an issue!');
 		}
 	}
 }

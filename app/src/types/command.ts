@@ -45,6 +45,7 @@ export enum ConfigOptionTypes {
 	CHANNEL = 3,
 	ROLE = 4,
 	TEXT = 5,
+	NUMBER = 6,
 }
 
 export interface CommandOptions {
