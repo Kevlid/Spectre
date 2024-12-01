@@ -1,7 +1,7 @@
 import { PrefixCommand, ConfigOptionTypes } from '@/types/command';
 
 import { checkPermissions } from '../utils/checkPermissions';
-import { GuildMember, GuildTextBasedChannel, TextChannel } from 'discord.js';
+import { TextChannel } from 'discord.js';
 
 /**
  * @type {PrefixCommand}
@@ -28,9 +28,8 @@ export const CleanPrefix: PrefixCommand = {
 	},
 	async execute(client, message, commandOptions, amount: number) {
 		amount = Math.min(amount, 100);
-		console.log(amount);
 
-		var channel = message.channel as GuildTextBasedChannel;
+		var channel = message.channel as TextChannel;
 		channel.bulkDelete(amount, true);
 	},
 };
