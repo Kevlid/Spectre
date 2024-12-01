@@ -50,11 +50,11 @@ export const DeleteManyPrefix: PrefixCommand = {
 
 		while (userMessages.length < amount) {
 			fetchedMessages = await message.channel.messages.fetch({
-				limit: 100,
+				limit: 50,
 				before: lastMessageId,
 			});
 			if (fetchedMessages.size === 0) break;
-			if ((maxSeachAmount -= 100) <= 0) break;
+			if ((maxSeachAmount -= 50) <= 0) break;
 
 			const filteredMessages = fetchedMessages.filter(
 				(msg) => msg.author.id === user.id
