@@ -10,7 +10,7 @@ export const VoiceKickPrefix: PrefixCommand = {
 	config: {
 		name: 'voice-kick',
 		description: 'Kick a user from a voice channel',
-		alises: ['voicekick', 'vc-kick', 'vckick'],
+		aliases: ['voicekick', 'vc-kick', 'vckick'],
 		autoDelete: true,
 		options: [
 			{

@@ -10,7 +10,7 @@ export const CleanPrefix: PrefixCommand = {
 	config: {
 		name: 'clean',
 		description: 'Deletes x amount of messages from the channel',
-		alises: ['clear', 'prune'],
+		aliases: ['clear', 'prune'],
 		autoDelete: true,
 		options: [
 			{

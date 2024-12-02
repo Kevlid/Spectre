@@ -15,7 +15,7 @@ export const DeleteManyPrefix: PrefixCommand = {
 	config: {
 		name: 'delete-many',
 		description: 'Deletes x amount of a users messages from the channel',
-		alises: ['deletemany', 'dm'],
+		aliases: ['deletemany', 'dm'],
 		autoDelete: true,
 		options: [
 			{

@@ -40,7 +40,7 @@ export class CommandManager {
 
 	loadPrefix(command: PrefixCommand) {
 		this.PrefixCommands.set(command.config.name, command);
-		for (let alias of command.config.alises || []) {
+		for (let alias of command.config.aliases || []) {
 			this.PrefixCommands.set(alias, command);
 		}
 	}
