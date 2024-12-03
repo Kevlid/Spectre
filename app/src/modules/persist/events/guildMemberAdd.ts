@@ -28,12 +28,7 @@ export const GuildMemberAdd: Event = {
 		if (member.user.bot) return;
 		var perConf = await getPersistConfig(client, member.guild.id);
 
-		if (
-			perConf.requiredRoles &&
-			!(await hasRequiredRole(client, member.guild.id, member.id))
-		) {
-			return;
-		}
+		if (perConf.requiredRoles.length > 0) return;
 
 		if (perConf.nicknames) {
 			var userNickName = await client.db.repos.persistNickname.findOneBy({
