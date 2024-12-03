@@ -15,7 +15,7 @@ export const GuildMemberUpdate: Event = {
 
 	/**
 	 * @param {KiwiClient} client
-	 * @param {GuildMember} oldVoiceState
+	 * @param {GuildMember} member
 	 */
 	async getGuildId(member: GuildMember) {
 		return member.guild.id;
@@ -23,8 +23,8 @@ export const GuildMemberUpdate: Event = {
 
 	/**
 	 * @param {KiwiClient} client
-	 * @param {GuildMember} oldVoiceState
-	 * @param {GuildMember} newVoiceState
+	 * @param {GuildMember} oldMember
+	 * @param {GuildMember} newMember
 	 */
 	async execute(
 		client: KiwiClient,
