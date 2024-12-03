@@ -292,7 +292,7 @@ export const configOptions: ConfigOptions = {
 
 				if (listConf) {
 					listConf.logChannel = value;
-					await client.db.repos.activityConfig.save(listConf);
+					await client.db.repos.listConfig.save(listConf);
 				}
 			},
 		},
