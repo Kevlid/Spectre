@@ -48,7 +48,7 @@ export class EventManager {
 			var events = this.Events.get(eventKey);
 			if (!events) return;
 			events.forEach(async (event) => {
-				console.log(`Event: ${event.name}`);
+				console.log(`Triggered Event: ${event.name}`);
 				if (event.module?.default) {
 					event.execute(this.client, ...args);
 				} else if (event.global) {
