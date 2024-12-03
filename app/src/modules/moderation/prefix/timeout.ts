@@ -20,6 +20,7 @@ export const TimeoutPrefix: PrefixCommand = {
 			{
 				name: 'time',
 				type: ConfigOptionTypes.NUMBER,
+				maxValue: 39999,
 			},
 		],
 	},
@@ -37,6 +38,7 @@ export const TimeoutPrefix: PrefixCommand = {
 		member: GuildMember,
 		time: number
 	) {
-		member.timeout(time);
+		var minutes = time * 1000 * 60;
+		member.timeout(minutes);
 	},
 };
