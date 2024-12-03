@@ -96,7 +96,7 @@ export const configOptions: ConfigOptions = {
 				return { description, rows: [[toggleModuleButton]] };
 			},
 			updateOption: async (client, guildId, values) => {
-				var value = values[0];
+				var value = values[0] || null;
 				await toggleModule(
 					client,
 					guildId,
@@ -133,7 +133,7 @@ export const configOptions: ConfigOptions = {
 				return { description, rows: [[channelSelectMenu]] };
 			},
 			updateOption: async (client, guildId, values) => {
-				var value = values[0];
+				var value = values[0] || null;
 
 				var actConf = await client.db.repos.activityConfig.findOneBy({
 					guildId: guildId,
@@ -173,7 +173,7 @@ export const configOptions: ConfigOptions = {
 				return { description, rows: [[dailyActiveRoleSM]] };
 			},
 			updateOption: async (client, guildId, values) => {
-				var value = values[0];
+				var value = values[0] || null;
 
 				var actConf = await client.db.repos.activityConfig.findOneBy({
 					guildId: guildId,
@@ -213,7 +213,7 @@ export const configOptions: ConfigOptions = {
 				return { description, rows: [[weeklyActiveRoleSM]] };
 			},
 			updateOption: async (client, guildId, values) => {
-				var value = values[0];
+				var value = values[0] || null;
 
 				var actConf = await client.db.repos.activityConfig.findOneBy({
 					guildId: guildId,
@@ -247,7 +247,7 @@ export const configOptions: ConfigOptions = {
 				return { description, rows: [[toggleModuleButton]] };
 			},
 			updateOption: async (client, guildId, values) => {
-				var value = values[0];
+				var value = values[0] || null;
 				await toggleModule(
 					client,
 					guildId,
@@ -284,7 +284,7 @@ export const configOptions: ConfigOptions = {
 				return { description, rows: [[channelSelectMenu]] };
 			},
 			updateOption: async (client, guildId, values) => {
-				var value = values[0];
+				var value = values[0] || null;
 
 				var listConf = await client.db.repos.listConfig.findOneBy({
 					guildId: guildId,
@@ -318,7 +318,7 @@ export const configOptions: ConfigOptions = {
 				return { description, rows: [[toggleModuleButton]] };
 			},
 			updateOption: async (client, guildId, values) => {
-				var value = values[0];
+				var value = values[0] || null;
 				await toggleModule(
 					client,
 					guildId,
@@ -355,7 +355,7 @@ export const configOptions: ConfigOptions = {
 				return { description, rows: [[channelSelectMenu]] };
 			},
 			updateOption: async (client, guildId, values) => {
-				var value = values[0];
+				var value = values[0] || null;
 
 				var modConf = await client.db.repos.moderationConfig.findOneBy({
 					guildId: guildId,
@@ -449,7 +449,7 @@ export const configOptions: ConfigOptions = {
 				return { description, rows: [[toggleModuleButton]] };
 			},
 			updateOption: async (client, guildId, values) => {
-				var value = values[0];
+				var value = values[0] || null;
 				await toggleModule(
 					client,
 					guildId,
@@ -486,7 +486,7 @@ export const configOptions: ConfigOptions = {
 				return { description, rows: [[channelSelectMenu]] };
 			},
 			updateOption: async (client, guildId, values) => {
-				var value = values[0];
+				var value = values[0] || null;
 
 				var perConf = await client.db.repos.persistConfig.findOneBy({
 					guildId: guildId,
@@ -528,7 +528,7 @@ export const configOptions: ConfigOptions = {
 				return { description, rows: [[nicknamesButton]] };
 			},
 			updateOption: async (client, guildId, values) => {
-				var value = values[0];
+				var value = values[0] || null;
 
 				var perConf = await client.db.repos.persistConfig.findOneBy({
 					guildId: guildId,
