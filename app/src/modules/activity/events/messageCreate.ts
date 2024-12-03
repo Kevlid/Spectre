@@ -22,7 +22,7 @@ export const MessageCreate: Event = {
 	 * @param {VoiceState} newVoiceState
 	 */
 	async execute(client: KiwiClient, message: Message) {
-		if (message.member.user.bot) return;
+		if (message.author.bot) return;
 
 		var existingRecord = await client.db.repos.activityMessages.findOne({
 			where: {
