@@ -84,15 +84,6 @@ async function saveNewUserData(
 		updateNickname(client, member.guild.id, member.id, member.nickname);
 	}
 
-	for (let role of userPersistRoles) {
-		if (member.roles.cache.has(role.roleId)) continue;
-		await client.db.repos.persistUserRole.delete({
-			guildId: member.guild.id,
-			userId: member.id,
-			roleId: role.roleId,
-		});
-	}
-
 	for (let role of member.roles.cache.values()) {
 		if (userPersistRoles.find((r) => r.roleId === role.id)) continue;
 		if (!(await isPersistRole(client, member.guild.id, role.id))) continue;
