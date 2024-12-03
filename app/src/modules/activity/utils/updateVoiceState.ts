@@ -3,8 +3,7 @@ import { KiwiClient } from '@/client';
 export const updateVoiceState = async (
 	client: KiwiClient,
 	guildId: string,
-	userId: string,
-	channelId: string
+	userId: string
 ) => {
 	client.db.repos.activityVoicestates.update(
 		{
@@ -12,7 +11,6 @@ export const updateVoiceState = async (
 			userId,
 		},
 		{
-			channelId,
 			joinedAt: new Date(),
 		}
 	);

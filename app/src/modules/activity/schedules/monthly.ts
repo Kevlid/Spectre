@@ -17,27 +17,6 @@ timeRule.date = 1;
 export const monthlySchedule: Schedule = {
 	rule: timeRule,
 	execute: async (client: KiwiClient, guildId: string) => {
-		var voiceStates = await client.db.repos.activityVoicestates.findBy({
-			guildId: guildId,
-		});
-		for (var userVoiceState of voiceStates) {
-			var secondsSinceLastUpdate =
-				(new Date().getTime() - userVoiceState.joinedAt.getTime()) /
-				1000;
-			updateVoiceState(
-				client,
-				guildId,
-				userVoiceState.userId,
-				userVoiceState.channelId
-			);
-			await saveVoice(
-				client,
-				guildId,
-				userVoiceState.userId,
-				secondsSinceLastUpdate
-			);
-		}
-
 		var actConf = await getActivityConfig(client, guildId);
 		if (actConf?.logChannel) {
 			let lb = await createVoiceLeaderboard(client, guildId, 'monthly');

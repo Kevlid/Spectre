@@ -8,6 +8,7 @@ import { updateVoiceState } from '../utils/updateVoiceState';
 import { saveVoice } from '../utils/saveVoice';
 import { grantMostActiveRole } from '../utils/grantMostActiveRole';
 import { createVoiceLeaderboard } from '../utils/createVoiceLeaderboard';
+import { getVoiceState } from '../utils/getVoiceState';
 
 var timeRule = new RecurrenceRule();
 timeRule.tz = 'UTC';
@@ -17,28 +18,6 @@ timeRule.minute = 0;
 export const dailySchedule: Schedule = {
 	rule: timeRule,
 	execute: async (client: KiwiClient, guildId: string) => {
-		// Saves everyones voice activity
-		var voiceStates = await client.db.repos.activityVoicestates.findBy({
-			guildId: guildId,
-		});
-		for (var userVoiceState of voiceStates) {
-			var secondsSinceLastUpdate =
-				(new Date().getTime() - userVoiceState.joinedAt.getTime()) /
-				1000;
-			updateVoiceState(
-				client,
-				guildId,
-				userVoiceState.userId,
-				userVoiceState.channelId
-			);
-			await saveVoice(
-				client,
-				guildId,
-				userVoiceState.userId,
-				secondsSinceLastUpdate
-			);
-		}
-
 		// Grant the most active role to the most active user
 		await grantMostActiveRole(client, guildId, 'daily');
 

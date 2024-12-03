@@ -1,15 +1,13 @@
 import { KiwiClient } from '@/client';
 
-export const saveVoiceState = async (
+export const createVoiceState = async (
 	client: KiwiClient,
 	guildId: string,
-	userId: string,
-	channelId: string
+	userId: string
 ) => {
 	client.db.repos.activityVoicestates.save({
 		guildId: guildId,
 		userId: userId,
-		channelId: channelId,
 		joinedAt: new Date(),
 	});
 };

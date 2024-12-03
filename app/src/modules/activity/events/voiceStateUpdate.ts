@@ -2,9 +2,10 @@ import { VoiceState } from 'discord.js';
 import { KiwiClient } from '@/client';
 import { Event, EventList } from '@/types/event';
 
-import { saveVoiceState } from '../utils/saveVoiceState';
+import { createVoiceState } from '../utils/createVoiceState';
 import { removeVoiceState } from '../utils/removeVoiceState';
 import { saveVoice } from '../utils/saveVoice';
+import { getVoiceState } from '../utils/getVoiceState';
 
 /**
  * @type {Event}
@@ -32,20 +33,24 @@ export const VoiceStateUpdate: Event = {
 	) {
 		if (newVoiceState.member.user.bot) return;
 
-		var userVoiceState =
-			await client.db.repos.activityVoicestates.findOneBy({
-				userId: oldVoiceState.id,
-				guildId: oldVoiceState.guild.id,
-			});
+		var userVoiceState = await getVoiceState(
+			client,
+			newVoiceState.guild.id,
+			newVoiceState.id
+		);
 
 		if (userVoiceState && !newVoiceState.channelId) {
 			// User left voice channel
-			removeVoiceState(client, newVoiceState.guild.id, newVoiceState.id);
+			await removeVoiceState(
+				client,
+				newVoiceState.guild.id,
+				newVoiceState.id
+			);
 
 			var secondsSinceLastUpdate =
 				(new Date().getTime() - userVoiceState.joinedAt.getTime()) /
 				1000;
-			saveVoice(
+			await saveVoice(
 				client,
 				newVoiceState.guild.id,
 				newVoiceState.id,
@@ -53,29 +58,10 @@ export const VoiceStateUpdate: Event = {
 			);
 		} else if (!userVoiceState && newVoiceState.channelId) {
 			// User joined a voice channel
-			saveVoiceState(
+			await createVoiceState(
 				client,
 				newVoiceState.guild.id,
-				newVoiceState.id,
-				newVoiceState.channelId
-			);
-		} else if (userVoiceState && newVoiceState.channelId) {
-			// User switched voice channel
-			saveVoiceState(
-				client,
-				newVoiceState.guild.id,
-				newVoiceState.id,
-				newVoiceState.channelId
-			);
-
-			var secondsSinceLastUpdate =
-				(new Date().getTime() - userVoiceState.joinedAt.getTime()) /
-				1000;
-			saveVoice(
-				client,
-				newVoiceState.guild.id,
-				newVoiceState.id,
-				secondsSinceLastUpdate
+				newVoiceState.id
 			);
 		}
 	},

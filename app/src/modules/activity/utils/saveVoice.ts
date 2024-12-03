@@ -11,16 +11,10 @@ export const saveVoice = async (
 		userId,
 	});
 	var user = await client.users.fetch(userId);
-	client.db.repos.activityVoice.upsert(
-		{
-			guildId: guildId,
-			userId: userId,
-			userName: user.username,
-			totalSeconds: (userVoice?.totalSeconds || 0) + seconds,
-			dailySeconds: (userVoice?.dailySeconds || 0) + seconds,
-			weeklySeconds: (userVoice?.weeklySeconds || 0) + seconds,
-			monthlySeconds: (userVoice?.monthlySeconds || 0) + seconds,
-		},
-		['guildId', 'userId']
-	);
+	userVoice.userName = user.username;
+	userVoice.totalSeconds += seconds;
+	userVoice.dailySeconds += seconds;
+	userVoice.weeklySeconds += seconds;
+	userVoice.monthlySeconds += seconds;
+	client.db.repos.activityVoice.save(userVoice);
 };
