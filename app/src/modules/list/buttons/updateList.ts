@@ -26,24 +26,26 @@ export const UpdateListButton: Button = {
 		});
 		var users = interaction.message.content.split('\n');
 
-		let beforeMovePlace = users.indexOf(options.optionOne);
+		let beforeMovePlace = users.indexOf(options.value);
 
 		if (beforeMovePlace !== -1) {
 			users.splice(beforeMovePlace, 1);
-			users.push(options.optionOne);
+			users.push(options.value);
 		}
 
 		var content = users.join('\n');
 
 		interaction.update({ content });
 
+		console.log(listConf.logChannel);
 		if (listConf.logChannel) {
+			console.log(1);
 			var log = (await interaction.guild.channels.fetch(
 				listConf.logChannel
 			)) as TextChannel;
 			if (!log) return;
 			var emDescription = [
-				`**Value:** ${options.optionOne}`,
+				`**Value:** ${options.value}`,
 				`**By:** <@${interaction.user.id}> (${interaction.user.username})`,
 				`**In: <#${interaction.channelId}> [Go to Message](${interaction.message.url})** `,
 			];
@@ -60,10 +62,10 @@ export const UpdateListButton: Button = {
 
 			var customId = await client.createCustomId({
 				customId: RevertListButton.customId,
-				valueOne: interaction.channelId,
-				valueTwo: interaction.message.id,
-				valueThree: options.optionOne,
-				valueFour: beforeMovePlace.toString(),
+				cId: interaction.channelId,
+				msgId: interaction.message.id,
+				value: options.value,
+				oldIndex: beforeMovePlace.toString(),
 			});
 			var revertButton =
 				new ActionRowBuilder<ButtonBuilder>().addComponents(

@@ -17,16 +17,16 @@ export const RevertListButton: Button = {
 		});
 
 		var listChannel = (await interaction.guild.channels.fetch(
-			options.optionOne
+			options.cId
 		)) as TextChannel;
-		var listMessage = await listChannel.messages.fetch(options.optionTwo);
+		var listMessage = await listChannel.messages.fetch(options.msgId);
 		var users = listMessage.content.split('\n');
 
-		let index = users.indexOf(options.optionThree);
+		let index = users.indexOf(options.value);
 
 		if (index !== -1) {
 			users.splice(index, 1);
-			users.splice(Number(options.optionFour), 0, options.optionThree);
+			users.splice(Number(options.oldIndex), 0, options.value);
 		}
 
 		var content = users.join('\n');
@@ -40,14 +40,14 @@ export const RevertListButton: Button = {
 			)) as TextChannel;
 			if (!log) return;
 			var emDescription = [
-				`**Value:** ${options.optionThree}`,
+				`**Value:** ${options.value}`,
 				`**By:** <@${interaction.user.id}> (${interaction.user.username})`,
 				`**In: <#${
-					options.optionOne
+					options.cId
 				}> [Go to Message](${client.createMessageUrl(
 					interaction.guild.id,
-					options.optionOne,
-					options.optionTwo
+					options.cId,
+					options.msgId
 				)})** `,
 			];
 			var em = new EmbedBuilder()

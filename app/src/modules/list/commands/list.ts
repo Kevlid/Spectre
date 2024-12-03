@@ -6,6 +6,7 @@ import {
 	ButtonStyle,
 	ChatInputCommandInteraction,
 	SlashCommandBuilder,
+	StringSelectMenuBuilder,
 } from 'discord.js';
 import { SlashCommand } from '@/types/command';
 
@@ -42,14 +43,19 @@ export const ListSlash: SlashCommand = {
 			case 'create': {
 				var rows = [];
 				var buttons = [];
-				var userText = '';
-				var users = interaction.options.getString('users').split(',');
+				var users = interaction.options
+					.getString('users')
+					.split(',')
+					.slice(0, 15)
+					.filter((user) => user.trim() !== '');
 
-				for (let user of users) {
+				for (let user of [...users].sort((a, b) =>
+					a.localeCompare(b)
+				)) {
 					if (!user) break;
 					var customId = await client.createCustomId({
 						customId: UpdateListButton.customId,
-						valueOne: user,
+						value: user,
 					});
 					let button = new ButtonBuilder()
 						.setStyle(ButtonStyle.Primary)
@@ -57,7 +63,6 @@ export const ListSlash: SlashCommand = {
 						.setLabel(user);
 
 					buttons.push(button);
-					userText += `${user}\n`;
 				}
 
 				for (var i = 0; i < buttons.length; i += 3) {
@@ -69,7 +74,7 @@ export const ListSlash: SlashCommand = {
 				}
 
 				interaction.reply({
-					content: userText,
+					content: users.join('\n'),
 					components: rows,
 					ephemeral: false,
 				});
