@@ -1,7 +1,7 @@
 import { PrefixCommand, ConfigOptionTypes } from '@/types/command';
 
 import { checkPermissions } from '../utils/checkPermissions';
-import { GuildMember } from 'discord.js';
+import { GuildMember, TextChannel } from 'discord.js';
 
 /**
  * @type {PrefixCommand}
@@ -38,7 +38,12 @@ export const TimeoutPrefix: PrefixCommand = {
 		member: GuildMember,
 		time: number
 	) {
-		var minutes = time * 1000 * 60;
-		member.timeout(minutes);
+		if (member.user.bot) {
+			var channel = message.channel as TextChannel;
+			channel.send('I cannot timeout this user');
+		} else {
+			var minutes = time * 1000 * 60;
+			member.timeout(minutes);
+		}
 	},
 };

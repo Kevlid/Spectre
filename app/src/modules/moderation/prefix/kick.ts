@@ -1,7 +1,7 @@
 import { PrefixCommand, ConfigOptionTypes } from '@/types/command';
 
 import { checkPermissions } from '../utils/checkPermissions';
-import { GuildMember } from 'discord.js';
+import { GuildMember, TextChannel } from 'discord.js';
 
 /**
  * @type {PrefixCommand}
@@ -26,6 +26,11 @@ export const KickPrefix: PrefixCommand = {
 		);
 	},
 	async execute(client, message, commandOptions, member: GuildMember) {
-		member.kick();
+		if (!member.kickable || member.user.bot) {
+			var channel = message.channel as TextChannel;
+			channel.send('I cannot kick this user');
+		} else {
+			member.kick().catch((err) => {});
+		}
 	},
 };
