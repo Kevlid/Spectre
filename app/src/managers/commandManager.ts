@@ -209,6 +209,12 @@ export class CommandManager {
 					});
 					return;
 				}
+				if (option.maxValue && number > option.maxValue) {
+					channel.send({
+						content: `You must provide a number less than ${option.maxValue}`,
+					});
+					return;
+				}
 				args.push(number);
 			} else {
 				var id = await this.client.getId(message, textArgs[count]);
