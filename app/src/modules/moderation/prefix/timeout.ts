@@ -38,12 +38,17 @@ export const TimeoutPrefix: PrefixCommand = {
 		member: GuildMember,
 		time: number
 	) {
+		var channel = message.channel as TextChannel;
 		if (member.user.bot) {
-			var channel = message.channel as TextChannel;
 			channel.send('I cannot timeout this user');
 		} else {
 			var minutes = time * 1000 * 60;
-			member.timeout(minutes);
+			try {
+				member.timeout(minutes);
+			} catch (err) {
+				console.log(err);
+				channel.send('I cannot timeout this user');
+			}
 		}
 	},
 };
