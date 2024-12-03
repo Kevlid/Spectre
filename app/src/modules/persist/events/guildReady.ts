@@ -55,7 +55,7 @@ export const GuildReady: Event = {
 		for (var member of (await guild.members.fetch()).values()) {
 			if (member.user.bot) continue;
 
-			saveNewUserData(client, member, perConf);
+			await saveNewUserData(client, member, perConf);
 			updateUser(client, member, perConf);
 		}
 	},
@@ -76,7 +76,11 @@ async function saveNewUserData(
 		member.id
 	);
 
-	if (userNickName?.nickName !== member.nickname && perConf?.nicknames) {
+	if (
+		userNickName?.nickName !== member.nickname &&
+		perConf?.nicknames &&
+		member.nickname
+	) {
 		updateNickname(client, member.guild.id, member.id, member.nickname);
 	}
 
