@@ -30,7 +30,7 @@ import { getVoiceState } from './utils/getVoiceState';
 import { grantMostActiveRole } from './utils/grantMostActiveRole';
 import { removeVoiceState } from './utils/removeVoiceState';
 import { saveVoice } from './utils/saveVoice';
-import { saveVoiceState } from './utils/createVoiceState';
+import { createVoiceState } from './utils/createVoiceState';
 import { updateVoiceState } from './utils/updateVoiceState';
 
 export const ActivityModule: Module = {
@@ -54,7 +54,7 @@ export const ActivityModule: Module = {
 		grantMostActiveRole,
 		removeVoiceState,
 		saveVoice,
-		saveVoiceState,
+		createVoiceState,
 		updateVoiceState,
 	},
 };
