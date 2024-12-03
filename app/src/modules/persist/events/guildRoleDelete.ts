@@ -12,7 +12,6 @@ export const GuildRoleDelete: Event = {
 	name: EventList.GuildRoleDelete,
 
 	/**
-	 * @param {KiwiClient} client
 	 * @param {Role} role
 	 */
 	async getGuildId(role: Role) {

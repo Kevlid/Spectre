@@ -13,7 +13,6 @@ export const GuildMemberAdd: Event = {
 	name: EventList.GuildMemberAdd,
 
 	/**
-	 * @param {KiwiClient} client
 	 * @param {GuildMember} member
 	 */
 	async getGuildId(member: GuildMember) {
