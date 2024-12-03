@@ -29,6 +29,29 @@ export const GuildReady: Event = {
 	 */
 	async execute(client: KiwiClient, guild: Guild) {
 		var perConf = await getPersistConfig(client, guild.id);
+
+		for (var role of perConf.persistRoles) {
+			if (guild.roles.cache.has(role.roleId)) continue;
+
+			await client.db.repos.persistUserRole.delete({
+				guildId: guild.id,
+				roleId: role.roleId,
+			});
+
+			await client.db.repos.persistConfigRole.delete({
+				guildId: guild.id,
+				roleId: role.roleId,
+			});
+		}
+
+		for (var role of perConf.requiredRoles) {
+			if (guild.roles.cache.has(role.roleId)) continue;
+			await client.db.repos.persistConfigRequiredRole.delete({
+				guildId: guild.id,
+				roleId: role.roleId,
+			});
+		}
+
 		for (var member of (await guild.members.fetch()).values()) {
 			if (member.user.bot) continue;
 
@@ -53,7 +76,7 @@ async function saveNewUserData(
 		member.id
 	);
 
-	if (userNickName.nickName !== member.nickname && perConf?.nicknames) {
+	if (userNickName?.nickName !== member.nickname && perConf?.nicknames) {
 		updateNickname(client, member.guild.id, member.id, member.nickname);
 	}
 
