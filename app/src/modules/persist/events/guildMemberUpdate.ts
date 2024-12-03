@@ -6,6 +6,8 @@ import { addUserPersistRole } from '../utils/addUserPersistRole';
 import { getPersistConfig } from '../utils/getPersistConfig';
 import { isPersistRole } from '../utils/isPersistRole';
 import { updateNickname } from '../utils/updateNickname';
+import { hasRequiredRole } from '../utils/hasRequiredRole';
+import { getUserPersistRoles } from '../utils/getUserPersistRoles';
 
 /**
  * @type {Event}
@@ -33,6 +35,37 @@ export const GuildMemberUpdate: Event = {
 	) {
 		if (newMember.user.bot) return;
 		var perConf = await getPersistConfig(client, newMember.guild.id);
+
+		if (
+			perConf.requiredRoles.length > 0 &&
+			(await hasRequiredRole(client, newMember.guild.id, newMember.id))
+		) {
+			if (perConf.nicknames) {
+				var userNickName =
+					await client.db.repos.persistNickname.findOneBy({
+						guildId: newMember.guild.id,
+						userId: newMember.id,
+					});
+				if (userNickName) {
+					newMember
+						.setNickname(userNickName.nickName)
+						.catch(() => {});
+				}
+			}
+
+			var userPersistRoles = await getUserPersistRoles(
+				client,
+				newMember.guild.id,
+				newMember.id
+			);
+			for (var role of userPersistRoles) {
+				if (
+					perConf.persistRoles.find((r) => r.roleId === role.roleId)
+				) {
+					newMember.roles.add(role.roleId).catch(() => {});
+				}
+			}
+		}
 
 		if (oldMember.nickname !== newMember.nickname && perConf?.nicknames) {
 			updateNickname(

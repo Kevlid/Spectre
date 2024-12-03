@@ -36,7 +36,7 @@ export const GuildMemberAdd: Event = {
 				userId: member.id,
 			});
 			if (userNickName) {
-				member.setNickname(userNickName.nickName);
+				member.setNickname(userNickName.nickName).catch(() => {});
 			}
 		}
 
@@ -47,7 +47,7 @@ export const GuildMemberAdd: Event = {
 		);
 		for (var role of userPersistRoles) {
 			if (perConf.persistRoles.find((r) => r.roleId === role.roleId)) {
-				member.roles.add(role.roleId);
+				member.roles.add(role.roleId).catch(() => {});
 			}
 		}
 	},
