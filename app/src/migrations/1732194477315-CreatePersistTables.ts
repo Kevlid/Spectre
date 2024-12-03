@@ -156,9 +156,15 @@ export class CreatePersistTables1732194477315 implements MigrationInterface {
 						unsigned: true,
 					},
 					{
-						name: 'role_id',
+						name: 'user_id',
 						type: 'bigint',
 						isPrimary: true,
+						isNullable: false,
+						unsigned: true,
+					},
+					{
+						name: 'role_id',
+						type: 'bigint',
 						isNullable: false,
 						unsigned: true,
 					},
