@@ -1,14 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryColumn, Column } from 'typeorm';
 
 @Entity('activity_voicestates')
 export class ActivityVoicestateEntity {
-	@PrimaryGeneratedColumn()
-	_id: number;
-
-	@Column({ name: 'guild_id' })
+	@PrimaryColumn({ name: 'guild_id' })
 	guildId: string;
 
-	@Column({ name: 'user_id' })
+	@PrimaryColumn({ name: 'user_id' })
 	userId: string;
 
 	@Column({ name: 'channel_id' })
