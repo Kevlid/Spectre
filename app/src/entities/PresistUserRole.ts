@@ -1,6 +1,6 @@
-import { Entity, PrimaryColumn, CreateDateColumn, Column } from 'typeorm';
+import { Entity, PrimaryColumn, CreateDateColumn } from 'typeorm';
 
-@Entity('persist_roles')
+@Entity('persist_user_roles')
 export class PersistUserRoleEntity {
 	@PrimaryColumn({ name: 'guild_id' })
 	guildId: string;
@@ -8,7 +8,7 @@ export class PersistUserRoleEntity {
 	@PrimaryColumn({ name: 'user_id' })
 	userId: string;
 
-	@Column({ name: 'role_id' })
+	@PrimaryColumn({ name: 'role_id' })
 	roleId: string;
 
 	@CreateDateColumn({ name: 'created_at' })
