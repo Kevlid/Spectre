@@ -1,0 +1,108 @@
+import { Guild, GuildMember, Role } from 'discord.js';
+import { KiwiClient } from '@/client';
+import { Event, EventList } from '@/types/event';
+
+import { getPersistConfig } from '../utils/getPersistConfig';
+import { getUserPersistRoles } from '../utils/getUserPersistRoles';
+import { hasRequiredRole } from '../utils/hasRequiredRole';
+import { updateNickname } from '../utils/updateNickname';
+import { addUserPersistRole } from '../utils/addUserPersistRole';
+import { isPersistRole } from '../utils/isPersistRole';
+import { PersistConfigEntity } from '@/entities/PersistConfig';
+
+/**
+ * @type {Event}
+ */
+export const GuildReady: Event = {
+	name: EventList.GuildReady,
+
+	/**
+	 * @param {Guild} guild
+	 */
+	async getGuildId(guild: Guild) {
+		return guild.id;
+	},
+
+	/**
+	 * @param {KiwiClient} client
+	 * @param {Guild} guild
+	 */
+	async execute(client: KiwiClient, guild: Guild) {
+		var perConf = await getPersistConfig(client, guild.id);
+		for (var member of (await guild.members.fetch()).values()) {
+			if (member.user.bot) continue;
+
+			saveNewUserData(client, member, perConf);
+			updateUser(client, member, perConf);
+		}
+	},
+};
+
+async function saveNewUserData(
+	client: KiwiClient,
+	member: GuildMember,
+	perConf: PersistConfigEntity
+) {
+	var userNickName = await client.db.repos.persistNickname.findOneBy({
+		guildId: member.guild.id,
+		userId: member.id,
+	});
+	var userPersistRoles = await getUserPersistRoles(
+		client,
+		member.guild.id,
+		member.id
+	);
+
+	if (userNickName.nickName !== member.nickname && perConf?.nicknames) {
+		updateNickname(client, member.guild.id, member.id, member.nickname);
+	}
+
+	for (let role of userPersistRoles) {
+		if (member.roles.cache.has(role.roleId)) continue;
+		await client.db.repos.persistUserRole.delete({
+			guildId: member.guild.id,
+			userId: member.id,
+			roleId: role.roleId,
+		});
+	}
+
+	for (let role of member.roles.cache.values()) {
+		if (userPersistRoles.find((r) => r.roleId === role.id)) continue;
+		if (!(await isPersistRole(client, member.guild.id, role.id))) continue;
+		addUserPersistRole(client, member.guild.id, member.id, role.id);
+	}
+}
+
+async function updateUser(
+	client: KiwiClient,
+	member: GuildMember,
+	perConf: PersistConfigEntity
+) {
+	if (
+		perConf.requiredRoles.length > 0 &&
+		!hasRequiredRole(client, member.guild.id, member.id)
+	) {
+		return;
+	}
+
+	if (perConf.nicknames) {
+		var userNickName = await client.db.repos.persistNickname.findOneBy({
+			guildId: member.guild.id,
+			userId: member.id,
+		});
+		if (userNickName) {
+			member.setNickname(userNickName.nickName).catch(() => {});
+		}
+	}
+
+	var userPersistRoles = await getUserPersistRoles(
+		client,
+		member.guild.id,
+		member.id
+	);
+	for (var role of userPersistRoles) {
+		if (perConf.persistRoles.find((r) => r.roleId === role.roleId)) {
+			member.roles.add(role.roleId).catch(() => {});
+		}
+	}
+}
