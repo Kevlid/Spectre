@@ -23,6 +23,7 @@ export interface PrefixCommand {
 		options?: {
 			name: string;
 			type: ConfigOptionTypes;
+			maxValue?: number;
 		}[];
 	};
 	checks?: (
