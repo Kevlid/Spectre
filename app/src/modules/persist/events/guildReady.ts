@@ -54,7 +54,6 @@ export const GuildReady: Event = {
 
 		for (var member of (await guild.members.fetch()).values()) {
 			if (member.user.bot) continue;
-
 			await saveNewUserData(client, member, perConf);
 			updateUser(client, member, perConf);
 		}
