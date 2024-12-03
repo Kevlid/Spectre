@@ -6,9 +6,15 @@ export const addUserPersistRole = async (
 	userId: string,
 	roleId: string
 ) => {
-	await client.db.repos.persistUserRole.insert({
-		guildId,
-		userId,
-		roleId,
+	var existingRole = await client.db.repos.persistUserRole.findOne({
+		where: { guildId, userId, roleId },
 	});
+
+	if (!existingRole) {
+		await client.db.repos.persistUserRole.insert({
+			guildId,
+			userId,
+			roleId,
+		});
+	}
 };
