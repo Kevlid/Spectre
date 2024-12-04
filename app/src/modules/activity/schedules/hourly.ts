@@ -8,10 +8,9 @@ import { getVoiceState } from '../utils/getVoiceState';
 
 var timeRule = new RecurrenceRule();
 timeRule.tz = 'UTC';
-timeRule.hour = 0;
 timeRule.minute = 0;
 
-export const dailySchedule: Schedule = {
+export const hourlySchedule: Schedule = {
 	rule: timeRule,
 	execute: async (client: KiwiClient, guildId: string) => {
 		// Saves everyones voice activity
