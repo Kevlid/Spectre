@@ -37,6 +37,36 @@ export const GuildMemberUpdate: Event = {
 		if (newMember.user.bot) return;
 		var perConf = await getPersistConfig(client, newMember.guild.id);
 
+		if (oldMember.nickname !== newMember.nickname && perConf?.nicknames) {
+			updateNickname(
+				client,
+				newMember.guild.id,
+				newMember.id,
+				newMember.nickname
+			);
+		}
+
+		for (let role of oldMember.roles.cache.values()) {
+			if (newMember.roles.cache.has(role.id)) continue;
+			await client.db.repos.persistUserRole.delete({
+				guildId: oldMember.guild.id,
+				userId: oldMember.id,
+				roleId: role.id,
+			});
+		}
+
+		for (let role of newMember.roles.cache.values()) {
+			if (oldMember.roles.cache.has(role.id)) continue;
+			if (!(await isPersistRole(client, newMember.guild.id, role.id)))
+				continue;
+			addUserPersistRole(
+				client,
+				newMember.guild.id,
+				newMember.id,
+				role.id
+			);
+		}
+
 		if (
 			perConf.requiredRoles.length > 0 &&
 			(await hasRequiredRole(client, newMember.guild.id, newMember.id))
@@ -74,8 +104,11 @@ export const GuildMemberUpdate: Event = {
 				if (
 					perConf.persistRoles.find((r) => r.roleId === role.roleId)
 				) {
-					if (newMember.roles.cache.has(role.roleId)) continue;
-					newMember.roles.add(role.roleId).catch(() => {});
+					var member = await newMember.guild.members.fetch(
+						newMember.id
+					);
+					if (member.roles.cache.has(role.roleId)) continue;
+					member.roles.add(role.roleId).catch(() => {});
 					logRoleAdded(
 						client,
 						newMember.guild.id,
@@ -85,36 +118,6 @@ export const GuildMemberUpdate: Event = {
 					);
 				}
 			}
-		}
-
-		if (oldMember.nickname !== newMember.nickname && perConf?.nicknames) {
-			updateNickname(
-				client,
-				newMember.guild.id,
-				newMember.id,
-				newMember.nickname
-			);
-		}
-
-		for (let role of oldMember.roles.cache.values()) {
-			if (newMember.roles.cache.has(role.id)) continue;
-			await client.db.repos.persistUserRole.delete({
-				guildId: oldMember.guild.id,
-				userId: oldMember.id,
-				roleId: role.id,
-			});
-		}
-
-		for (let role of newMember.roles.cache.values()) {
-			if (oldMember.roles.cache.has(role.id)) continue;
-			if (!(await isPersistRole(client, newMember.guild.id, role.id)))
-				continue;
-			addUserPersistRole(
-				client,
-				newMember.guild.id,
-				newMember.id,
-				role.id
-			);
 		}
 	},
 };
