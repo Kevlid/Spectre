@@ -30,26 +30,30 @@ export const GuildReady: Event = {
 	async execute(client: KiwiClient, guild: Guild) {
 		var perConf = await getPersistConfig(client, guild.id);
 
-		for (var role of perConf.persistRoles) {
-			if (guild.roles.cache.has(role.roleId)) continue;
+		if (perConf?.persistRoles) {
+			for (var role of perConf.persistRoles) {
+				if (guild.roles.cache.has(role.roleId)) continue;
 
-			await client.db.repos.persistUserRole.delete({
-				guildId: guild.id,
-				roleId: role.roleId,
-			});
+				await client.db.repos.persistUserRole.delete({
+					guildId: guild.id,
+					roleId: role.roleId,
+				});
 
-			await client.db.repos.persistConfigRole.delete({
-				guildId: guild.id,
-				roleId: role.roleId,
-			});
+				await client.db.repos.persistConfigRole.delete({
+					guildId: guild.id,
+					roleId: role.roleId,
+				});
+			}
 		}
 
-		for (var role of perConf.requiredRoles) {
-			if (guild.roles.cache.has(role.roleId)) continue;
-			await client.db.repos.persistConfigRequiredRole.delete({
-				guildId: guild.id,
-				roleId: role.roleId,
-			});
+		if (perConf?.requiredRoles) {
+			for (var role of perConf.requiredRoles) {
+				if (guild.roles.cache.has(role.roleId)) continue;
+				await client.db.repos.persistConfigRequiredRole.delete({
+					guildId: guild.id,
+					roleId: role.roleId,
+				});
+			}
 		}
 
 		for (var member of (await guild.members.fetch()).values()) {
@@ -102,7 +106,7 @@ async function updateUser(
 		return;
 	}
 
-	if (perConf.nicknames) {
+	if (perConf?.nicknames) {
 		var userNickName = await client.db.repos.persistNickname.findOneBy({
 			guildId: member.guild.id,
 			userId: member.id,
@@ -117,6 +121,7 @@ async function updateUser(
 		member.guild.id,
 		member.id
 	);
+	if (userPersistRoles.length === 0) return;
 	for (var role of userPersistRoles) {
 		if (perConf.persistRoles.find((r) => r.roleId === role.roleId)) {
 			member.roles.add(role.roleId).catch(() => {});
