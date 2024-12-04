@@ -36,7 +36,7 @@ export const GuildMemberAdd: Event = {
 				guildId: member.guild.id,
 				userId: member.id,
 			});
-			if (userNickName) {
+			if (userNickName && userNickName.nickName !== member.nickname) {
 				member.setNickname(userNickName.nickName).catch(() => {});
 				logNicknameUpdate(
 					client,
@@ -56,6 +56,7 @@ export const GuildMemberAdd: Event = {
 		);
 		for (var role of userPersistRoles) {
 			if (perConf.persistRoles.find((r) => r.roleId === role.roleId)) {
+				if (member.roles.cache.has(role.roleId)) continue;
 				member.roles.add(role.roleId).catch(() => {});
 				logRoleAdded(
 					client,

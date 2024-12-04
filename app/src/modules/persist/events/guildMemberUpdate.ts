@@ -49,7 +49,7 @@ export const GuildMemberUpdate: Event = {
 					});
 				if (
 					userNickName &&
-					userNickName.nickName !== newMember.nickname
+					userNickName.nickName !== oldMember.nickname
 				) {
 					newMember
 						.setNickname(userNickName.nickName)
@@ -59,7 +59,7 @@ export const GuildMemberUpdate: Event = {
 						newMember.guild.id,
 						perConf.logChannel,
 						newMember.id,
-						newMember.nickname,
+						oldMember.nickname,
 						userNickName.nickName
 					);
 				}
@@ -74,7 +74,7 @@ export const GuildMemberUpdate: Event = {
 				if (
 					perConf.persistRoles.find((r) => r.roleId === role.roleId)
 				) {
-					if (!newMember.roles.cache.has(role.roleId)) continue;
+					if (newMember.roles.cache.has(role.roleId)) continue;
 					newMember.roles.add(role.roleId).catch(() => {});
 					logRoleAdded(
 						client,
