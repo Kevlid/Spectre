@@ -1,9 +1,9 @@
 FROM node:20
 USER node
 
-COPY --chown=node:node .env /katt/app/.env
-COPY --chown=node:node ./app /katt/app
+COPY --chown=node:node .env /spectre/app/.env
+COPY --chown=node:node ./app /spectre/app
 
-WORKDIR /katt/app
+WORKDIR /spectre/app
 
 RUN npm install && npm run build

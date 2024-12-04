@@ -1,9 +1,9 @@
 version: "3"
-name: "katt"
+name: "spectre"
 
 services:
-  kattapp:
-    container_name: kattapp
+  spectreapp:
+    container_name: spectre-app
     restart: unless-stopped
     build:
       context: .

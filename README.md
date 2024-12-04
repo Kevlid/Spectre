@@ -1,34 +1,33 @@
-# Katt
+# Spectre
 
 Custom Discord application designed for stuff I need.
 
 ## Table of Contents
 
-- [Installation](#installation)
-- [Features](#features)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+-   [Installation](#installation)
+-   [Features](#features)
+-   [Contributing](#contributing)
+-   [License](#license)
+-   [Contact](#contact)
 
 ## Installation
 
 Steps to install your project locally:
 
 ```bash
-git clone https://github.com/kewwie/katt.git
+git clone https://github.com/Kewwie/Spectre.git
 cd iwek
 ```
 
-
 ## Features
 
-- Verification System
-- Voice Tracker
-- Message Tracker
-- Lists for custom names
-- Nickname Saver
-- Server Groups
-- Custom Voice Channels
+-   Verification System
+-   Voice Tracker
+-   Message Tracker
+-   Lists for custom names
+-   Nickname Saver
+-   Server Groups
+-   Custom Voice Channels
 
 ## Contributing
 
