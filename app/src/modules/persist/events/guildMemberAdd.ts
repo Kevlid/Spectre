@@ -60,7 +60,7 @@ export const GuildMemberAdd: Event = {
 			if (await isPersistRole(client, member.guild.id, role.roleId)) {
 				if (member.roles.cache.has(role.roleId)) continue;
 				member.roles.add(role.roleId).catch(() => {});
-				await logRoleAdded(
+				logRoleAdded(
 					client,
 					member.guild.id,
 					perConf.logChannel,
