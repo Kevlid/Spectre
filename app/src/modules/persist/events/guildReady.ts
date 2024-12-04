@@ -134,7 +134,8 @@ async function updateUser(
 	if (userPersistRoles.length === 0) return;
 	for (var role of userPersistRoles) {
 		if (perConf.persistRoles.find((r) => r.roleId === role.roleId)) {
-			if (member.roles.cache.has(role.roleId)) continue;
+			var newMember = await member.guild.members.fetch(member.id);
+			if (newMember.roles.cache.has(role.roleId)) continue;
 			member.roles.add(role.roleId).catch(() => {});
 			logRoleAdded(
 				client,
