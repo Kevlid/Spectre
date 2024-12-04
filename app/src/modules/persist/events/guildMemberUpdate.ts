@@ -38,7 +38,11 @@ export const GuildMemberUpdate: Event = {
 		if (newMember.user.bot) return;
 		var perConf = await getPersistConfig(client, newMember.guild.id);
 
-		if (oldMember.nickname !== newMember.nickname && perConf?.nicknames) {
+		if (
+			newMember.nickname &&
+			oldMember.nickname !== newMember.nickname &&
+			perConf?.nicknames
+		) {
 			updateNickname(
 				client,
 				newMember.guild.id,
@@ -73,34 +77,41 @@ export const GuildMemberUpdate: Event = {
 			.map((role) => role.id);
 
 		if (
-			perConf.requiredRoles.length > 0 &&
-			(await hasRequiredRole(client, newMember.guild.id, newMember.id)) &&
-			!(await isAnyPersistRole(client, newMember.guild.id, newRoleIds))
-		) {
-			if (perConf.nicknames) {
-				var userNickName =
-					await client.db.repos.persistNickname.findOneBy({
-						guildId: newMember.guild.id,
-						userId: newMember.id,
-					});
-				if (
-					userNickName &&
-					userNickName.nickName !== oldMember.nickname
-				) {
-					newMember
-						.setNickname(userNickName.nickName)
-						.catch(() => {});
-					logNicknameUpdate(
-						client,
-						newMember.guild.id,
-						perConf.logChannel,
-						newMember.id,
-						oldMember.nickname,
-						userNickName.nickName
-					);
-				}
-			}
+			perConf.requiredRoles.length < 0 ||
+			!(await hasRequiredRole(client, newMember.guild.id, newMember.id))
+		)
+			return;
 
+		if (perConf.nicknames) {
+			var userNickName = await client.db.repos.persistNickname.findOneBy({
+				guildId: newMember.guild.id,
+				userId: newMember.id,
+			});
+			if (userNickName && userNickName.nickName !== newMember.nickname) {
+				newMember.setNickname(userNickName.nickName).catch((err) => {
+					console.log(err);
+				});
+				logNicknameUpdate(
+					client,
+					newMember.guild.id,
+					perConf.logChannel,
+					newMember.id,
+					oldMember.nickname,
+					userNickName.nickName
+				);
+			}
+		}
+
+		console.log(
+			(
+				await newMember.guild.members.fetch(newMember.id)
+			).roles.cache.hasAny(...newRoleIds)
+		);
+		if (
+			!(
+				await newMember.guild.members.fetch(newMember.id)
+			).roles.cache.hasAny(...newRoleIds)
+		) {
 			var userPersistRoles = await getUserPersistRoles(
 				client,
 				newMember.guild.id,
@@ -108,18 +119,24 @@ export const GuildMemberUpdate: Event = {
 			);
 			for (var role of userPersistRoles) {
 				if (
-					perConf.persistRoles.find((r) => r.roleId === role.roleId)
-				) {
-					if (newMember.roles.cache.has(role.roleId)) continue;
-					newMember.roles.add(role.roleId).catch(() => {});
-					logRoleAdded(
+					!(await isPersistRole(
 						client,
 						newMember.guild.id,
-						perConf.logChannel,
-						newMember.id,
 						role.roleId
-					);
-				}
+					))
+				)
+					continue;
+
+				if (newMember.roles.cache.has(role.roleId)) continue;
+				newMember.roles.add(role.roleId).catch(() => {});
+
+				logRoleAdded(
+					client,
+					newMember.guild.id,
+					perConf.logChannel,
+					newMember.id,
+					role.roleId
+				);
 			}
 		}
 	},
