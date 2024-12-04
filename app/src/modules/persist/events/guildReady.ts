@@ -30,7 +30,7 @@ export const GuildReady: Event = {
 	async execute(client: KiwiClient, guild: Guild) {
 		var perConf = await getPersistConfig(client, guild.id);
 
-		if (perConf?.persistRoles) {
+		if (perConf?.persistRoles.length > 0) {
 			for (var role of perConf.persistRoles) {
 				if (guild.roles.cache.has(role.roleId)) continue;
 
@@ -46,7 +46,7 @@ export const GuildReady: Event = {
 			}
 		}
 
-		if (perConf?.requiredRoles) {
+		if (perConf?.requiredRoles.length > 0) {
 			for (var role of perConf.requiredRoles) {
 				if (guild.roles.cache.has(role.roleId)) continue;
 				await client.db.repos.persistConfigRequiredRole.delete({
