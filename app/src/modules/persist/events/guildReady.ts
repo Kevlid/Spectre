@@ -60,6 +60,11 @@ export const GuildReady: Event = {
 
 		for (var member of (await guild.members.fetch()).values()) {
 			if (member.user.bot) continue;
+			if (
+				perConf.requiredRoles.length > 0 &&
+				!hasRequiredRole(client, member.guild.id, member.id)
+			)
+				continue;
 			await saveNewUserData(client, member, perConf);
 			updateUser(client, member, perConf);
 		}
@@ -82,17 +87,22 @@ async function saveNewUserData(
 	);
 
 	if (
-		userNickName?.nickName !== member.nickname &&
-		perConf?.nicknames &&
-		member.nickname
+		member.nickname &&
+		member.nickname !== userNickName?.nickName &&
+		perConf?.nicknames
 	) {
-		updateNickname(client, member.guild.id, member.id, member.nickname);
+		await updateNickname(
+			client,
+			member.guild.id,
+			member.id,
+			member.nickname
+		);
 	}
 
 	for (let role of member.roles.cache.values()) {
 		if (userPersistRoles.find((r) => r.roleId === role.id)) continue;
 		if (!(await isPersistRole(client, member.guild.id, role.id))) continue;
-		addUserPersistRole(client, member.guild.id, member.id, role.id);
+		await addUserPersistRole(client, member.guild.id, member.id, role.id);
 	}
 }
 
@@ -101,13 +111,6 @@ async function updateUser(
 	member: GuildMember,
 	perConf: PersistConfigEntity
 ) {
-	if (
-		perConf.requiredRoles.length > 0 &&
-		!hasRequiredRole(client, member.guild.id, member.id)
-	) {
-		return;
-	}
-
 	if (perConf?.nicknames) {
 		var userNickName = await client.db.repos.persistNickname.findOneBy({
 			guildId: member.guild.id,
@@ -133,7 +136,7 @@ async function updateUser(
 	);
 	if (userPersistRoles.length === 0) return;
 	for (var role of userPersistRoles) {
-		if (perConf.persistRoles.find((r) => r.roleId === role.roleId)) {
+		if (isPersistRole(client, member.guild.id, role.roleId)) {
 			if (member.roles.cache.has(role.roleId)) continue;
 			member.roles.add(role.roleId).catch(() => {});
 			logRoleAdded(
