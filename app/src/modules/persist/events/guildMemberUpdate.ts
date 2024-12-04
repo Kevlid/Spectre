@@ -8,6 +8,8 @@ import { isPersistRole } from '../utils/isPersistRole';
 import { updateNickname } from '../utils/updateNickname';
 import { hasRequiredRole } from '../utils/hasRequiredRole';
 import { getUserPersistRoles } from '../utils/getUserPersistRoles';
+import { logNicknameUpdate } from '../utils/logNicknameUpdate';
+import { logRoleAdded } from '../utils/logRoleAdded';
 
 /**
  * @type {Event}
@@ -45,10 +47,21 @@ export const GuildMemberUpdate: Event = {
 						guildId: newMember.guild.id,
 						userId: newMember.id,
 					});
-				if (userNickName) {
+				if (
+					userNickName &&
+					userNickName.nickName !== newMember.nickname
+				) {
 					newMember
 						.setNickname(userNickName.nickName)
 						.catch(() => {});
+					logNicknameUpdate(
+						client,
+						newMember.guild.id,
+						perConf.logChannel,
+						newMember.id,
+						newMember.nickname,
+						userNickName.nickName
+					);
 				}
 			}
 
@@ -61,7 +74,15 @@ export const GuildMemberUpdate: Event = {
 				if (
 					perConf.persistRoles.find((r) => r.roleId === role.roleId)
 				) {
+					if (!newMember.roles.cache.has(role.roleId)) continue;
 					newMember.roles.add(role.roleId).catch(() => {});
+					logRoleAdded(
+						client,
+						newMember.guild.id,
+						perConf.logChannel,
+						newMember.id,
+						role.roleId
+					);
 				}
 			}
 		}

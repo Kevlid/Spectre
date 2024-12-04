@@ -9,6 +9,8 @@ import { updateNickname } from '../utils/updateNickname';
 import { addUserPersistRole } from '../utils/addUserPersistRole';
 import { isPersistRole } from '../utils/isPersistRole';
 import { PersistConfigEntity } from '@/entities/PersistConfig';
+import { logRoleAdded } from '../utils/logRoleAdded';
+import { logNicknameUpdate } from '../utils/logNicknameUpdate';
 
 /**
  * @type {Event}
@@ -111,8 +113,16 @@ async function updateUser(
 			guildId: member.guild.id,
 			userId: member.id,
 		});
-		if (userNickName) {
+		if (userNickName && member.nickname !== userNickName.nickName) {
 			member.setNickname(userNickName.nickName).catch(() => {});
+			logNicknameUpdate(
+				client,
+				member.guild.id,
+				perConf.logChannel,
+				member.id,
+				member.nickname,
+				userNickName.nickName
+			);
 		}
 	}
 
@@ -124,7 +134,15 @@ async function updateUser(
 	if (userPersistRoles.length === 0) return;
 	for (var role of userPersistRoles) {
 		if (perConf.persistRoles.find((r) => r.roleId === role.roleId)) {
+			if (member.roles.cache.has(role.roleId)) continue;
 			member.roles.add(role.roleId).catch(() => {});
+			logRoleAdded(
+				client,
+				member.guild.id,
+				perConf.logChannel,
+				member.id,
+				role.roleId
+			);
 		}
 	}
 }
