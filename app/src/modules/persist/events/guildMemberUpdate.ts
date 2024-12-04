@@ -5,6 +5,7 @@ import { Event, EventList } from '@/types/event';
 import { addUserPersistRole } from '../utils/addUserPersistRole';
 import { getPersistConfig } from '../utils/getPersistConfig';
 import { isPersistRole } from '../utils/isPersistRole';
+import { isAnyPersistRole } from '../utils/isAnyPersistRole';
 import { updateNickname } from '../utils/updateNickname';
 import { hasRequiredRole } from '../utils/hasRequiredRole';
 import { getUserPersistRoles } from '../utils/getUserPersistRoles';
@@ -67,9 +68,14 @@ export const GuildMemberUpdate: Event = {
 			);
 		}
 
+		var newRoleIds = newMember.roles.cache
+			.filter((role) => !oldMember.roles.cache.has(role.id))
+			.map((role) => role.id);
+
 		if (
 			perConf.requiredRoles.length > 0 &&
-			(await hasRequiredRole(client, newMember.guild.id, newMember.id))
+			(await hasRequiredRole(client, newMember.guild.id, newMember.id)) &&
+			!(await isAnyPersistRole(client, newMember.guild.id, newRoleIds))
 		) {
 			if (perConf.nicknames) {
 				var userNickName =
@@ -104,11 +110,8 @@ export const GuildMemberUpdate: Event = {
 				if (
 					perConf.persistRoles.find((r) => r.roleId === role.roleId)
 				) {
-					var member = await newMember.guild.members.fetch(
-						newMember.id
-					);
-					if (member.roles.cache.has(role.roleId)) continue;
-					member.roles.add(role.roleId).catch(() => {});
+					if (newMember.roles.cache.has(role.roleId)) continue;
+					newMember.roles.add(role.roleId).catch(() => {});
 					logRoleAdded(
 						client,
 						newMember.guild.id,
