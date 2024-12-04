@@ -58,12 +58,6 @@ export class CreateActivityTables1727286580382 implements MigrationInterface {
 						unsigned: true,
 					},
 					{
-						name: 'channel_id',
-						type: 'bigint',
-						isNullable: false,
-						unsigned: true,
-					},
-					{
 						name: 'saved_total_seconds',
 						type: 'boolean',
 						default: false,

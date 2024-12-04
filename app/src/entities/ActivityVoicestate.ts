@@ -8,9 +8,6 @@ export class ActivityVoicestateEntity {
 	@PrimaryColumn({ name: 'user_id' })
 	userId: string;
 
-	@Column({ name: 'channel_id' })
-	channelId: string;
-
 	@Column({ name: 'saved_total_seconds' })
 	savedTotalSeconds: boolean;
 
