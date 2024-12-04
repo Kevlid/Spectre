@@ -6,7 +6,7 @@ export const getUserPersistRoles = async (
 	userId: string
 ) => {
 	return await client.db.repos.persistUserRole.findBy({
-		guildId,
-		userId,
+		guildId: guildId,
+		userId: userId,
 	});
 };

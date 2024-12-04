@@ -7,6 +7,7 @@ import { hasRequiredRole } from '../utils/hasRequiredRole';
 import { getUserPersistRoles } from '../utils/getUserPersistRoles';
 import { logRoleAdded } from '../utils/logRoleAdded';
 import { logNicknameUpdate } from '../utils/logNicknameUpdate';
+import { isPersistRole } from '../utils/isPersistRole';
 
 /**
  * @type {Event}
@@ -54,11 +55,12 @@ export const GuildMemberAdd: Event = {
 			member.guild.id,
 			member.id
 		);
+		if (userPersistRoles.length === 0) return;
 		for (var role of userPersistRoles) {
-			if (perConf.persistRoles.find((r) => r.roleId === role.roleId)) {
+			if (isPersistRole(client, member.guild.id, role.roleId)) {
 				if (member.roles.cache.has(role.roleId)) continue;
 				member.roles.add(role.roleId).catch(() => {});
-				logRoleAdded(
+				await logRoleAdded(
 					client,
 					member.guild.id,
 					perConf.logChannel,
