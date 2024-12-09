@@ -78,6 +78,12 @@ export class CreateActivityTables1727286580382 implements MigrationInterface {
 						default: false,
 					},
 					{
+						name: 'last_update',
+						type: 'timestamp',
+						isNullable: false,
+						default: 'CURRENT_TIMESTAMP',
+					},
+					{
 						name: 'joined_at',
 						type: 'timestamp',
 						isNullable: false,

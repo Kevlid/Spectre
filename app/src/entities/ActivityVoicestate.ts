@@ -1,4 +1,10 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import {
+	Entity,
+	PrimaryColumn,
+	Column,
+	CreateDateColumn,
+	UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('activity_voicestates')
 export class ActivityVoicestateEntity {
@@ -20,6 +26,9 @@ export class ActivityVoicestateEntity {
 	@Column({ name: 'saved_monthly_seconds' })
 	savedMonthlySeconds: boolean;
 
-	@Column({ name: 'joined_at' })
+	@UpdateDateColumn({ name: 'last_update' })
+	lastUpdate: Date;
+
+	@CreateDateColumn({ name: 'joined_at' })
 	joinedAt: Date;
 }
