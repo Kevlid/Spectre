@@ -10,7 +10,7 @@ export const MessageCreate: Event = {
 
 	/**
 	 * @param {KiwiClient} client
-	 * @param {VoiceState} oldVoiceState
+	 * @param {Message} message
 	 */
 	async getGuildId(message: Message) {
 		return message.guild.id;
@@ -18,8 +18,7 @@ export const MessageCreate: Event = {
 
 	/**
 	 * @param {KiwiClient} client
-	 * @param {VoiceState} oldVoiceState
-	 * @param {VoiceState} newVoiceState
+	 * @param {Message} message
 	 */
 	async execute(client: KiwiClient, message: Message) {
 		if (message.author.bot) return;

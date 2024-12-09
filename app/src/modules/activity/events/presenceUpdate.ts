@@ -14,6 +14,7 @@ export const PresenceUpdate: Event = {
 
 	/**
 	 * @param {KiwiClient} client
+	 * @param {Presence} presence
 	 */
 	async execute(client: KiwiClient, presence: Presence) {
 		if (presence.user.bot) return;
