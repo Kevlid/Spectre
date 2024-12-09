@@ -102,11 +102,6 @@ export const GuildMemberUpdate: Event = {
 			}
 		}
 
-		console.log(
-			(
-				await newMember.guild.members.fetch(newMember.id)
-			).roles.cache.hasAny(...newRoleIds)
-		);
 		if (
 			!(
 				await newMember.guild.members.fetch(newMember.id)
