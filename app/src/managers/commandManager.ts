@@ -175,11 +175,19 @@ export class CommandManager {
 		let command = this.PrefixCommands.get(commandName);
 		if (!command) return;
 
+		var channel = message.channel as TextChannel;
+
 		if (command.config.autoDelete) {
 			message.delete();
 		}
 
-		var channel = message.channel as TextChannel;
+		if (
+			command.module.developerOnly &&
+			!env.STAFF_USERS.includes(message.author.id)
+		) {
+			await channel.send('Developer only command!');
+			return;
+		}
 
 		var commandOptions: CommandOptions = {
 			commandName: commandName,
