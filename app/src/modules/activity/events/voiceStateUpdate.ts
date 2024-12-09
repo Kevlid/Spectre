@@ -48,7 +48,7 @@ export const VoiceStateUpdate: Event = {
 			);
 
 			var secondsSinceLastUpdate =
-				(new Date().getTime() - userVoiceState.joinedAt.getTime()) /
+				(new Date().getTime() - userVoiceState.lastUpdate.getTime()) /
 				1000;
 			await saveVoice(
 				client,

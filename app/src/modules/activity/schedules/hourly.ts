@@ -25,7 +25,7 @@ export const hourlySchedule: Schedule = {
 				voiceState.member.id
 			);
 			var secondsSinceLastUpdate =
-				(new Date().getTime() - userVoiceState.joinedAt.getTime()) /
+				(new Date().getTime() - userVoiceState.lastUpdate.getTime()) /
 				1000;
 			await updateVoiceState(client, guildId, userVoiceState.userId);
 
