@@ -5,13 +5,13 @@ export const updateVoiceState = async (
 	guildId: string,
 	userId: string
 ) => {
-	client.db.repos.activityVoicestates.update(
+	await client.db.repos.activityVoicestates.update(
 		{
 			guildId,
 			userId,
 		},
 		{
-			joinedAt: new Date(),
+			lastUpdate: new Date(),
 		}
 	);
 };

@@ -5,9 +5,8 @@ export const createVoiceState = async (
 	guildId: string,
 	userId: string
 ) => {
-	client.db.repos.activityVoicestates.save({
+	await client.db.repos.activityVoicestates.insert({
 		guildId: guildId,
 		userId: userId,
-		joinedAt: new Date(),
 	});
 };

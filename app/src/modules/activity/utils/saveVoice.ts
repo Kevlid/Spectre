@@ -4,17 +4,37 @@ export const saveVoice = async (
 	client: KiwiClient,
 	guildId: string,
 	userId: string,
+	userName: string,
 	seconds: number
 ) => {
 	var userVoice = await client.db.repos.activityVoice.findOneBy({
 		guildId,
 		userId,
 	});
-	var user = await client.users.fetch(userId);
-	userVoice.userName = user.username;
-	userVoice.totalSeconds += seconds;
-	userVoice.dailySeconds += seconds;
-	userVoice.weeklySeconds += seconds;
-	userVoice.monthlySeconds += seconds;
-	client.db.repos.activityVoice.save(userVoice);
+
+	if (!userVoice) {
+		await client.db.repos.activityVoice.insert({
+			guildId,
+			userId,
+			userName,
+			totalSeconds: seconds,
+			dailySeconds: seconds,
+			weeklySeconds: seconds,
+			monthlySeconds: seconds,
+		});
+	} else {
+		await client.db.repos.activityVoice.update(
+			{
+				guildId,
+				userId,
+			},
+			{
+				userName,
+				totalSeconds: userVoice.totalSeconds + seconds,
+				dailySeconds: userVoice.dailySeconds + seconds,
+				weeklySeconds: userVoice.weeklySeconds + seconds,
+				monthlySeconds: userVoice.monthlySeconds + seconds,
+			}
+		);
+	}
 };
