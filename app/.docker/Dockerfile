@@ -7,3 +7,4 @@ COPY --chown=node:node ./app /spectre/app
 WORKDIR /spectre/app
 
 RUN npm install && npm run build
+CMD ["npm", "run", "start"]
