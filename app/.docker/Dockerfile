@@ -1,10 +1,10 @@
 FROM node:20
 USER node
 
-COPY --chown=node:node .env /spectre/app/.env
-COPY --chown=node:node ./app /spectre/app
+WORKDIR /app
 
-WORKDIR /spectre/app
+COPY --chown=node:node .env /app/.env
+COPY --chown=node:node ./app /app
 
 RUN npm install && npm run build
 CMD ["npm", "run", "start"]
