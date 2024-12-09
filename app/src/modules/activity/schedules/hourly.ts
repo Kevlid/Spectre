@@ -13,9 +13,6 @@ timeRule.minute = 0;
 export const hourlySchedule: Schedule = {
 	rule: timeRule,
 	execute: async (client: KiwiClient, guildId: string) => {
-		// Saves everyones voice activity
-		console.log('Hourly schedule');
-
 		var guild = await client.guilds.fetch(guildId);
 		var voiceStates = await guild.voiceStates.cache.values();
 		for (var voiceState of voiceStates) {
@@ -24,6 +21,8 @@ export const hourlySchedule: Schedule = {
 				guildId,
 				voiceState.member.id
 			);
+			if (!userVoiceState) continue;
+
 			var secondsSinceLastUpdate =
 				(new Date().getTime() - userVoiceState.lastUpdate.getTime()) /
 				1000;
