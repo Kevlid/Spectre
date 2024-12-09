@@ -8,16 +8,13 @@ import { updateVoiceState } from '../utils/updateVoiceState';
 import { saveVoice } from '../utils/saveVoice';
 import { removeVoiceState } from '../utils/removeVoiceState';
 
-/**
- * @type {Event}
- */
 export const GuildReady: Event = {
 	name: EventList.GuildReady,
 
-	/**
-	 * @param {KiwiClient} client
-	 * @param {Guild} guild
-	 */
+	async getGuildId(guild: Guild) {
+		return guild.id;
+	},
+
 	async execute(client: KiwiClient, guild: Guild) {
 		for (var voiceState of guild.voiceStates.cache.values()) {
 			var userVoiceState = await getVoiceState(
