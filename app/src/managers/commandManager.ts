@@ -188,61 +188,63 @@ export class CommandManager {
 
 		var count = 0;
 		var args = new Array();
-		for (let option of command.config.options) {
-			if (!textArgs[count]) {
-				channel.send({
-					content: `You must provide a ${option.name}`,
-				});
-				return;
-			}
-			if (option.type === ConfigOptionTypes.TEXT) {
-				args.push(textArgs[count]);
-			} else if (option.type === ConfigOptionTypes.NUMBER) {
-				var number = parseInt(textArgs[count]);
-				if (isNaN(number)) {
+		if (command.config.options) {
+			for (let option of command.config.options) {
+				if (!textArgs[count]) {
 					channel.send({
-						content: `You must provide a valid number`,
+						content: `You must provide a ${option.name}`,
 					});
 					return;
 				}
-				if (option.maxValue && number > option.maxValue) {
-					channel.send({
-						content: `You must provide a number less than ${option.maxValue}`,
-					});
-					return;
-				}
-				args.push(number);
-			} else {
-				var id = await this.client.getId(message, textArgs[count]);
-				if (!id) {
-					channel.send({
-						content: `You must provide a valid ${option.name}`,
-					});
-					return;
-				}
+				if (option.type === ConfigOptionTypes.TEXT) {
+					args.push(textArgs[count]);
+				} else if (option.type === ConfigOptionTypes.NUMBER) {
+					var number = parseInt(textArgs[count]);
+					if (isNaN(number)) {
+						channel.send({
+							content: `You must provide a valid number`,
+						});
+						return;
+					}
+					if (option.maxValue && number > option.maxValue) {
+						channel.send({
+							content: `You must provide a number less than ${option.maxValue}`,
+						});
+						return;
+					}
+					args.push(number);
+				} else {
+					var id = await this.client.getId(message, textArgs[count]);
+					if (!id) {
+						channel.send({
+							content: `You must provide a valid ${option.name}`,
+						});
+						return;
+					}
 
-				var entry;
-				if (option.type === ConfigOptionTypes.USER) {
-					entry = await this.client.users.fetch(id);
-					args.push(entry);
-				} else if (option.type === ConfigOptionTypes.MEMBER) {
-					entry = await message.guild?.members.fetch(id);
-					args.push(entry);
-				} else if (option.type === ConfigOptionTypes.CHANNEL) {
-					entry = await message.guild?.channels.fetch(id);
-					args.push(entry);
-				} else if (option.type === ConfigOptionTypes.ROLE) {
-					entry = await message.guild?.roles.fetch(id);
-					args.push(entry);
+					var entry;
+					if (option.type === ConfigOptionTypes.USER) {
+						entry = await this.client.users.fetch(id);
+						args.push(entry);
+					} else if (option.type === ConfigOptionTypes.MEMBER) {
+						entry = await message.guild?.members.fetch(id);
+						args.push(entry);
+					} else if (option.type === ConfigOptionTypes.CHANNEL) {
+						entry = await message.guild?.channels.fetch(id);
+						args.push(entry);
+					} else if (option.type === ConfigOptionTypes.ROLE) {
+						entry = await message.guild?.roles.fetch(id);
+						args.push(entry);
+					}
+					if (!entry) {
+						channel.send({
+							content: `You must provide a valid ${option.name}`,
+						});
+						return;
+					}
 				}
-				if (!entry) {
-					channel.send({
-						content: `You must provide a valid ${option.name}`,
-					});
-					return;
-				}
+				count++;
 			}
-			count++;
 		}
 
 		try {
@@ -257,17 +259,19 @@ export class CommandManager {
 					return;
 				}
 
-				var passedChecks = await command.checks(
-					this.client,
-					message,
-					commandOptions,
-					...args
-				);
-				if (!passedChecks) {
-					channel.send({
-						content: `You do not have permission to use this command!`,
-					});
-					return;
+				if (command.checks) {
+					var passedChecks = await command.checks(
+						this.client,
+						message,
+						commandOptions,
+						...args
+					);
+					if (!passedChecks) {
+						channel.send({
+							content: `You do not have permission to use this command!`,
+						});
+						return;
+					}
 				}
 			}
 			await command.execute(

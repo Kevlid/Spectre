@@ -19,7 +19,7 @@ export interface PrefixCommand {
 		name: string;
 		description?: string;
 		aliases?: string[];
-		autoDelete: boolean;
+		autoDelete?: boolean;
 		options?: {
 			name: string;
 			type: ConfigOptionTypes;
