@@ -1,5 +1,5 @@
 {
-  "name": "katt-app",
+  "name": "spectre-app",
   "version": "4.0.0",
   "scripts": {
     "start": "node -r ./register-tsconfig-paths.js dist/index.js",
