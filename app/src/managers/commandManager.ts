@@ -256,7 +256,11 @@ export class CommandManager {
 		}
 
 		try {
-			if (message.guildId && command.module && !command.module?.default) {
+			if (
+				message.guildId &&
+				!command.module?.default &&
+				!command.module.developerOnly
+			) {
 				let isEnabled =
 					await await this.client.db.repos.guildModules.findOneBy({
 						guildId: message.guildId,
