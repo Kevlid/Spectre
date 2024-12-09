@@ -1,12 +1,13 @@
 import { Module } from '@/types/module';
 
 // Events
-import { VoiceStateUpdate } from './events/voiceStateUpdate';
 import { MessageCreate } from './events/messageCreate';
+//import { PresenceUpdate } from './events/presenceUpdate';
+import { VoiceStateUpdate } from './events/voiceStateUpdate';
 
 // Slash Commands
 import { ActivitySlash } from './commands/activity';
-//import { PresenceUpdate } from './events/presenceUpdate';
+import { JoinedSlash } from './commands/joined';
 import { LeaderboardSlash } from './commands/leaderboard';
 
 // Select Menus
@@ -37,7 +38,7 @@ import { updateVoiceState } from './utils/updateVoiceState';
 export const ActivityModule: Module = {
 	id: 'activity',
 	events: [VoiceStateUpdate, MessageCreate],
-	slashCommands: [ActivitySlash, LeaderboardSlash],
+	slashCommands: [ActivitySlash, JoinedSlash, LeaderboardSlash],
 	selectMenus: [
 		ActivitySelectMenu,
 		LeaderboardTypeSelectMenu,
