@@ -15,19 +15,16 @@ Custom Discord application designed for stuff I need.
 Steps to install your project locally:
 
 ```bash
-git clone https://github.com/Kewwie/Spectre.git
-cd iwek
+git clone https://github.com/kewwie/spectre.git
+cd spectre
 ```
 
 ## Features
 
 -   Verification System
--   Voice Tracker
--   Message Tracker
--   Lists for custom names
--   Nickname Saver
--   Server Groups
--   Custom Voice Channels
+-   Activity Tracker (Voice, Messages, Status)
+-   Manage lists with custom names
+-   Persist Roles and Nicknames
 
 ## Contributing
 
@@ -45,8 +42,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-Kewi - [@k3wwie](https://twitter.com/k3wwie)
-
 Support - [Discord](https://discord.gg/JKbtSTCmbz)
 
-Project Link: [github.com/kewwie/katt](https://github.com/kewwie/katt)
+Project Link: [github.com/Kewwie/Spectre](https://github.com/Kewwie/Spectre)
