@@ -6,6 +6,7 @@ import { createVoiceState } from '../utils/createVoiceState';
 import { getVoiceState } from '../utils/getVoiceState';
 import { updateVoiceState } from '../utils/updateVoiceState';
 import { saveVoice } from '../utils/saveVoice';
+import { removeVoiceState } from '../utils/removeVoiceState';
 
 /**
  * @type {Event}
@@ -44,6 +45,8 @@ export const GuildReady: Event = {
 						voiceState.member.user.username,
 						secondsSinceLastUpdate
 					);
+				} else {
+					await removeVoiceState(client, guild.id, voiceState.id);
 				}
 			}
 		}
