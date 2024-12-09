@@ -54,9 +54,10 @@ export const VoiceStateUpdate: Event = {
 				client,
 				newVoiceState.guild.id,
 				newVoiceState.id,
+				newVoiceState.member.user.username,
 				secondsSinceLastUpdate
 			);
-		} else if (!userVoiceState && newVoiceState.channelId) {
+		} else if (!oldVoiceState.channelId && newVoiceState.channelId) {
 			// User joined a voice channel
 			await createVoiceState(
 				client,
