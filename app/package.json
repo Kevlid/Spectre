@@ -1,23 +1,34 @@
 {
-  "name": "iwek-app",
-  "version": "3.0.0",
+  "name": "katt-app",
+  "version": "4.0.0",
   "scripts": {
-    "dev": "nodemon src/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node -r ./register-tsconfig-paths.js dist/index.js",
+    "dev": "ts-node -r tsconfig-paths/register src/index.ts",
+    "build": "tsc --build",
+    "watch": "tsc --watch",
+    "watch:run": "tsc-watch --build --onSuccess \"npm run start\"",
+    "watch:dev": "nodemon --watch src --ext ts,js,json --exec npm run dev",
+    "typeorm": "npx typeorm",
+    "migrate:create": "npm run typeorm -- migration:create src/migrations/new",
+    "migrate:run": "npm run typeorm -- migration:run -d dist/datasource.js",
+    "migrate:revert": "npm run typeorm -- migration:revert -d dist/datasource.js"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1",
-    "typescript": "^5.4.4"
+    "nodemon": "^3.1.7",
+    "tsc-watch": "^4.6.0",
+    "typescript": "^5.7.2"
   },
   "dependencies": {
-    "@discordjs/rest": "^2.2.0",
+    "@discordjs/builders": "^1.9.0",
+    "@discordjs/rest": "^2.4.0",
     "@discordjs/voice": "^0.17.0",
-    "discord-api-types": "^0.37.79",
-    "discord.js": "^14.12.1",
+    "discord-api-types": "^0.37.110",
+    "discord.js": "^14.16.3",
     "dotenv": "^16.4.5",
+    "mongodb": "^5.9.2",
     "mysql2": "^3.9.4",
-    "typeorm": "^0.3.20",
-    "unofficial-valorant-api": "^2.3.1-stable.0"
+    "node-schedule": "^2.1.1",
+    "tsconfig-paths": "^4.2.0",
+    "typeorm": "^0.3.20"
   }
 }
