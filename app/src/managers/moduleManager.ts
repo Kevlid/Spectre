@@ -29,10 +29,6 @@ export class ModuleManager {
 			for (let slashCommand of module.slashCommands) {
 				slashCommand.module = module;
 				this.client.CommandManager.loadSlash(slashCommand);
-				if (module.staffServer)
-					this.client.CommandManager.staffServerCommands.push(
-						slashCommand.config
-					);
 			}
 		}
 		if (module.userCommands) {

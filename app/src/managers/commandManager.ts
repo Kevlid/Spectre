@@ -19,8 +19,6 @@ export class CommandManager {
 	public UserCommands: Collection<string, UserCommand>;
 	private RestAPI: REST;
 
-	public staffServerCommands: any[];
-
 	constructor(client: KiwiClient) {
 		this.client = client;
 
@@ -28,8 +26,6 @@ export class CommandManager {
 		this.SlashCommands = new Collection();
 		this.UserCommands = new Collection();
 		this.RestAPI = new REST({ version: '10' }).setToken(env.CLIENT_TOKEN);
-
-		this.staffServerCommands = [];
 
 		this.client.on(
 			EventList.InteractionCreate,

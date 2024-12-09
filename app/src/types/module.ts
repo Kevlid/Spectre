@@ -18,6 +18,5 @@ export interface Module {
 	functions?: { [key: string]: Function };
 	default?: boolean;
 	hidden?: boolean;
-	staffOnly?: boolean;
-	staffServer?: string;
+	developerOnly?: boolean;
 }
