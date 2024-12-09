@@ -1,6 +1,7 @@
 import { Module } from '@/types/module';
 
 // Events
+import { GuildReady } from './events/guildReady';
 import { MessageCreate } from './events/messageCreate';
 //import { PresenceUpdate } from './events/presenceUpdate';
 import { VoiceStateUpdate } from './events/voiceStateUpdate';
@@ -37,7 +38,7 @@ import { updateVoiceState } from './utils/updateVoiceState';
 
 export const ActivityModule: Module = {
 	id: 'activity',
-	events: [VoiceStateUpdate, MessageCreate],
+	events: [GuildReady, VoiceStateUpdate, MessageCreate],
 	slashCommands: [ActivitySlash, JoinedSlash, LeaderboardSlash],
 	selectMenus: [
 		ActivitySelectMenu,
