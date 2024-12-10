@@ -5,6 +5,7 @@ import { ConfigChannelSelectMenu } from '../selectmenus/configChannel';
 interface SelectMenuConfig {
 	moduleId: string;
 	optionId: string;
+	ownerId: string;
 	maxValues?: number;
 	channelTypes?: ChannelType[];
 	defaultChannels?: string[];
@@ -21,6 +22,7 @@ export const buildChannelSelectMenu = (
 			customId: ConfigChannelSelectMenu.customId,
 			moduleId: config.moduleId,
 			optionId: config.optionId,
+			ownerId: config.ownerId,
 		})
 	);
 

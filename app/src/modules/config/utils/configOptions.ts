@@ -89,6 +89,7 @@ export const configOptions: ConfigOptions = {
 				var toggleModuleButton = buildButton(client, {
 					moduleId: config.moduleId,
 					optionId: config.optionId,
+					ownerId: config.pageOwner.id,
 					value: isEnabled ? 'false' : 'true',
 					label: `${isEnabled ? 'Disable' : 'Enable'} Module`,
 					style: isEnabled ? ButtonStyle.Danger : ButtonStyle.Success,
@@ -128,6 +129,7 @@ export const configOptions: ConfigOptions = {
 				var channelSelectMenu = buildChannelSelectMenu(client, {
 					moduleId: 'activity',
 					optionId: 'logChannel',
+					ownerId: config.pageOwner.id,
 					defaultChannels: [actConf?.logChannel],
 				});
 
@@ -168,6 +170,7 @@ export const configOptions: ConfigOptions = {
 				var dailyActiveRoleSM = buildRoleSelectMenu(client, {
 					moduleId: 'activity',
 					optionId: 'dailyActiveRole',
+					ownerId: config.pageOwner.id,
 					defaultRoles: [actConf?.dailyActiveRole],
 				});
 
@@ -208,6 +211,7 @@ export const configOptions: ConfigOptions = {
 				var weeklyActiveRoleSM = buildRoleSelectMenu(client, {
 					moduleId: 'activity',
 					optionId: 'dailyActiveRole',
+					ownerId: config.pageOwner.id,
 					defaultRoles: [actConf?.weeklyActiveRole],
 				});
 
@@ -240,6 +244,7 @@ export const configOptions: ConfigOptions = {
 				var toggleModuleButton = buildButton(client, {
 					moduleId: config.moduleId,
 					optionId: config.optionId,
+					ownerId: config.pageOwner.id,
 					value: isEnabled ? 'false' : 'true',
 					label: `${isEnabled ? 'Disable' : 'Enable'} Module`,
 					style: isEnabled ? ButtonStyle.Danger : ButtonStyle.Success,
@@ -279,6 +284,7 @@ export const configOptions: ConfigOptions = {
 				var channelSelectMenu = buildChannelSelectMenu(client, {
 					moduleId: 'list',
 					optionId: 'logChannel',
+					ownerId: config.pageOwner.id,
 					defaultChannels: [listConf?.logChannel],
 				});
 
@@ -311,6 +317,7 @@ export const configOptions: ConfigOptions = {
 				var toggleModuleButton = buildButton(client, {
 					moduleId: config.moduleId,
 					optionId: config.optionId,
+					ownerId: config.pageOwner.id,
 					value: isEnabled ? 'false' : 'true',
 					label: `${isEnabled ? 'Disable' : 'Enable'} Module`,
 					style: isEnabled ? ButtonStyle.Danger : ButtonStyle.Success,
@@ -350,6 +357,7 @@ export const configOptions: ConfigOptions = {
 				var channelSelectMenu = buildChannelSelectMenu(client, {
 					moduleId: 'moderation',
 					optionId: 'logChannel',
+					ownerId: config.pageOwner.id,
 					defaultChannels: [modConf?.logChannel],
 				});
 
@@ -396,6 +404,7 @@ export const configOptions: ConfigOptions = {
 				var moderationRolesSM = buildRoleSelectMenu(client, {
 					moduleId: 'moderation',
 					optionId: 'roles',
+					ownerId: config.pageOwner.id,
 					maxValues: 10,
 					defaultRoles: [...roleIds],
 				});
@@ -442,6 +451,7 @@ export const configOptions: ConfigOptions = {
 				var toggleModuleButton = buildButton(client, {
 					moduleId: config.moduleId,
 					optionId: config.optionId,
+					ownerId: config.pageOwner.id,
 					value: isEnabled ? 'false' : 'true',
 					label: `${isEnabled ? 'Disable' : 'Enable'} Module`,
 					style: isEnabled ? ButtonStyle.Danger : ButtonStyle.Success,
@@ -481,6 +491,7 @@ export const configOptions: ConfigOptions = {
 				var channelSelectMenu = buildChannelSelectMenu(client, {
 					moduleId: 'persist',
 					optionId: 'logChannel',
+					ownerId: config.pageOwner.id,
 					defaultChannels: [perConf?.logChannel],
 				});
 
@@ -517,6 +528,7 @@ export const configOptions: ConfigOptions = {
 				var nicknamesButton = buildButton(client, {
 					moduleId: config.moduleId,
 					optionId: config.optionId,
+					ownerId: config.pageOwner.id,
 					value: perConf?.nicknames ? 'true' : 'false',
 					label: `${
 						perConf?.nicknames ? 'Disable' : 'Enable'
@@ -569,6 +581,7 @@ export const configOptions: ConfigOptions = {
 				var requiredRolesSM = buildRoleSelectMenu(client, {
 					moduleId: 'persist',
 					optionId: 'requiredRoles',
+					ownerId: config.pageOwner.id,
 					maxValues: 10,
 					defaultRoles: [...roleIds],
 				});
@@ -637,6 +650,7 @@ export const configOptions: ConfigOptions = {
 				var persistRolesSM = buildRoleSelectMenu(client, {
 					moduleId: 'persist',
 					optionId: 'persistRoles',
+					ownerId: config.pageOwner.id,
 					maxValues: 10,
 					defaultRoles: [...roleIds],
 				});
@@ -687,6 +701,7 @@ export const configOptions: ConfigOptions = {
 				var toggleModuleButton = buildButton(client, {
 					moduleId: config.moduleId,
 					optionId: config.optionId,
+					ownerId: config.pageOwner.id,
 					value: isEnabled ? 'false' : 'true',
 					label: `${isEnabled ? 'Disable' : 'Enable'} Module`,
 					style: isEnabled ? ButtonStyle.Danger : ButtonStyle.Success,
@@ -727,6 +742,7 @@ export const configOptions: ConfigOptions = {
 				var channelSelectMenu = buildChannelSelectMenu(client, {
 					moduleId: 'verification',
 					optionId: 'logChannel',
+					ownerId: config.pageOwner.id,
 					defaultChannels: [verConf?.logChannel],
 				});
 
@@ -774,6 +790,7 @@ export const configOptions: ConfigOptions = {
 				var verificationRolesSM = buildRoleSelectMenu(client, {
 					moduleId: 'verification',
 					optionId: 'roles',
+					ownerId: config.pageOwner.id,
 					maxValues: 10,
 					defaultRoles: [...roleIds],
 				});

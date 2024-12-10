@@ -6,6 +6,7 @@ import { ConfigButton } from '../buttons/configButton';
 interface ButtonConfig {
 	moduleId: string;
 	optionId: string;
+	ownerId: string;
 	value: string;
 	label: string;
 	style?: ButtonStyle;
@@ -23,6 +24,7 @@ export const buildButton = (
 			customId: ConfigButton.customId,
 			moduleId: config.moduleId,
 			optionId: config.optionId,
+			ownerId: config.ownerId,
 			value: config.value,
 		})
 	);
