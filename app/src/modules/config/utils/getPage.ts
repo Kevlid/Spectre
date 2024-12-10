@@ -23,8 +23,7 @@ export async function getPage(client: KiwiClient, config: Config) {
 	var pageData = await configOptions.pages
 		.find(
 			(page) =>
-				page.moduleId === config.moduleId &&
-				page.optionId === config.optionId
+				page.module === config.module && page.option === config.option
 		)
 		.getPageData(client, config);
 
@@ -45,8 +44,8 @@ export async function getPage(client: KiwiClient, config: Config) {
 		.setDescription(description);
 
 	var allModules = configOptions.pages
-		.map((page) => page.moduleId)
-		.filter((moduleId, index, self) => self.indexOf(moduleId) === index);
+		.map((page) => page.module)
+		.filter((module, index, self) => self.indexOf(module) === index);
 
 	var configModuleSM = new StringSelectMenuBuilder()
 		.setCustomId(
@@ -57,29 +56,29 @@ export async function getPage(client: KiwiClient, config: Config) {
 		)
 		.setPlaceholder('Select a module')
 		.addOptions(
-			allModules.map((moduleId) => {
+			allModules.map((module) => {
 				return {
-					label: client.capitalize(client.addSpace(moduleId)),
-					value: moduleId,
+					label: client.capitalize(client.addSpace(module)),
+					value: module,
 				};
 			})
 		);
 
 	for (var option of configModuleSM.options) {
-		if (config.moduleId === option.data.value) {
+		if (config.module === option.data.value) {
 			option.data.default = true;
 		}
 	}
 
 	var allOptions = configOptions.pages.filter(
-		(page) => page.moduleId === config.moduleId && page.optionId
+		(page) => page.module === config.module && page.option
 	);
 
 	var configOptionSM = new StringSelectMenuBuilder()
 		.setCustomId(
 			client.createCustomId({
 				customId: ConfigOptionSM.customId,
-				moduleId: config.moduleId,
+				module: config.module,
 				ownerId: config.pageOwner.id,
 			})
 		)
@@ -87,18 +86,18 @@ export async function getPage(client: KiwiClient, config: Config) {
 		.addOptions(
 			allOptions.map((page) => {
 				return {
-					label: client.capitalize(client.addSpace(page.optionId)),
-					value: page.optionId,
+					label: client.capitalize(client.addSpace(page.option)),
+					value: page.option,
 				};
 			})
 		);
 
-	if (!config.optionId && allOptions.length > 0) {
-		config.optionId = allOptions[0].optionId;
+	if (!config.option && allOptions.length > 0) {
+		config.option = allOptions[0].option;
 	}
 
 	for (var option of configOptionSM.options) {
-		if (config.optionId === option.data.value) {
+		if (config.option === option.data.value) {
 			option.data.default = true;
 		}
 	}
