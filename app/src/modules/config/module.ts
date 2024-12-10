@@ -1,5 +1,7 @@
 import { Module } from '../../types/module';
 
+import { PermissionFlagsBits, Permissions } from 'discord.js';
+
 // Events
 import { GuildCreate } from './events/guildCreate';
 import { GuildReady } from './events/guildReady';
@@ -20,6 +22,7 @@ import { ConfigEnableButton } from './buttons/configEnable';
 
 export const ConfigModule: Module = {
 	id: 'config',
+	permissions: [PermissionFlagsBits.Administrator],
 	events: [GuildCreate, GuildReady],
 	slashCommands: [ConfigSlash],
 	selectMenus: [

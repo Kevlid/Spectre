@@ -50,22 +50,39 @@ export class ComponentManager {
 				return;
 			}
 
-			if (
-				interaction.guildId &&
-				selectMenu.module &&
-				!selectMenu.module?.default
-			) {
-				let isEnabled =
-					await this.client.db.repos.guildModules.findOneBy({
-						guildId: interaction.guildId,
-						moduleId: selectMenu.module.id,
-					});
-				if (!isEnabled) {
-					interaction.reply({
-						content: `This select menu is disabled!`,
-						ephemeral: true,
-					});
-					return;
+			if (interaction.guildId) {
+				if (!selectMenu.module?.default) {
+					var isEnabled =
+						await this.client.db.repos.guildModules.findOneBy({
+							guildId: interaction.guildId,
+							moduleId: selectMenu.module.id,
+						});
+					if (!isEnabled) {
+						interaction.reply({
+							content: `This select menu is disabled!`,
+							ephemeral: true,
+						});
+						return;
+					}
+				}
+				if (selectMenu.module.permissions) {
+					var member = await interaction.guild.members.fetch(
+						interaction.user.id
+					);
+					var hasPermission = false;
+					for (var permission of selectMenu.module.permissions) {
+						if (member.permissions.has(permission)) {
+							hasPermission = true;
+							break;
+						}
+					}
+					if (!hasPermission) {
+						interaction.reply({
+							content: `You don't have permission to use this button!`,
+							ephemeral: true,
+						});
+						return;
+					}
 				}
 			}
 
@@ -90,22 +107,39 @@ export class ComponentManager {
 				return;
 			}
 
-			if (
-				interaction.guildId &&
-				button.module &&
-				!button.module?.default
-			) {
-				let isEnabled =
-					await this.client.db.repos.guildModules.findOneBy({
-						guildId: interaction.guildId,
-						moduleId: button.module.id,
-					});
-				if (!isEnabled) {
-					interaction.reply({
-						content: `This button is disabled!`,
-						ephemeral: true,
-					});
-					return;
+			if (interaction.guildId) {
+				if (!button.module?.default) {
+					var isEnabled =
+						await this.client.db.repos.guildModules.findOneBy({
+							guildId: interaction.guildId,
+							moduleId: button.module.id,
+						});
+					if (!isEnabled) {
+						interaction.reply({
+							content: `This button is disabled!`,
+							ephemeral: true,
+						});
+						return;
+					}
+				}
+				if (button.module.permissions) {
+					var member = await interaction.guild.members.fetch(
+						interaction.user.id
+					);
+					var hasPermission = false;
+					for (var permission of button.module.permissions) {
+						if (member.permissions.has(permission)) {
+							hasPermission = true;
+							break;
+						}
+					}
+					if (!hasPermission) {
+						interaction.reply({
+							content: `You don't have permission to use this button!`,
+							ephemeral: true,
+						});
+						return;
+					}
 				}
 			}
 
