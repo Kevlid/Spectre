@@ -125,7 +125,11 @@ export class KiwiClient extends Client {
 	}
 
 	public async getId(message: Message, value: string): Promise<string> {
-		if (value.startsWith('<@') && value.endsWith('>')) {
+		if (
+			value.startsWith('<@') &&
+			value.endsWith('>') &&
+			!value.startsWith('<@&')
+		) {
 			value = value.slice(2, -1);
 			if (value.startsWith('!')) {
 				value = value.slice(1);
