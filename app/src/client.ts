@@ -6,7 +6,10 @@ import {
 	ColorResolvable,
 	ClientPresenceStatus,
 	Message,
+	TextChannel,
 } from 'discord.js';
+
+import { env } from './env';
 
 import { DatabaseManager } from './managers/databaseManager';
 
@@ -31,6 +34,8 @@ export class KiwiClient extends Client {
 	public ModuleManager: ModuleManager;
 
 	public Pages: PageManager;
+
+	private _logChannel: TextChannel;
 
 	constructor() {
 		super({
