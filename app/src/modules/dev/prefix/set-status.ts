@@ -11,6 +11,7 @@ export const SetStatusPrefix: PrefixCommand = {
 			{
 				name: 'statusText',
 				type: ConfigOptionTypes.TEXT,
+				includeAfter: true,
 			},
 		],
 	},
