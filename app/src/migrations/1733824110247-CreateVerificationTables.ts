@@ -22,6 +22,13 @@ export class CreateVerificationTables1733824110247
 						unsigned: true,
 						default: null,
 					},
+					{
+						name: 'pending_channel',
+						type: 'bigint',
+						isNullable: true,
+						unsigned: true,
+						default: null,
+					},
 				],
 			}),
 			true

@@ -9,6 +9,9 @@ export class VerificationConfigEntity {
 	@Column({ name: 'log_channel' })
 	logChannel: string;
 
+	@Column({ name: 'pending_channel' })
+	pendingChannel: string;
+
 	@OneToMany(
 		() => VerificationConfigRoleEntity,
 		(role) => role.verificationConfig,
