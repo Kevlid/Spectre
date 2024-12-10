@@ -18,6 +18,7 @@ export const ConfigPrefix: PrefixCommand = {
 		message.reply({
 			embeds: [...page.embeds],
 			components: [...page.rows],
+			allowedMentions: { repliedUser: false },
 		});
 	},
 };
