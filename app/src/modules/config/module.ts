@@ -6,14 +6,17 @@ import { PermissionFlagsBits, Permissions } from 'discord.js';
 import { GuildCreate } from './events/guildCreate';
 import { GuildReady } from './events/guildReady';
 
-// Slash Commands
-import { ConfigSlash } from './commands/config';
+// Prefix Commands
+import { ConfigPrefix } from './prefix/config';
 
 // Select Menus
 import { ConfigChannelSelectMenu } from './selectmenus/configChannel';
 import { ConfigRoleSelectMenu } from './selectmenus/configRole';
 import { ConfigModuleSelectMenu } from './selectmenus/configModule';
 import { ConfigOptionSelectMenu } from './selectmenus/configOption';
+
+// Slash Commands
+import { ConfigSlash } from './slash/config';
 
 // Buttons
 import { ConfigButton } from './buttons/configButton';
@@ -24,13 +27,14 @@ export const ConfigModule: Module = {
 	id: 'config',
 	permissions: [PermissionFlagsBits.Administrator],
 	events: [GuildCreate, GuildReady],
-	slashCommands: [ConfigSlash],
+	prefixCommands: [ConfigPrefix],
 	selectMenus: [
 		ConfigChannelSelectMenu,
 		ConfigRoleSelectMenu,
 		ConfigModuleSelectMenu,
 		ConfigOptionSelectMenu,
 	],
+	slashCommands: [ConfigSlash],
 	buttons: [ConfigButton, ConfigDisableButton, ConfigEnableButton],
 	default: true,
 };
