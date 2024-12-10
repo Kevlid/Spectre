@@ -24,6 +24,7 @@ export interface PrefixCommand {
 			name: string;
 			type: ConfigOptionTypes;
 			maxValue?: number;
+			includeAfter?: boolean;
 		}[];
 	};
 	checks?: (

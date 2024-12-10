@@ -204,8 +204,13 @@ export class CommandManager {
 					});
 					return;
 				}
+
 				if (option.type === ConfigOptionTypes.TEXT) {
-					args.push(textArgs[count]);
+					if (option.includeAfter) {
+						args.push(textArgs.slice(count).join(' '));
+					} else {
+						args.push(textArgs[count]);
+					}
 				} else if (option.type === ConfigOptionTypes.NUMBER) {
 					var number = parseInt(textArgs[count]);
 					if (isNaN(number)) {
