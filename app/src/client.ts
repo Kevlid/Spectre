@@ -94,24 +94,6 @@ export class KiwiClient extends Client {
 		return value.replace(/([A-Z])/g, ' $1').trim();
 	}
 
-	public createCustomIdV1(options: {
-		customId: string;
-		valueOne?: string;
-		valueTwo?: string;
-		valueThree?: string;
-		valueFour?: string;
-		userId?: string;
-		ownerId?: string;
-	}): string {
-		var optionOne = options.valueOne || '';
-		var optionTwo = options.valueTwo || '';
-		var optionThree = options.valueThree || '';
-		var optionFour = options.valueFour || '';
-		var userId = options.userId || '';
-		var ownerId = options.ownerId || '';
-		return `+${options.customId}+?${optionOne}?&${optionTwo}&$${optionThree}$£${optionFour}£%${userId}%=${ownerId}=`;
-	}
-
 	public createCustomId(options: CustomOptions): string {
 		var customId = new Array<string>();
 		for (var [key, value] of Object.entries(options)) {
