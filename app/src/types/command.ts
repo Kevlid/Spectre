@@ -52,8 +52,8 @@ export enum ConfigOptionTypes {
 export interface CommandOptions {
 	commandName: string;
 	auther: string;
-	//args: string[];
-	[key: string]: User | GuildMember | Channel | Role | string;
+	module: Module;
+	command: PrefixCommand;
 }
 
 export interface UserCommand {

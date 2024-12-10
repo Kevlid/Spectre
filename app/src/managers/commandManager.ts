@@ -192,6 +192,8 @@ export class CommandManager {
 		var commandOptions: CommandOptions = {
 			commandName: commandName,
 			auther: message.author.id,
+			module: command.module,
+			command: command,
 		};
 
 		var count = 0;
