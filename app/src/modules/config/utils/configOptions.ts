@@ -58,6 +58,7 @@ import { buildButton } from './buildButton';
 import { ModerationConfigRoleEntity } from '@/entities/ModerationConfigRole';
 import { PersistConfigRoleEntity } from '@/entities/PersistConfigRole';
 import { PersistConfigRequiredRoleEntity } from '@/entities/PersistConfigRequiredRole';
+import { VerificationConfigRoleEntity } from '@/entities/VerificationConfigRole';
 
 export const configOptions: ConfigOptions = {
 	setupConfig: async (client, config) => {
@@ -668,6 +669,141 @@ export const configOptions: ConfigOptions = {
 						role.roleId = value;
 						role.persistConfig = perConf;
 						await client.db.repos.persistConfigRole.save(role);
+					}
+				}
+			},
+		},
+		{
+			moduleId: 'verification',
+			optionId: 'overview',
+			async getPageData(client, config) {
+				const { isEnabled } = config;
+
+				var description = [
+					`### Moderation Module`,
+					`**Enabled:** ${isEnabled ? 'True' : 'False'}`,
+				];
+
+				var toggleModuleButton = buildButton(client, {
+					moduleId: config.moduleId,
+					optionId: config.optionId,
+					value: isEnabled ? 'false' : 'true',
+					label: `${isEnabled ? 'Disable' : 'Enable'} Module`,
+					style: isEnabled ? ButtonStyle.Danger : ButtonStyle.Success,
+				});
+
+				return { description, rows: [[toggleModuleButton]] };
+			},
+			updateOption: async (client, guildId, values) => {
+				var value = values[0] || null;
+				await toggleModule(
+					client,
+					guildId,
+					'verification',
+					client.getBoolean(value)
+				);
+			},
+		},
+		{
+			moduleId: 'verification',
+			optionId: 'logChannel',
+			async getPageData(client, config) {
+				const { guildId } = config;
+
+				var verConf =
+					await client.db.repos.verificationConfig.findOneBy({
+						guildId: guildId,
+					});
+
+				var description = [
+					`### Verification Module`,
+					`**Log Channel:** ${
+						verConf?.logChannel
+							? `<#${verConf.logChannel}>`
+							: 'None'
+					}`,
+				];
+
+				var channelSelectMenu = buildChannelSelectMenu(client, {
+					moduleId: 'verification',
+					optionId: 'logChannel',
+					defaultChannels: [verConf?.logChannel],
+				});
+
+				return { description, rows: [[channelSelectMenu]] };
+			},
+			updateOption: async (client, guildId, values) => {
+				var value = values[0] || null;
+
+				var verConf =
+					await client.db.repos.verificationConfig.findOneBy({
+						guildId: guildId,
+					});
+
+				if (verConf) {
+					verConf.logChannel = value;
+					await client.db.repos.verificationConfig.save(verConf);
+				}
+			},
+		},
+		{
+			moduleId: 'verification',
+			optionId: 'roles',
+			async getPageData(client, config) {
+				const { guildId } = config;
+
+				var verConf = await client.db.repos.verificationConfig.findOne({
+					where: {
+						guildId: guildId,
+					},
+					relations: ['roles'],
+				});
+
+				var roleIds: Array<string> =
+					verConf?.roles?.map((role) => role.roleId) || [];
+
+				var roles = verConf?.roles
+					?.map((r) => `<@&${r.roleId}>`)
+					.join(', ');
+
+				var description = [
+					`### Verification Module`,
+					`**Roles:** ${roles ? `${roles}` : 'None'}`,
+				];
+
+				var verificationRolesSM = buildRoleSelectMenu(client, {
+					moduleId: 'verification',
+					optionId: 'roles',
+					maxValues: 10,
+					defaultRoles: [...roleIds],
+				});
+
+				return { description, rows: [[verificationRolesSM]] };
+			},
+			updateOption: async (client, guildId, values: string[]) => {
+				var verConf = await client.db.repos.verificationConfig.findOne({
+					where: {
+						guildId,
+					},
+					relations: ['roles'],
+				});
+
+				var oldRoles = verConf.roles?.filter(
+					(role) => !values.includes(role.roleId)
+				);
+
+				for (let oldRole of oldRoles) {
+					await client.db.repos.verificationConfigRole.delete(
+						oldRole
+					);
+				}
+
+				for (let value of values) {
+					if (!verConf.roles?.some((role) => role.roleId === value)) {
+						let role = new VerificationConfigRoleEntity();
+						role.roleId = value;
+						role.verificationConfig = verConf;
+						await client.db.repos.verificationConfigRole.save(role);
 					}
 				}
 			},
