@@ -73,7 +73,11 @@ export class ModuleManager {
 	}
 
 	public async checkGuild(guild: Guild, user: User, module: Module) {
-		if (module.developerOnly && !env.STAFF_USERS.includes(user.id)) {
+		if (module.developerOnly && env.STAFF_USERS.includes(user.id)) {
+			return {
+				status: true,
+			};
+		} else if (module.developerOnly) {
 			return {
 				response: `You are not a developer!`,
 				status: false,
