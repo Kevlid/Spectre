@@ -764,6 +764,49 @@ export const configOptions: ConfigOptions = {
 		},
 		{
 			moduleId: 'verification',
+			optionId: 'pendingChannel',
+			async getPageData(client, config) {
+				const { guildId } = config;
+
+				var verConf =
+					await client.db.repos.verificationConfig.findOneBy({
+						guildId: guildId,
+					});
+
+				var description = [
+					`### Verification Module`,
+					`**Pending Channel:** ${
+						verConf?.pendingChannel
+							? `<#${verConf.pendingChannel}>`
+							: 'None'
+					}`,
+				];
+
+				var channelSelectMenu = buildChannelSelectMenu(client, {
+					moduleId: 'verification',
+					optionId: 'pendingChannel',
+					ownerId: config.pageOwner.id,
+					defaultChannels: [verConf?.pendingChannel],
+				});
+
+				return { description, rows: [[channelSelectMenu]] };
+			},
+			updateOption: async (client, guildId, values) => {
+				var value = values[0] || null;
+
+				var verConf =
+					await client.db.repos.verificationConfig.findOneBy({
+						guildId: guildId,
+					});
+
+				if (verConf) {
+					verConf.pendingChannel = value;
+					await client.db.repos.verificationConfig.save(verConf);
+				}
+			},
+		},
+		{
+			moduleId: 'verification',
 			optionId: 'roles',
 			async getPageData(client, config) {
 				const { guildId } = config;
