@@ -21,14 +21,6 @@ export const ConfigSlash: SlashCommand = {
 		interaction: ChatInputCommandInteraction,
 		client: KiwiClient
 	): Promise<void> {
-		if (interaction.user.id !== interaction.guild.ownerId) {
-			interaction.reply({
-				content: 'You must be the server owner to use this command',
-				ephemeral: true,
-			});
-			return;
-		}
-
 		var page = await getPage(client, {
 			guildId: interaction.guildId,
 			moduleId: 'activity',
