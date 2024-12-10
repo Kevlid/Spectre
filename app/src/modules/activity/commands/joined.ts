@@ -37,9 +37,10 @@ export const JoinedSlash: SlashCommand = {
 		);
 
 		if (!voiceState) {
-			interaction.reply(
-				`${client.capitalize(user.username)} is not in a voice channel`
-			);
+			interaction.reply({
+				content: `<@${user.id}> is not in a voice channel`,
+				allowedMentions: { parse: [] },
+			});
 			return;
 		}
 
