@@ -1,4 +1,3 @@
-import { KiwiClient } from '@/client';
 import { ConfigOptionTypes, PrefixCommand } from '@/types/command';
 
 import { Role } from 'discord.js';
