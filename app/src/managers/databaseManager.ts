@@ -18,6 +18,8 @@ import { PersistConfigRequiredRoleEntity } from '@/entities/PersistConfigRequire
 import { PersistConfigRoleEntity } from '@/entities/PersistConfigRole';
 import { PersistNicknameEntity } from '@/entities/PersistNickname';
 import { PersistUserRoleEntity } from '@/entities/PresistUserRole';
+import { VerificationConfigEntity } from '@/entities/VerificationConfig';
+import { VerificationConfigRoleEntity } from '@/entities/VerificationConfigRole';
 
 export class DatabaseManager {
 	public dataSource: DataSource;
@@ -38,6 +40,8 @@ export class DatabaseManager {
 		persistConfigRole: Repository<PersistConfigRoleEntity>;
 		persistNickname: Repository<PersistNicknameEntity>;
 		persistUserRole: Repository<PersistUserRoleEntity>;
+		verificationConfig: Repository<VerificationConfigEntity>;
+		verificationConfigRole: Repository<VerificationConfigRoleEntity>;
 	};
 
 	constructor(client: KiwiClient) {
@@ -92,6 +96,12 @@ export class DatabaseManager {
 			persistUserRole: await this.dataSource.getRepository(
 				PersistUserRoleEntity
 			),
+			verificationConfig: await this.dataSource.getRepository(
+				VerificationConfigEntity
+			),
+			verificationConfigRole: await this.dataSource.getRepository(
+				VerificationConfigRoleEntity
+			),
 		};
 	}
 
@@ -130,6 +140,15 @@ export class DatabaseManager {
 			let perConf = new PersistConfigEntity();
 			perConf.guildId = guildId;
 			await this.repos.persistConfig.save(perConf);
+		}
+
+		var verificationConfig = await this.repos.verificationConfig.findOne({
+			where: { guildId },
+		});
+		if (!verificationConfig) {
+			let verConf = new VerificationConfigEntity();
+			verConf.guildId = guildId;
+			await this.repos.verificationConfig.save(verConf);
 		}
 	}
 
