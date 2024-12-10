@@ -14,6 +14,10 @@ export class ComponentManager {
 	public SelectMenus: Collection<string, SelectMenu>;
 	public Buttons: Collection<string, Button>;
 
+	public shortKeys: {
+		[key: string]: string;
+	};
+
 	constructor(client: KiwiClient) {
 		this.client = client;
 		this.SelectMenus = new Collection();
@@ -23,6 +27,24 @@ export class ComponentManager {
 			EventList.InteractionCreate,
 			this.onInteraction.bind(this)
 		);
+
+		this.shortKeys = {
+			customId: 'ci',
+			ownerId: 'oi',
+			module: 'mo',
+			option: 'op',
+		};
+	}
+
+	public getShortKey(value: string): string {
+		return this.shortKeys[value] || value;
+	}
+
+	public getKeyFromShort(value: string): string {
+		var key = Object.keys(this.shortKeys).find(
+			(key) => this.shortKeys[key] === value
+		);
+		return key;
 	}
 
 	public registerSelectMenu(selectMenu: SelectMenu) {
@@ -40,7 +62,8 @@ export class ComponentManager {
 
 		const config: CustomOptions = {};
 		for (const x of interaction.customId.split('&')) {
-			const [key, value] = x.split('=');
+			var [key, value] = x.split('=');
+			key = this.getKeyFromShort(key);
 			config[key] = value;
 		}
 
@@ -93,19 +116,17 @@ export class ComponentManager {
 			}
 
 			if (interaction.guildId) {
-				if (interaction.guildId) {
-					var checks = await this.client.ModuleManager.checkGuild(
-						interaction.guild,
-						interaction.user,
-						button.module
-					);
-					if (!checks.status) {
-						interaction.reply({
-							content: checks.response,
-							ephemeral: true,
-						});
-						return;
-					}
+				var checks = await this.client.ModuleManager.checkGuild(
+					interaction.guild,
+					interaction.user,
+					button.module
+				);
+				if (!checks.status) {
+					interaction.reply({
+						content: checks.response,
+						ephemeral: true,
+					});
+					return;
 				}
 			}
 
