@@ -15,9 +15,9 @@ export const RandomColorPrefix: PrefixCommand = {
 		],
 	},
 	async execute(client, message, commandOptions, role: Role) {
-		role.setColor(Math.floor(Math.random() * 16777215));
+		await role.setColor(Math.floor(Math.random() * 16777215));
 		message.reply({
-			content: `Role ${role.name} has been set to a random color`,
+			content: `<@&${role.id}> has been set to a random color`,
 			allowedMentions: { parse: [] },
 		});
 	},
