@@ -10,8 +10,8 @@ export const ConfigPrefix: PrefixCommand = {
 	async execute(client, message, commandOptions) {
 		var page = await getPage(client, {
 			guildId: message.guildId,
-			moduleId: 'activity',
-			optionId: 'overview',
+			module: 'activity',
+			option: 'overview',
 			pageOwner: message.author,
 		});
 

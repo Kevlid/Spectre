@@ -20,8 +20,8 @@ export const ConfigModuleSelectMenu: SelectMenu = {
 	) => {
 		var page = await getPage(client, {
 			guildId: interaction.guildId,
-			moduleId: interaction.values[0],
-			optionId: 'overview',
+			module: interaction.values[0],
+			option: 'overview',
 			pageOwner: interaction.user,
 		});
 

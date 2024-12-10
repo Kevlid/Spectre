@@ -117,6 +117,7 @@ export class KiwiClient extends Client {
 		for (var [key, value] of Object.entries(options)) {
 			if (customId.includes('&')) continue;
 			if (!key || !value) continue;
+			key = this.ComponentManager.getShortKey(key);
 			customId.push(`${key}=${value}`);
 		}
 		return customId.join('&');

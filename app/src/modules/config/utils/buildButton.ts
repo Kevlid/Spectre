@@ -4,8 +4,8 @@ import { ButtonStyle } from 'discord.js';
 import { ConfigButton } from '../buttons/configButton';
 
 interface ButtonConfig {
-	moduleId: string;
-	optionId: string;
+	module: string;
+	option: string;
 	ownerId: string;
 	value: string;
 	label: string;
@@ -22,8 +22,8 @@ export const buildButton = (
 	button.setCustomId(
 		client.createCustomId({
 			customId: ConfigButton.customId,
-			moduleId: config.moduleId,
-			optionId: config.optionId,
+			module: config.module,
+			option: config.option,
 			ownerId: config.ownerId,
 			value: config.value,
 		})

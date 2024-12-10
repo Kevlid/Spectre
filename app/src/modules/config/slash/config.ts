@@ -23,8 +23,8 @@ export const ConfigSlash: SlashCommand = {
 	): Promise<void> {
 		var page = await getPage(client, {
 			guildId: interaction.guildId,
-			moduleId: 'activity',
-			optionId: 'overview',
+			module: 'activity',
+			option: 'overview',
 			pageOwner: interaction.user,
 		});
 

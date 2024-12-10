@@ -13,8 +13,8 @@ import {
 
 export interface Config {
 	guildId: string;
-	moduleId: string;
-	optionId?: string;
+	module: string;
+	option?: string;
 	pageOwner?: User;
 	guild?: Guild;
 	guildOwner?: User;
@@ -27,8 +27,8 @@ interface ConfigOptions {
 }
 
 interface Page {
-	moduleId: string;
-	optionId?: string;
+	module: string;
+	option?: string;
 	getPageData: (client: KiwiClient, config: Config) => Promise<PageData>;
 	updateOption?: (
 		client: KiwiClient,
@@ -64,20 +64,20 @@ export const configOptions: ConfigOptions = {
 	setupConfig: async (client, config) => {
 		config.guild = await client.guilds.fetch(config.guildId);
 		config.guildOwner = await client.users.fetch(config.guild.ownerId);
-		if (config.moduleId)
+		if (config.module)
 			config.isEnabled = await client.db.isModuleEnabled(
 				config.guildId,
-				config.moduleId
+				config.module
 			);
 
-		if (!config.optionId) config.optionId = 'overview';
+		if (!config.option) config.option = 'overview';
 
 		return config;
 	},
 	pages: [
 		{
-			moduleId: 'activity',
-			optionId: 'overview',
+			module: 'activity',
+			option: 'overview',
 			getPageData: async (client, config) => {
 				const { isEnabled } = config;
 
@@ -87,8 +87,8 @@ export const configOptions: ConfigOptions = {
 				];
 
 				var toggleModuleButton = buildButton(client, {
-					moduleId: config.moduleId,
-					optionId: config.optionId,
+					module: config.module,
+					option: config.option,
 					ownerId: config.pageOwner.id,
 					value: isEnabled ? 'false' : 'true',
 					label: `${isEnabled ? 'Disable' : 'Enable'} Module`,
@@ -108,8 +108,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			moduleId: 'activity',
-			optionId: 'logChannel',
+			module: 'activity',
+			option: 'logChannel',
 			getPageData: async (client, config) => {
 				const { guildId } = config;
 
@@ -127,8 +127,8 @@ export const configOptions: ConfigOptions = {
 				];
 
 				var channelSelectMenu = buildChannelSelectMenu(client, {
-					moduleId: 'activity',
-					optionId: 'logChannel',
+					module: 'activity',
+					option: 'logChannel',
 					ownerId: config.pageOwner.id,
 					defaultChannels: [actConf?.logChannel],
 				});
@@ -149,8 +149,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			moduleId: 'activity',
-			optionId: 'dailyActiveRole',
+			module: 'activity',
+			option: 'dailyActiveRole',
 			getPageData: async (client, config) => {
 				const { guildId } = config;
 
@@ -168,8 +168,8 @@ export const configOptions: ConfigOptions = {
 				];
 
 				var dailyActiveRoleSM = buildRoleSelectMenu(client, {
-					moduleId: 'activity',
-					optionId: 'dailyActiveRole',
+					module: 'activity',
+					option: 'dailyActiveRole',
 					ownerId: config.pageOwner.id,
 					defaultRoles: [actConf?.dailyActiveRole],
 				});
@@ -190,8 +190,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			moduleId: 'activity',
-			optionId: 'weeklyActiveRole',
+			module: 'activity',
+			option: 'weeklyActiveRole',
 			getPageData: async (client, config) => {
 				const { guildId } = config;
 
@@ -209,8 +209,8 @@ export const configOptions: ConfigOptions = {
 				];
 
 				var weeklyActiveRoleSM = buildRoleSelectMenu(client, {
-					moduleId: 'activity',
-					optionId: 'dailyActiveRole',
+					module: 'activity',
+					option: 'dailyActiveRole',
 					ownerId: config.pageOwner.id,
 					defaultRoles: [actConf?.weeklyActiveRole],
 				});
@@ -231,8 +231,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			moduleId: 'list',
-			optionId: 'overview',
+			module: 'list',
+			option: 'overview',
 			async getPageData(client, config) {
 				const { isEnabled } = config;
 
@@ -242,8 +242,8 @@ export const configOptions: ConfigOptions = {
 				];
 
 				var toggleModuleButton = buildButton(client, {
-					moduleId: config.moduleId,
-					optionId: config.optionId,
+					module: config.module,
+					option: config.option,
 					ownerId: config.pageOwner.id,
 					value: isEnabled ? 'false' : 'true',
 					label: `${isEnabled ? 'Disable' : 'Enable'} Module`,
@@ -263,8 +263,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			moduleId: 'list',
-			optionId: 'logChannel',
+			module: 'list',
+			option: 'logChannel',
 			async getPageData(client, config) {
 				const { guildId } = config;
 
@@ -282,8 +282,8 @@ export const configOptions: ConfigOptions = {
 				];
 
 				var channelSelectMenu = buildChannelSelectMenu(client, {
-					moduleId: 'list',
-					optionId: 'logChannel',
+					module: 'list',
+					option: 'logChannel',
 					ownerId: config.pageOwner.id,
 					defaultChannels: [listConf?.logChannel],
 				});
@@ -304,8 +304,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			moduleId: 'moderation',
-			optionId: 'overview',
+			module: 'moderation',
+			option: 'overview',
 			async getPageData(client, config) {
 				const { isEnabled } = config;
 
@@ -315,8 +315,8 @@ export const configOptions: ConfigOptions = {
 				];
 
 				var toggleModuleButton = buildButton(client, {
-					moduleId: config.moduleId,
-					optionId: config.optionId,
+					module: config.module,
+					option: config.option,
 					ownerId: config.pageOwner.id,
 					value: isEnabled ? 'false' : 'true',
 					label: `${isEnabled ? 'Disable' : 'Enable'} Module`,
@@ -336,8 +336,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			moduleId: 'moderation',
-			optionId: 'logChannel',
+			module: 'moderation',
+			option: 'logChannel',
 			async getPageData(client, config) {
 				const { guildId } = config;
 
@@ -355,8 +355,8 @@ export const configOptions: ConfigOptions = {
 				];
 
 				var channelSelectMenu = buildChannelSelectMenu(client, {
-					moduleId: 'moderation',
-					optionId: 'logChannel',
+					module: 'moderation',
+					option: 'logChannel',
 					ownerId: config.pageOwner.id,
 					defaultChannels: [modConf?.logChannel],
 				});
@@ -377,8 +377,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			moduleId: 'moderation',
-			optionId: 'roles',
+			module: 'moderation',
+			option: 'roles',
 			async getPageData(client, config) {
 				const { guildId } = config;
 
@@ -402,8 +402,8 @@ export const configOptions: ConfigOptions = {
 				];
 
 				var moderationRolesSM = buildRoleSelectMenu(client, {
-					moduleId: 'moderation',
-					optionId: 'roles',
+					module: 'moderation',
+					option: 'roles',
 					ownerId: config.pageOwner.id,
 					maxValues: 10,
 					defaultRoles: [...roleIds],
@@ -438,8 +438,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			moduleId: 'persist',
-			optionId: 'overview',
+			module: 'persist',
+			option: 'overview',
 			async getPageData(client, config) {
 				const { isEnabled } = config;
 
@@ -449,8 +449,8 @@ export const configOptions: ConfigOptions = {
 				];
 
 				var toggleModuleButton = buildButton(client, {
-					moduleId: config.moduleId,
-					optionId: config.optionId,
+					module: config.module,
+					option: config.option,
 					ownerId: config.pageOwner.id,
 					value: isEnabled ? 'false' : 'true',
 					label: `${isEnabled ? 'Disable' : 'Enable'} Module`,
@@ -470,8 +470,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			moduleId: 'persist',
-			optionId: 'logChannel',
+			module: 'persist',
+			option: 'logChannel',
 			async getPageData(client, config) {
 				const { guildId } = config;
 
@@ -489,8 +489,8 @@ export const configOptions: ConfigOptions = {
 				];
 
 				var channelSelectMenu = buildChannelSelectMenu(client, {
-					moduleId: 'persist',
-					optionId: 'logChannel',
+					module: 'persist',
+					option: 'logChannel',
 					ownerId: config.pageOwner.id,
 					defaultChannels: [perConf?.logChannel],
 				});
@@ -511,8 +511,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			moduleId: 'persist',
-			optionId: 'nicknames',
+			module: 'persist',
+			option: 'nicknames',
 			async getPageData(client, config) {
 				const { guildId } = config;
 
@@ -526,8 +526,8 @@ export const configOptions: ConfigOptions = {
 				];
 
 				var nicknamesButton = buildButton(client, {
-					moduleId: config.moduleId,
-					optionId: config.optionId,
+					module: config.module,
+					option: config.option,
 					ownerId: config.pageOwner.id,
 					value: perConf?.nicknames ? 'true' : 'false',
 					label: `${
@@ -554,8 +554,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			moduleId: 'persist',
-			optionId: 'requiredRoles',
+			module: 'persist',
+			option: 'requiredRoles',
 			async getPageData(client, config) {
 				const { guildId } = config;
 
@@ -579,8 +579,8 @@ export const configOptions: ConfigOptions = {
 				];
 
 				var requiredRolesSM = buildRoleSelectMenu(client, {
-					moduleId: 'persist',
-					optionId: 'requiredRoles',
+					module: 'persist',
+					option: 'requiredRoles',
 					ownerId: config.pageOwner.id,
 					maxValues: 10,
 					defaultRoles: [...roleIds],
@@ -623,8 +623,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			moduleId: 'persist',
-			optionId: 'persistRoles',
+			module: 'persist',
+			option: 'persistRoles',
 			async getPageData(client, config) {
 				const { guildId } = config;
 
@@ -648,8 +648,8 @@ export const configOptions: ConfigOptions = {
 				];
 
 				var persistRolesSM = buildRoleSelectMenu(client, {
-					moduleId: 'persist',
-					optionId: 'persistRoles',
+					module: 'persist',
+					option: 'persistRoles',
 					ownerId: config.pageOwner.id,
 					maxValues: 10,
 					defaultRoles: [...roleIds],
@@ -688,8 +688,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			moduleId: 'verification',
-			optionId: 'overview',
+			module: 'verification',
+			option: 'overview',
 			async getPageData(client, config) {
 				const { isEnabled } = config;
 
@@ -699,8 +699,8 @@ export const configOptions: ConfigOptions = {
 				];
 
 				var toggleModuleButton = buildButton(client, {
-					moduleId: config.moduleId,
-					optionId: config.optionId,
+					module: config.module,
+					option: config.option,
 					ownerId: config.pageOwner.id,
 					value: isEnabled ? 'false' : 'true',
 					label: `${isEnabled ? 'Disable' : 'Enable'} Module`,
@@ -720,8 +720,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			moduleId: 'verification',
-			optionId: 'logChannel',
+			module: 'verification',
+			option: 'logChannel',
 			async getPageData(client, config) {
 				const { guildId } = config;
 
@@ -740,8 +740,8 @@ export const configOptions: ConfigOptions = {
 				];
 
 				var channelSelectMenu = buildChannelSelectMenu(client, {
-					moduleId: 'verification',
-					optionId: 'logChannel',
+					module: 'verification',
+					option: 'logChannel',
 					ownerId: config.pageOwner.id,
 					defaultChannels: [verConf?.logChannel],
 				});
@@ -763,8 +763,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			moduleId: 'verification',
-			optionId: 'pendingChannel',
+			module: 'verification',
+			option: 'pendingChannel',
 			async getPageData(client, config) {
 				const { guildId } = config;
 
@@ -783,8 +783,8 @@ export const configOptions: ConfigOptions = {
 				];
 
 				var channelSelectMenu = buildChannelSelectMenu(client, {
-					moduleId: 'verification',
-					optionId: 'pendingChannel',
+					module: 'verification',
+					option: 'pendingChannel',
 					ownerId: config.pageOwner.id,
 					defaultChannels: [verConf?.pendingChannel],
 				});
@@ -806,8 +806,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			moduleId: 'verification',
-			optionId: 'roles',
+			module: 'verification',
+			option: 'roles',
 			async getPageData(client, config) {
 				const { guildId } = config;
 
@@ -831,8 +831,8 @@ export const configOptions: ConfigOptions = {
 				];
 
 				var verificationRolesSM = buildRoleSelectMenu(client, {
-					moduleId: 'verification',
-					optionId: 'roles',
+					module: 'verification',
+					option: 'roles',
 					ownerId: config.pageOwner.id,
 					maxValues: 10,
 					defaultRoles: [...roleIds],

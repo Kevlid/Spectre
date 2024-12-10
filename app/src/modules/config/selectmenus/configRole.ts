@@ -18,15 +18,15 @@ export const ConfigRoleSelectMenu: SelectMenu = {
 		await configOptions.pages
 			.find(
 				(page) =>
-					page.moduleId === options.moduleId &&
-					page.optionId === options.optionId
+					page.module === options.module &&
+					page.option === options.option
 			)
 			.updateOption(client, interaction.guildId, interaction.values);
 
 		var page = await getPage(client, {
 			guildId: interaction.guildId,
-			moduleId: options.moduleId,
-			optionId: options.optionId,
+			module: options.module,
+			option: options.option,
 			pageOwner: interaction.user,
 		});
 

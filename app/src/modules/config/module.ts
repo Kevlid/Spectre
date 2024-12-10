@@ -20,8 +20,6 @@ import { ConfigSlash } from './slash/config';
 
 // Buttons
 import { ConfigButton } from './buttons/configButton';
-import { ConfigDisableButton } from './buttons/configDisable';
-import { ConfigEnableButton } from './buttons/configEnable';
 
 export const ConfigModule: Module = {
 	id: 'config',
@@ -35,6 +33,6 @@ export const ConfigModule: Module = {
 		ConfigOptionSelectMenu,
 	],
 	slashCommands: [ConfigSlash],
-	buttons: [ConfigButton, ConfigDisableButton, ConfigEnableButton],
+	buttons: [ConfigButton],
 	default: true,
 };

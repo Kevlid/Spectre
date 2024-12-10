@@ -3,8 +3,8 @@ import { ChannelType, RoleSelectMenuBuilder } from 'discord.js';
 import { ConfigChannelSelectMenu } from '../selectmenus/configChannel';
 
 interface SelectMenuConfig {
-	moduleId: string;
-	optionId: string;
+	module: string;
+	option: string;
 	ownerId: string;
 	maxValues?: number;
 	defaultRoles?: string[];
@@ -19,8 +19,8 @@ export const buildRoleSelectMenu = (
 	SelectMenu.setCustomId(
 		client.createCustomId({
 			customId: ConfigChannelSelectMenu.customId,
-			moduleId: config.moduleId,
-			optionId: config.optionId,
+			module: config.module,
+			option: config.option,
 			ownerId: config.ownerId,
 		})
 	);

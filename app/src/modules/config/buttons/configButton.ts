@@ -18,15 +18,15 @@ export const ConfigButton: Button = {
 		await configOptions.pages
 			.find(
 				(page) =>
-					page.moduleId === options.moduleId &&
-					page.optionId === options.optionId
+					page.module === options.module &&
+					page.option === options.option
 			)
 			.updateOption(client, interaction.guildId, [options.value]);
 
 		var page = await getPage(client, {
 			guildId: interaction.guildId,
-			moduleId: options.moduleId,
-			optionId: options.optionId,
+			module: options.module,
+			option: options.option,
 			pageOwner: interaction.user,
 		});
 		interaction.update({
