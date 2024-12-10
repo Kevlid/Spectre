@@ -18,5 +18,6 @@ export const SetStatusPrefix: PrefixCommand = {
 		await client.user.setActivity(statusText, {
 			type: ActivityType.Custom,
 		});
+		message.reply(`Status set to \`${statusText}\` successfully!`);
 	},
 };
