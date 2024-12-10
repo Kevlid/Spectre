@@ -1,6 +1,7 @@
-import { Collection } from 'discord.js';
+import { Collection, Guild, User } from 'discord.js';
 import { KiwiClient } from '@/client';
 import { Module } from '@/types/module';
+import { env } from '@/env';
 
 export class ModuleManager {
 	private client: KiwiClient;
@@ -69,5 +70,47 @@ export class ModuleManager {
 			cmds.push(command.config);
 		}
 		this.client.CommandManager.register(cmds, guildId);
+	}
+
+	public async checkGuild(guild: Guild, user: User, module: Module) {
+		if (module.developerOnly && !env.STAFF_USERS.includes(user.id)) {
+			return {
+				response: `You are not a developer!`,
+				status: false,
+			};
+		}
+
+		if (!module?.default) {
+			var isEnabled = await this.client.db.repos.guildModules.findOneBy({
+				guildId: guild.id,
+				moduleId: module.id,
+			});
+			if (!isEnabled) {
+				return {
+					response: `This module is disabled!`,
+					status: false,
+				};
+			}
+		}
+		if (module.permissions) {
+			var member = await guild.members.fetch(user.id);
+			var hasPermission = false;
+			for (var permission of module.permissions) {
+				if (member.permissions.has(permission)) {
+					hasPermission = true;
+					break;
+				}
+			}
+			if (!hasPermission) {
+				return {
+					response: `You don't have permission to use this module!`,
+					status: false,
+				};
+			}
+		}
+
+		return {
+			status: true,
+		};
 	}
 }

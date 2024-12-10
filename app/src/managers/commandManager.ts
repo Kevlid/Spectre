@@ -9,7 +9,7 @@ import {
 	CommandOptions,
 	ConfigOptionTypes,
 } from '@/types/command';
-import { Collection, Message, TextChannel, User } from 'discord.js';
+import { Collection, Message, TextChannel } from 'discord.js';
 import { EventList } from '@/types/event';
 
 export class CommandManager {
@@ -85,25 +85,22 @@ export class CommandManager {
 
 			if (!command) return;
 
-			try {
-				if (
-					interaction.guildId &&
-					command.module &&
-					!command.module?.default
-				) {
-					let isEnabled =
-						await this.client.db.repos.guildModules.findOneBy({
-							guildId: interaction.guildId,
-							moduleId: command.module.id,
-						});
-					if (!isEnabled) {
-						interaction.reply({
-							content: `This command is disabled!`,
-							ephemeral: true,
-						});
-						return;
-					}
+			if (interaction.guildId) {
+				var checks = await this.client.ModuleManager.checkGuild(
+					interaction.guild,
+					interaction.user,
+					command.module
+				);
+				if (!checks.status) {
+					interaction.reply({
+						content: checks.response,
+						ephemeral: true,
+					});
+					return;
 				}
+			}
+
+			try {
 				await command.execute(interaction, this.client);
 			} catch (error) {
 				console.error(error);
@@ -131,25 +128,22 @@ export class CommandManager {
 
 			if (!command) return;
 
-			try {
-				if (
-					interaction.guildId &&
-					command.module &&
-					!command.module?.default
-				) {
-					let isEnabled =
-						await this.client.db.repos.guildModules.findOneBy({
-							guildId: interaction.guildId,
-							moduleId: command.module.id,
-						});
-					if (!isEnabled) {
-						interaction.reply({
-							content: `This command is disabled!`,
-							ephemeral: true,
-						});
-						return;
-					}
+			if (interaction.guildId) {
+				var checks = await this.client.ModuleManager.checkGuild(
+					interaction.guild,
+					interaction.user,
+					command.module
+				);
+				if (!checks.status) {
+					interaction.reply({
+						content: checks.response,
+						ephemeral: true,
+					});
+					return;
 				}
+			}
+
+			try {
 				await command.execute(interaction, this.client);
 			} catch (error) {
 				console.error(error);
@@ -181,12 +175,16 @@ export class CommandManager {
 			message.delete();
 		}
 
-		if (
-			command.module.developerOnly &&
-			!env.STAFF_USERS.includes(message.author.id)
-		) {
-			await channel.send('Developer only command!');
-			return;
+		if (message.guildId) {
+			var checks = await this.client.ModuleManager.checkGuild(
+				message.guild,
+				message.author,
+				command.module
+			);
+			if (!checks.status) {
+				await channel.send(checks.response);
+				return;
+			}
 		}
 
 		var commandOptions: CommandOptions = {
@@ -258,36 +256,6 @@ export class CommandManager {
 		}
 
 		try {
-			if (
-				message.guildId &&
-				!command.module?.default &&
-				!command.module.developerOnly
-			) {
-				let isEnabled =
-					await await this.client.db.repos.guildModules.findOneBy({
-						guildId: message.guildId,
-						moduleId: command.module.id,
-					});
-				if (!isEnabled) {
-					channel.send({ content: `This command is disabled!` });
-					return;
-				}
-
-				if (command.checks) {
-					var passedChecks = await command.checks(
-						this.client,
-						message,
-						commandOptions,
-						...args
-					);
-					if (!passedChecks) {
-						channel.send({
-							content: `You do not have permission to use this command!`,
-						});
-						return;
-					}
-				}
-			}
 			await command.execute(
 				this.client,
 				message,
