@@ -9,6 +9,7 @@ export const env = {
 	PREFIX: '!',
 	STAFF_USERS: (process.env.STAFF_USERS?.split(',') || []) as string[],
 	STAFF_SERVERS: (process.env.STAFF_SERVERS?.split(',') || []) as string[],
+	LOG_CHANNELS: (process.env.LOG_CHANNELS?.split(',') || []) as string[],
 
 	RESTART_WEBHOOK_URL: process.env.RESTART_WEBHOOK_URL as string,
 
