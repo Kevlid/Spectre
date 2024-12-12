@@ -20,9 +20,7 @@ export const buildStringSelectMenu = (
 ): StringSelectMenuBuilder => {
 	var SelectMenu = new StringSelectMenuBuilder();
 
-	console.log(config.customId);
 	SelectMenu.setCustomId(config.customId);
-
 	SelectMenu.setPlaceholder(config.placeholder);
 
 	if (config.minValues) {
@@ -40,7 +38,7 @@ export const buildStringSelectMenu = (
 		SelectMenu.addOptions(config.options);
 	}
 
-	if (config.defaults) {
+	if (config.defaults.length > 0) {
 		for (var option of SelectMenu.options) {
 			if (config.defaults.includes(option.data.value)) {
 				option.data.default = true;
