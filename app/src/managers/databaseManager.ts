@@ -160,4 +160,33 @@ export class DatabaseManager {
 		if (moduleStatus) return true;
 		return false;
 	}
+
+	public async getActivityConfig(guildId: string) {
+		return await this.repos.activityConfig.findOne({ where: { guildId } });
+	}
+
+	public async getListConfig(guildId: string) {
+		return await this.repos.listConfig.findOne({ where: { guildId } });
+	}
+
+	public async getModerationConfig(guildId: string) {
+		return await this.repos.moderationConfig.findOne({
+			where: { guildId },
+			relations: ['roles'],
+		});
+	}
+
+	public async getPersistConfig(guildId: string) {
+		return await this.repos.persistConfig.findOne({
+			where: { guildId },
+			relations: ['roles', 'requiredRoles'],
+		});
+	}
+
+	public async getVerificationConfig(guildId: string) {
+		return await this.repos.verificationConfig.findOne({
+			where: { guildId },
+			relations: ['roles'],
+		});
+	}
 }
