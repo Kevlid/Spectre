@@ -33,6 +33,8 @@ export class ComponentManager {
 			ownerId: 'oi',
 			module: 'mo',
 			option: 'op',
+			userId: 'ui',
+			memberId: 'mi',
 		};
 	}
 
@@ -45,6 +47,16 @@ export class ComponentManager {
 			(newKey) => this.shortKeys[newKey] === key
 		);
 		return key;
+	}
+
+	public decodeCustomId(customId: string): CustomOptions {
+		let config = {};
+		for (const x of customId.split('&')) {
+			let [key, value] = x.split('=');
+			key = this.getKeyFromShort(key) ?? key;
+			config[key] = value;
+		}
+		return config;
 	}
 
 	public registerSelectMenu(selectMenu: SelectMenu) {
@@ -60,12 +72,7 @@ export class ComponentManager {
 	async onInteraction(interaction: MessageComponentInteraction) {
 		if (!interaction.isMessageComponent()) return;
 
-		const config: CustomOptions = {};
-		for (const x of interaction.customId.split('&')) {
-			var [key, value] = x.split('=');
-			key = this.getKeyFromShort(key) ?? key;
-			config[key] = value;
-		}
+		var config = await this.decodeCustomId(interaction.customId);
 
 		if (interaction.isAnySelectMenu()) {
 			let selectMenu = this.SelectMenus.get(config.customId);
