@@ -16,7 +16,6 @@ interface SelectMenuConfig {
 }
 
 export const buildStringSelectMenu = (
-	client: KiwiClient,
 	config: SelectMenuConfig
 ): StringSelectMenuBuilder => {
 	var SelectMenu = new StringSelectMenuBuilder();
@@ -29,7 +28,7 @@ export const buildStringSelectMenu = (
 	if (config.minValues) {
 		SelectMenu.setMinValues(config.minValues);
 	} else {
-		SelectMenu.setMinValues(0);
+		SelectMenu.setMinValues(1);
 	}
 	if (config.maxValues) {
 		SelectMenu.setMaxValues(config.maxValues);
