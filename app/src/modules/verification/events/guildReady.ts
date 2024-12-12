@@ -41,7 +41,8 @@ export const GuildReady: Event = {
 				member.roles.cache.hasAny(
 					...verConf.roles.map((role) => role.roleId)
 				) ||
-				member.user.bot
+				member.user.bot ||
+				verConf.roles.length <= 0
 			) {
 				continue;
 			}
