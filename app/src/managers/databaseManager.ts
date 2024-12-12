@@ -19,6 +19,7 @@ import { PersistConfigRoleEntity } from '@/entities/PersistConfigRole';
 import { PersistNicknameEntity } from '@/entities/PersistNickname';
 import { PersistUserRoleEntity } from '@/entities/PresistUserRole';
 import { VerificationConfigEntity } from '@/entities/VerificationConfig';
+import { VerificationConfigPingEntity } from '@/entities/VerificationConfigPing';
 import { VerificationConfigRoleEntity } from '@/entities/VerificationConfigRole';
 import { VerificationPendingMessageEntity } from '@/entities/VerificationPendingMessage';
 
@@ -42,6 +43,7 @@ export class DatabaseManager {
 		persistNickname?: Repository<PersistNicknameEntity>;
 		persistUserRole?: Repository<PersistUserRoleEntity>;
 		verificationConfig?: Repository<VerificationConfigEntity>;
+		verificationConfigPing?: Repository<VerificationConfigPingEntity>;
 		verificationConfigRole?: Repository<VerificationConfigRoleEntity>;
 		verificationPendingMessage?: Repository<VerificationPendingMessageEntity>;
 	};
@@ -100,6 +102,9 @@ export class DatabaseManager {
 			),
 			verificationConfig: await this.dataSource.getRepository(
 				VerificationConfigEntity
+			),
+			verificationConfigPing: await this.dataSource.getRepository(
+				VerificationConfigPingEntity
 			),
 			verificationConfigRole: await this.dataSource.getRepository(
 				VerificationConfigRoleEntity

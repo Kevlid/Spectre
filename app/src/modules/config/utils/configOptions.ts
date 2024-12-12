@@ -59,6 +59,7 @@ import { ModerationConfigRoleEntity } from '@/entities/ModerationConfigRole';
 import { PersistConfigRoleEntity } from '@/entities/PersistConfigRole';
 import { PersistConfigRequiredRoleEntity } from '@/entities/PersistConfigRequiredRole';
 import { VerificationConfigRoleEntity } from '@/entities/VerificationConfigRole';
+import { VerificationConfigPingEntity } from '@/entities/VerificationConfigPing';
 
 export const configOptions: ConfigOptions = {
 	setupConfig: async (client, config) => {
@@ -802,6 +803,59 @@ export const configOptions: ConfigOptions = {
 				if (verConf) {
 					verConf.pendingChannel = value;
 					await client.db.repos.verificationConfig.save(verConf);
+				}
+			},
+		},
+		{
+			module: 'verification',
+			option: 'pings',
+			async getPageData(client, config) {
+				const { guildId } = config;
+
+				var verConf = await client.db.getVerificationConfig(guildId);
+
+				var pingIds: Array<string> =
+					verConf?.pings?.map((ping) => ping.roleId) || [];
+
+				var pings = verConf?.pings
+					?.map((ping) => `<@&${ping.roleId}>`)
+					.join(', ');
+
+				var description = [
+					`### Verification Module`,
+					`**Pings:** ${pings ? `${pings}` : 'None'}`,
+				];
+
+				var verificationRolesSM = buildRoleSelectMenu(client, {
+					module: 'verification',
+					option: 'pings',
+					ownerId: config.pageOwner.id,
+					maxValues: 5,
+					defaultRoles: [...pingIds],
+				});
+
+				return { description, rows: [[verificationRolesSM]] };
+			},
+			updateOption: async (client, guildId, values: string[]) => {
+				var verConf = await client.db.getVerificationConfig(guildId);
+
+				var oldPings = verConf.pings?.filter(
+					(ping) => !values.includes(ping.roleId)
+				);
+
+				for (let oldPing of oldPings) {
+					await client.db.repos.verificationConfigPing.delete(
+						oldPing
+					);
+				}
+
+				for (let value of values) {
+					if (!verConf.pings?.some((ping) => ping.roleId === value)) {
+						let role = new VerificationConfigPingEntity();
+						role.roleId = value;
+						role.verificationConfig = verConf;
+						await client.db.repos.verificationConfigPing.save(role);
+					}
 				}
 			},
 		},
