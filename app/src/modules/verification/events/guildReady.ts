@@ -53,16 +53,19 @@ export const GuildReady: Event = {
 			});
 			if (oldPendingMessage) continue;
 
-			var pendingMsg = await buildPendingMessage(client, guild, member);
-			console.log(pendingMsg);
+			var { content, embeds, components } = await buildPendingMessage(
+				client,
+				guild,
+				member
+			);
 			var pendingChannel = guild.channels.cache.get(
 				verConf.pendingChannel
 			);
 			if (!pendingChannel || !pendingChannel.isSendable()) continue;
 			var pendingMessage = await pendingChannel.send({
-				content: pendingMsg.content,
-				embeds: [...pendingMsg.embeds],
-				components: [...pendingMsg.components],
+				content,
+				embeds: [...embeds],
+				components: [...components],
 			});
 			client.db.createPendingMessage({
 				guildId: guild.id,
