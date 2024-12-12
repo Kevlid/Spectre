@@ -86,6 +86,7 @@ export const buildPendingMessage = async (
 	});
 
 	return {
+		content: verConf.pings.map((ping) => `<@&${ping.roleId}>`).join(' '),
 		embeds: [pendingEmbed],
 		components: [
 			new ActionRowBuilder<StringSelectMenuBuilder>().addComponents([
