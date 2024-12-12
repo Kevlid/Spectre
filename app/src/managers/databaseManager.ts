@@ -193,7 +193,7 @@ export class DatabaseManager {
 	public async getVerificationConfig(guildId: string) {
 		return await this.repos.verificationConfig.findOne({
 			where: { guildId },
-			relations: ['roles'],
+			relations: ['pings', 'roles'],
 		});
 	}
 
