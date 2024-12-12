@@ -40,7 +40,7 @@ export const GuildMemberAdd: Event = {
 		);
 		if (!pendingChannel) return;
 
-		var { embeds, components } = await buildPendingMessage(
+		var { content, embeds, components } = await buildPendingMessage(
 			client,
 			member.guild,
 			member
@@ -48,6 +48,7 @@ export const GuildMemberAdd: Event = {
 
 		if (!pendingChannel.isSendable()) return;
 		var pendingMessage = await pendingChannel.send({
+			content,
 			embeds: [...embeds],
 			components: [...components],
 		});

@@ -52,7 +52,7 @@ export const GuildReady: Event = {
 			});
 			if (oldPendingMessage) continue;
 
-			var { embeds, components } = await buildPendingMessage(
+			var { content, embeds, components } = await buildPendingMessage(
 				client,
 				guild,
 				member
@@ -62,6 +62,7 @@ export const GuildReady: Event = {
 			);
 			if (!pendingChannel || !pendingChannel.isSendable()) continue;
 			var pendingMessage = await pendingChannel.send({
+				content,
 				embeds: [...embeds],
 				components: [...components],
 			});
