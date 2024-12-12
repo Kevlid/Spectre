@@ -2,7 +2,7 @@ import { Module } from '@/types/module';
 
 import { CleanDatabasePrefix } from './prefix/clean-database';
 import { RandomColorPrefix } from './prefix/random-color';
-import { RestartPrefix } from './prefix/restart';
+import { UpdatePrefix } from './prefix/update';
 import { SetStatusPrefix } from './prefix/set-status';
 import { TriggerJoinPrefix } from './prefix/trigger-join';
 
@@ -12,7 +12,7 @@ export const DevModule: Module = {
 	prefixCommands: [
 		CleanDatabasePrefix,
 		RandomColorPrefix,
-		RestartPrefix,
+		UpdatePrefix,
 		SetStatusPrefix,
 		TriggerJoinPrefix,
 	],
