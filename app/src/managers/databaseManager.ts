@@ -1,4 +1,4 @@
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, FindOptionsWhere, Repository, DeepPartial } from 'typeorm';
 import { KiwiClient } from '@/client';
 
 import { dataSource } from '@/datasource';
@@ -198,32 +198,30 @@ export class DatabaseManager {
 	}
 
 	public async createPendingMessage(
-		guildId: string,
-		userId: string,
-		messageId: string
+		options: DeepPartial<VerificationPendingMessageEntity>
 	) {
-		return await this.repos.verificationPendingMessage.insert({
-			guildId,
-			userId,
-			messageId,
+		return await this.repos.verificationPendingMessage.insert(options);
+	}
+
+	public async getPendingMessage(
+		options: FindOptionsWhere<VerificationPendingMessageEntity>
+	): Promise<VerificationPendingMessageEntity> {
+		return await this.repos.verificationPendingMessage.findOneBy({
+			...options,
 		});
 	}
 
-	public async getPendingMessage(findOptions: {
-		guildId?: string;
-		userId?: string;
-		messageId?: string;
-	}) {
-		return await this.repos.verificationPendingMessage.findOne({
-			where: findOptions,
+	public async getPendingMessages(
+		options: FindOptionsWhere<VerificationPendingMessageEntity>
+	): Promise<VerificationPendingMessageEntity[]> {
+		return await this.repos.verificationPendingMessage.findBy({
+			...options,
 		});
 	}
 
-	public async deletePendingMessage(findOptions: {
-		guildId?: string;
-		userId?: string;
-		messageId?: string;
-	}) {
-		return await this.repos.verificationPendingMessage.delete(findOptions);
+	public async deletePendingMessages(
+		options: FindOptionsWhere<VerificationPendingMessageEntity>
+	) {
+		return await this.repos.verificationPendingMessage.delete(options);
 	}
 }
