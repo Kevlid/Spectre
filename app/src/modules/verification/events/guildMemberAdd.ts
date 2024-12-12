@@ -28,6 +28,12 @@ export const GuildMemberAdd: Event = {
 	async execute(client: KiwiClient, member: GuildMember) {
 		if (member.user.bot) return;
 
+		var oldPendingMessage = await client.db.getPendingMessage({
+			guildId: member.guild.id,
+			userId: member.id,
+		});
+		if (oldPendingMessage) return;
+
 		var verConf = await client.db.getVerificationConfig(member.guild.id);
 		var pendingChannel = member.guild.channels.cache.get(
 			verConf.pendingChannel
@@ -41,9 +47,14 @@ export const GuildMemberAdd: Event = {
 		);
 
 		if (!pendingChannel.isSendable()) return;
-		pendingChannel.send({
+		var pendingMessage = await pendingChannel.send({
 			embeds: [...embeds],
 			components: [...components],
+		});
+		client.db.createPendingMessage({
+			guildId: member.guild.id,
+			userId: member.id,
+			messageId: pendingMessage.id,
 		});
 	},
 };

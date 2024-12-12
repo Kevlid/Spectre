@@ -10,6 +10,10 @@ export const DenyUserButton: Button = {
 		client: KiwiClient
 	) => {
 		await interaction.message.delete().catch(() => {});
+		await client.db.deletePendingMessages({
+			guildId: interaction.guild.id,
+			userId: options.memberId,
+		});
 		var verConf = await client.db.getVerificationConfig(
 			interaction.guild.id
 		);
