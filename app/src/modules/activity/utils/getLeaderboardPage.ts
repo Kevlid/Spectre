@@ -7,20 +7,22 @@ import { LeaderboardTimeSelectMenu as LeaderboardTimeSM } from '../selectmenus/l
 import { createVoiceLeaderboard } from './createVoiceLeaderboard';
 import { createMessageLeaderboard } from './createMessageLeaderboard';
 
+import { buildStringSelectMenu } from '@/utils/buildStringSelectMenu';
+
 export const getLeaderboardPage = async (
 	client: KiwiClient,
 	config: {
 		guildId: string;
-		pageId: string;
+		type: string;
 		time: string;
 		pageOwner: User;
 	}
 ) => {
-	const { guildId, pageId, time, pageOwner } = config;
+	const { guildId, type, time, pageOwner } = config;
 
 	var rows = [];
 
-	switch (pageId) {
+	switch (type) {
 		case 'voice': {
 			var content = (await createVoiceLeaderboard(client, guildId, time))
 				.content;
@@ -36,10 +38,10 @@ export const getLeaderboardPage = async (
 	}
 
 	var { options } = LeaderboardTypeSM.config as StringSelectMenuBuilder;
-	var typeSelectMenu = client.Pages.generateSelectMenu({
+	var typeSelectMenu = buildStringSelectMenu(client, {
 		customId: client.createCustomId({
 			customId: LeaderboardTypeSM.customId,
-			valueOne: time,
+			time,
 			ownerId: pageOwner.id,
 		}),
 		placeholder: LeaderboardTypeSM.config.data.placeholder,
@@ -50,16 +52,15 @@ export const getLeaderboardPage = async (
 				description: option.data.description,
 			};
 		}),
-		minValues: 1,
-		defaults: [pageId],
-		type: 'string',
+		maxValues: 1,
+		defaults: [type],
 	});
 
 	var { options } = LeaderboardTimeSM.config as StringSelectMenuBuilder;
-	var timeSelectMenu = client.Pages.generateSelectMenu({
+	var timeSelectMenu = buildStringSelectMenu(client, {
 		customId: client.createCustomId({
 			customId: LeaderboardTimeSM.customId,
-			valueOne: pageId,
+			type,
 			ownerId: pageOwner.id,
 		}),
 		placeholder: LeaderboardTimeSM.config.data.placeholder,
@@ -72,7 +73,6 @@ export const getLeaderboardPage = async (
 		}),
 		minValues: 1,
 		defaults: [time],
-		type: 'string',
 	});
 
 	rows.push(

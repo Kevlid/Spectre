@@ -36,7 +36,7 @@ export const LeaderboardTimeSelectMenu: SelectMenu = {
 	) => {
 		var page = await getLeaderboardPage(client, {
 			guildId: interaction.guildId,
-			pageId: options.optionOne,
+			type: options.type,
 			time: interaction.values[0],
 			pageOwner: interaction.user,
 		});

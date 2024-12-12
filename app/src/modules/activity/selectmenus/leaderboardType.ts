@@ -30,8 +30,8 @@ export const LeaderboardTypeSelectMenu: SelectMenu = {
 	) => {
 		var page = await getLeaderboardPage(client, {
 			guildId: interaction.guildId,
-			pageId: interaction.values[0],
-			time: options.optionOne,
+			type: interaction.values[0],
+			time: options.time,
 			pageOwner: interaction.user,
 		});
 		interaction.update({

@@ -40,9 +40,9 @@ export class ComponentManager {
 		return this.shortKeys[value] || value;
 	}
 
-	public getKeyFromShort(value: string): string {
-		var key = Object.keys(this.shortKeys).find(
-			(key) => this.shortKeys[key] === value
+	public getKeyFromShort(key: string): string {
+		key = Object.keys(this.shortKeys).find(
+			(newKey) => this.shortKeys[newKey] === key
 		);
 		return key;
 	}
@@ -63,7 +63,7 @@ export class ComponentManager {
 		const config: CustomOptions = {};
 		for (const x of interaction.customId.split('&')) {
 			var [key, value] = x.split('=');
-			key = this.getKeyFromShort(key);
+			key = this.getKeyFromShort(key) ?? key;
 			config[key] = value;
 		}
 

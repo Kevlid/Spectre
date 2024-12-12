@@ -60,8 +60,8 @@ export const LeaderboardSlash: SlashCommand = {
 
 		var page = await getLeaderboardPage(client, {
 			guildId: interaction.guildId,
-			pageId: type,
-			time: time,
+			type,
+			time,
 			pageOwner: interaction.user,
 		});
 		interaction.reply({
