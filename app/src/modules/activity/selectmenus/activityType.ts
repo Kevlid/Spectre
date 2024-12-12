@@ -14,7 +14,7 @@ import { getActivityPage } from '../utils/getActivityPage';
 export const ActivitySelectMenu: SelectMenu = {
 	customId: 'activity-type',
 	config: new StringSelectMenuBuilder()
-		.setPlaceholder('Activity Type')
+		.setPlaceholder('Select an Activity Type')
 		.addOptions(
 			new StringSelectMenuOptionBuilder()
 				.setLabel('Status Activity')
@@ -36,7 +36,7 @@ export const ActivitySelectMenu: SelectMenu = {
 	) => {
 		var page = await getActivityPage(client, {
 			guildId: interaction.guildId,
-			pageId: interaction.values[0],
+			page: interaction.values[0],
 			pageOwner: interaction.user,
 			user: await client.users.fetch(options.userId),
 		});

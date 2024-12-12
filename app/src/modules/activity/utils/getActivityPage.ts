@@ -3,6 +3,7 @@ import {
 	StringSelectMenuBuilder,
 	User,
 	ActivityType,
+	EmbedBuilder,
 } from 'discord.js';
 import { KiwiClient } from '@/client';
 import { Emojis } from '@/emojis';
@@ -10,16 +11,18 @@ import { Emojis } from '@/emojis';
 import { ActivitySelectMenu as ActivitySM } from '../selectmenus/activityType';
 import { getVoice } from './getVoice';
 
+import { buildStringSelectMenu } from '@/utils/buildStringSelectMenu';
+
 export const getActivityPage = async (
 	client: KiwiClient,
 	config: {
 		guildId: string;
-		pageId: string;
+		page: string;
 		pageOwner: User;
 		user: User;
 	}
 ) => {
-	const { guildId, pageId, pageOwner, user } = config;
+	const { guildId, page, pageOwner, user } = config;
 	var guild = await client.guilds.fetch(guildId);
 
 	const hours = new Intl.NumberFormat('en-US', {
@@ -37,7 +40,7 @@ export const getActivityPage = async (
 	var embedDescription = [];
 	var embedFields = [];
 
-	switch (pageId) {
+	switch (page) {
 		case 'status': {
 			var userStatus = await client.db.repos.activityStatus.findBy({
 				userId: user.id,
@@ -155,31 +158,31 @@ export const getActivityPage = async (
 	}
 
 	embeds.push(
-		client.Pages.generateEmbed({
-			author: {
+		new EmbedBuilder()
+			.setAuthor({
 				name: `${client.capitalize(
 					user.displayName
 				)} (${client.capitalize(user.username)})`,
 				iconURL: user.avatarURL(),
-			},
-			description: embedDescription.join('\n'),
-			thumbnail: guild.iconURL(),
-			fields: embedFields,
-			footer: {
+			})
+			.setDescription(embedDescription.join('\n'))
+			.setThumbnail(guild.iconURL())
+			.addFields(embedFields)
+			.setFooter({
 				text: `Requested by ${client.capitalize(pageOwner.username)}`,
 				iconURL: pageOwner.avatarURL(),
-			},
-		})
+			})
 	);
 
 	var { options } = ActivitySM.config as StringSelectMenuBuilder;
-	var moduleSelectMenu = client.Pages.generateSelectMenu({
+
+	var moduleSelectMenu = buildStringSelectMenu({
 		customId: client.createCustomId({
 			customId: ActivitySM.customId,
 			ownerId: pageOwner.id,
 			userId: user.id,
 		}),
-		placeholder: 'Select an Activity Type',
+		placeholder: ActivitySM.config.data.placeholder,
 		options: options.map((option) => {
 			return {
 				label: option.data.label,
@@ -187,8 +190,7 @@ export const getActivityPage = async (
 				description: option.data.description,
 			};
 		}),
-		defaults: [pageId],
-		type: 'string',
+		defaults: [page],
 	});
 
 	rows.push(

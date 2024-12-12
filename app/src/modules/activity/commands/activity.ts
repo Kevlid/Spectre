@@ -35,7 +35,7 @@ export const ActivitySlash: SlashCommand = {
 		var user = interaction.options.getUser('user') || interaction.user;
 		var page = await getActivityPage(client, {
 			guildId: interaction.guildId,
-			pageId: 'status',
+			page: 'status',
 			pageOwner: interaction.user,
 			user,
 		});
