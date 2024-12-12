@@ -694,7 +694,7 @@ export const configOptions: ConfigOptions = {
 				const { isEnabled } = config;
 
 				var description = [
-					`### Moderation Module`,
+					`### Verification Module`,
 					`**Enabled:** ${isEnabled ? 'True' : 'False'}`,
 				];
 
