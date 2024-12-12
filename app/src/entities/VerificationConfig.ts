@@ -14,13 +14,13 @@ export class VerificationConfigEntity {
 	pendingChannel: string;
 
 	@OneToMany(
-		() => VerificationConfigRoleEntity,
+		() => VerificationConfigPingEntity,
 		(role) => role.verificationConfig,
 		{
 			cascade: true,
 		}
 	)
-	pings: VerificationConfigRoleEntity[];
+	pings: VerificationConfigPingEntity[];
 
 	@OneToMany(
 		() => VerificationConfigRoleEntity,
