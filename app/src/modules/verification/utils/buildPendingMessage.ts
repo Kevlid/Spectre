@@ -85,10 +85,13 @@ export const buildPendingMessage = async (
 		url: `https://discord.com/users/${member.user.id}`,
 	});
 
+	var content = '';
+	if (verConf.pings) {
+		content = verConf.pings?.map((ping) => `<@&${ping.roleId}>`).join(' ');
+	}
+
 	return {
-		content: verConf.pings
-			? verConf.pings?.map((ping) => `<@&${ping.roleId}>`).join(' ')
-			: '',
+		content,
 		embeds: [pendingEmbed],
 		components: [
 			new ActionRowBuilder<StringSelectMenuBuilder>().addComponents([
