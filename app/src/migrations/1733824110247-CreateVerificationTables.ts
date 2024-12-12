@@ -69,10 +69,46 @@ export class CreateVerificationTables1733824110247
 			}),
 			true
 		);
+
+		await queryRunner.createTable(
+			new Table({
+				name: 'verification_pending_messages',
+				columns: [
+					{
+						name: 'guild_id',
+						type: 'bigint',
+						isPrimary: true,
+						isNullable: false,
+						unsigned: true,
+					},
+					{
+						name: 'user_id',
+						type: 'bigint',
+						isPrimary: true,
+						isNullable: false,
+						unsigned: true,
+					},
+					{
+						name: 'message_id',
+						type: 'bigint',
+						isNullable: false,
+						unsigned: true,
+					},
+					{
+						name: 'created_at',
+						type: 'timestamp',
+						isNullable: false,
+						default: 'CURRENT_TIMESTAMP',
+					},
+				],
+			}),
+			true
+		);
 	}
 
 	public async down(queryRunner: QueryRunner): Promise<void> {
 		await queryRunner.dropTable('verification_config_roles', true);
 		await queryRunner.dropTable('verification_config', true);
+		await queryRunner.dropTable('verification_pending_messages', true);
 	}
 }

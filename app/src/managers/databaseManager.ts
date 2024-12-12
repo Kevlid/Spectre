@@ -20,28 +20,30 @@ import { PersistNicknameEntity } from '@/entities/PersistNickname';
 import { PersistUserRoleEntity } from '@/entities/PresistUserRole';
 import { VerificationConfigEntity } from '@/entities/VerificationConfig';
 import { VerificationConfigRoleEntity } from '@/entities/VerificationConfigRole';
+import { VerificationPendingMessageEntity } from '@/entities/VerificationPendingMessage';
 
 export class DatabaseManager {
 	public dataSource: DataSource;
 	public client: KiwiClient;
 	public repos: {
-		activityConfig: Repository<ActivityConfigEntity>;
-		activityMessages: Repository<ActivityMessageEntity>;
-		activityPresence: Repository<ActivityPresenceEntity>;
-		activityStatus: Repository<ActivityStatusEntity>;
-		activityVoice: Repository<ActivityVoiceEntity>;
-		activityVoicestates: Repository<ActivityVoicestateEntity>;
-		guildModules: Repository<GuildModuleEntity>;
-		listConfig: Repository<ListConfigEntity>;
-		moderationConfig: Repository<ModerationConfigEntity>;
-		moderationConfigRole: Repository<ModerationConfigRoleEntity>;
-		persistConfig: Repository<PersistConfigEntity>;
-		persistConfigRequiredRole: Repository<PersistConfigRequiredRoleEntity>;
-		persistConfigRole: Repository<PersistConfigRoleEntity>;
-		persistNickname: Repository<PersistNicknameEntity>;
-		persistUserRole: Repository<PersistUserRoleEntity>;
-		verificationConfig: Repository<VerificationConfigEntity>;
-		verificationConfigRole: Repository<VerificationConfigRoleEntity>;
+		activityConfig?: Repository<ActivityConfigEntity>;
+		activityMessages?: Repository<ActivityMessageEntity>;
+		activityPresence?: Repository<ActivityPresenceEntity>;
+		activityStatus?: Repository<ActivityStatusEntity>;
+		activityVoice?: Repository<ActivityVoiceEntity>;
+		activityVoicestates?: Repository<ActivityVoicestateEntity>;
+		guildModules?: Repository<GuildModuleEntity>;
+		listConfig?: Repository<ListConfigEntity>;
+		moderationConfig?: Repository<ModerationConfigEntity>;
+		moderationConfigRole?: Repository<ModerationConfigRoleEntity>;
+		persistConfig?: Repository<PersistConfigEntity>;
+		persistConfigRequiredRole?: Repository<PersistConfigRequiredRoleEntity>;
+		persistConfigRole?: Repository<PersistConfigRoleEntity>;
+		persistNickname?: Repository<PersistNicknameEntity>;
+		persistUserRole?: Repository<PersistUserRoleEntity>;
+		verificationConfig?: Repository<VerificationConfigEntity>;
+		verificationConfigRole?: Repository<VerificationConfigRoleEntity>;
+		verificationPendingMessage?: Repository<VerificationPendingMessageEntity>;
 	};
 
 	constructor(client: KiwiClient) {
@@ -101,6 +103,9 @@ export class DatabaseManager {
 			),
 			verificationConfigRole: await this.dataSource.getRepository(
 				VerificationConfigRoleEntity
+			),
+			verificationPendingMessage: await this.dataSource.getRepository(
+				VerificationPendingMessageEntity
 			),
 		};
 	}
@@ -183,10 +188,42 @@ export class DatabaseManager {
 		});
 	}
 
+	// Verification Database Functions
+
 	public async getVerificationConfig(guildId: string) {
 		return await this.repos.verificationConfig.findOne({
 			where: { guildId },
 			relations: ['roles'],
 		});
+	}
+
+	public async createPendingMessage(
+		guildId: string,
+		userId: string,
+		messageId: string
+	) {
+		return await this.repos.verificationPendingMessage.insert({
+			guildId,
+			userId,
+			messageId,
+		});
+	}
+
+	public async getPendingMessage(findOptions: {
+		guildId?: string;
+		userId?: string;
+		messageId?: string;
+	}) {
+		return await this.repos.verificationPendingMessage.findOne({
+			where: findOptions,
+		});
+	}
+
+	public async deletePendingMessage(findOptions: {
+		guildId?: string;
+		userId?: string;
+		messageId?: string;
+	}) {
+		return await this.repos.verificationPendingMessage.delete(findOptions);
 	}
 }
