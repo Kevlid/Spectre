@@ -53,6 +53,7 @@ export const GuildReady: Event = {
 			if (oldPendingMessage) continue;
 
 			var pendingMsg = await buildPendingMessage(client, guild, member);
+			console.log(pendingMsg);
 			var pendingChannel = guild.channels.cache.get(
 				verConf.pendingChannel
 			);
