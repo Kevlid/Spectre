@@ -2,20 +2,16 @@ import {
 	Client,
 	GatewayIntentBits,
 	Partials,
-	Collection,
 	ColorResolvable,
 	ClientPresenceStatus,
 	Message,
 	TextChannel,
 } from 'discord.js';
 
-import { env } from './env';
-
 import { DatabaseManager } from './managers/databaseManager';
 
 import { EventManager } from './managers/eventManager';
 import { ComponentManager } from './managers/componentManager';
-import { PageManager } from './pageManager';
 import { CommandManager } from './managers/commandManager';
 import { ScheduleManager } from './managers/scheduleManager';
 import { ModuleManager } from './managers/moduleManager';
@@ -32,8 +28,6 @@ export class KiwiClient extends Client {
 	public CommandManager: CommandManager;
 	public ScheduleManager: ScheduleManager;
 	public ModuleManager: ModuleManager;
-
-	public Pages: PageManager;
 
 	private _logChannel: TextChannel;
 
@@ -73,9 +67,6 @@ export class KiwiClient extends Client {
 
 		// Component Manager
 		this.ComponentManager = new ComponentManager(this);
-
-		// Page Manager
-		this.Pages = new PageManager(this);
 
 		// Command Manager
 		this.CommandManager = new CommandManager(this);

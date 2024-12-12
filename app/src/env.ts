@@ -13,8 +13,6 @@ export const env = {
 
 	RESTART_WEBHOOK_URL: process.env.RESTART_WEBHOOK_URL as string,
 
-	//DATABASE_URL: process.env.DATABASE_URL as string,
-	//DATABASE_NAME: process.env.DATABASE_NAME as string,
 	DB_HOST: process.env.DATABASE_HOST as string,
 	DB_PORT: process.env.DATABASE_PORT as string,
 	DB_USER: process.env.DATABASE_USER as string,
