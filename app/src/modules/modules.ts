@@ -7,6 +7,7 @@ import { DevModule } from './dev/module';
 import { ListModule } from './list/module';
 import { ModerationModule } from './moderation/module';
 import { PersistModule } from './persist/module';
+import { verificationModule } from './verification/module';
 
 export const ClientModules: Module[] = [
 	ConfigModule,
@@ -15,4 +16,5 @@ export const ClientModules: Module[] = [
 	ListModule,
 	ModerationModule,
 	PersistModule,
+	verificationModule,
 ];
