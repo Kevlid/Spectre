@@ -6,6 +6,7 @@ import { DenyUserButton } from './buttons/denyUser';
 
 // Events
 import { GuildMemberAdd } from './events/guildMemberAdd';
+import { GuildReady } from './events/guildReady';
 
 // Select Menus
 import { VerifyRoleSelectMenu } from './selectmenus/verifyRole';
@@ -13,6 +14,6 @@ import { VerifyRoleSelectMenu } from './selectmenus/verifyRole';
 export const verificationModule: Module = {
 	id: 'verification',
 	buttons: [ApproveUserButton, DenyUserButton],
-	events: [GuildMemberAdd],
+	events: [GuildMemberAdd, GuildReady],
 	selectMenus: [VerifyRoleSelectMenu],
 };
