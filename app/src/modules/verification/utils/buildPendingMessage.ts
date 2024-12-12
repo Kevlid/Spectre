@@ -85,6 +85,8 @@ export const buildPendingMessage = async (
 		url: `https://discord.com/users/${member.user.id}`,
 	});
 
+	console.log(pendingEmbed, 1011);
+
 	return {
 		content: verConf.pings.map((ping) => `<@&${ping.roleId}>`).join(' '),
 		embeds: [pendingEmbed],
