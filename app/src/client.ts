@@ -21,6 +21,11 @@ export class KiwiClient extends Client {
 	public Settings: {
 		color: ColorResolvable;
 	};
+	public Colors: {
+		fail: ColorResolvable;
+		success: ColorResolvable;
+		normal: ColorResolvable;
+	};
 	public db: DatabaseManager;
 
 	public EventManager: EventManager;
@@ -57,6 +62,12 @@ export class KiwiClient extends Client {
 
 		this.Settings = {
 			color: '#7289DA',
+		};
+
+		this.Colors = {
+			fail: '#ff474d',
+			success: '#90ee90',
+			normal: '#7289DA',
 		};
 
 		// Database Manager
