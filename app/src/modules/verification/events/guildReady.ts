@@ -23,15 +23,16 @@ export const GuildReady: Event = {
 			let pendingChannel = (await guild.channels.fetch(
 				verConf.pendingChannel
 			)) as TextChannel;
-			let pendingMessage = await pendingChannel.messages.fetch(
-				oldPendingMessage.messageId
-			);
+			let pendingMessage = await pendingChannel.messages
+				.fetch(oldPendingMessage.messageId)
+				.catch(() => {});
 			if (!pendingMessage || !member) {
 				await client.db.deletePendingMessages({
 					guildId: guild.id,
 					userId: oldPendingMessage.userId,
 				});
-				await pendingMessage?.delete().catch(() => {});
+				if (pendingMessage)
+					await pendingMessage.delete().catch(() => {});
 			}
 		}
 
