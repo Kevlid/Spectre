@@ -38,7 +38,7 @@ export const getLeaderboardPage = async (
 	}
 
 	var { options } = LeaderboardTypeSM.config as StringSelectMenuBuilder;
-	var typeSelectMenu = buildStringSelectMenu(client, {
+	var typeSelectMenu = buildStringSelectMenu({
 		customId: client.createCustomId({
 			customId: LeaderboardTypeSM.customId,
 			time,
@@ -57,7 +57,7 @@ export const getLeaderboardPage = async (
 	});
 
 	var { options } = LeaderboardTimeSM.config as StringSelectMenuBuilder;
-	var timeSelectMenu = buildStringSelectMenu(client, {
+	var timeSelectMenu = buildStringSelectMenu({
 		customId: client.createCustomId({
 			customId: LeaderboardTimeSM.customId,
 			type,
