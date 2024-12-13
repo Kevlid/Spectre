@@ -14,14 +14,15 @@ export const CleanDatabasePrefix: PrefixCommand = {
 		],
 	},
 	async execute(client, message, commandOptions, guildId: string) {
-		const guild = client.guilds.cache.get(guildId);
+		const guild = await client.guilds.fetch(guildId);
 		if (!guild) {
 			await cleanGuild(client, guildId);
 			await message.reply('Database cleaned from ' + guildId);
+		} else {
+			await message.reply(
+				"You can't clean the database of a guild that I'm in"
+			);
 		}
-		await message.reply(
-			"You can't clean the database of a guild that I'm in"
-		);
 	},
 };
 
