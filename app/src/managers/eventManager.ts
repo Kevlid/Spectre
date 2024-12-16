@@ -30,7 +30,6 @@ export class EventManager {
 		]);
 
 		for (let guild of await client.guilds.fetch()) {
-			client.CommandManager.unregisterAll(guild[0]);
 			client.emit(EventList.GuildReady, await guild[1].fetch());
 		}
 	}
