@@ -1,8 +1,8 @@
-import { Collection } from 'discord.js';
-import { KiwiClient } from '@/client';
-import { Event, EventList } from '@/types/event';
+import { Collection } from "discord.js";
+import { KiwiClient } from "@/client";
+import { Event, EventList } from "@/types/event";
 
-import { ClientModules } from '@/modules/modules';
+import { ClientModules } from "@/modules/modules";
 
 export class EventManager {
 	private client: KiwiClient;
@@ -22,6 +22,7 @@ export class EventManager {
 		}
 
 		client.ModuleManager.register();
+		client.CommandManager.unregisterAll();
 
 		client.ModuleManager.registerCommands([
 			...client.CommandManager.SlashCommands.values(),
@@ -55,10 +56,7 @@ export class EventManager {
 					event.execute(this.client, ...args);
 				} else {
 					var guildId = await event.getGuildId(...args);
-					var isEnabled = await this.client.db.isModuleEnabled(
-						guildId,
-						event.module.id
-					);
+					var isEnabled = await this.client.db.isModuleEnabled(guildId, event.module.id);
 					if (isEnabled) event.execute(this.client, ...args);
 				}
 			});
