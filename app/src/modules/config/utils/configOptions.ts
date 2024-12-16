@@ -1,4 +1,4 @@
-import { KiwiClient } from '@/client';
+import { KiwiClient } from "@/client";
 import {
 	AnyComponentBuilder,
 	ButtonBuilder,
@@ -9,7 +9,7 @@ import {
 	StringSelectMenuBuilder,
 	User,
 	UserSelectMenuBuilder,
-} from 'discord.js';
+} from "discord.js";
 
 export interface Config {
 	guildId: string;
@@ -30,11 +30,7 @@ interface Page {
 	module: string;
 	option?: string;
 	getPageData: (client: KiwiClient, config: Config) => Promise<PageData>;
-	updateOption?: (
-		client: KiwiClient,
-		guildId: string,
-		values: string[]
-	) => Promise<void>;
+	updateOption?: (client: KiwiClient, guildId: string, values: string[]) => Promise<void>;
 }
 
 interface PageData {
@@ -49,50 +45,47 @@ interface PageData {
 	>;
 }
 
-import { toggleModule } from './toggleModule';
+import { toggleModule } from "./toggleModule";
 
-import { buildChannelSelectMenu } from './buildChannelSelectMenu';
-import { buildRoleSelectMenu } from './buildRoleSelectMenu';
-import { buildButton } from './buildButton';
+import { buildChannelSelectMenu } from "./buildChannelSelectMenu";
+import { buildRoleSelectMenu } from "./buildRoleSelectMenu";
+import { buildButton } from "./buildButton";
 
-import { ModerationConfigRoleEntity } from '@/entities/ModerationConfigRole';
-import { PersistConfigRoleEntity } from '@/entities/PersistConfigRole';
-import { PersistConfigRequiredRoleEntity } from '@/entities/PersistConfigRequiredRole';
-import { VerificationConfigRoleEntity } from '@/entities/VerificationConfigRole';
-import { VerificationConfigPingEntity } from '@/entities/VerificationConfigPing';
+import { ModerationConfigRoleEntity } from "@/entities/ModerationConfigRole";
+import { PersistConfigRoleEntity } from "@/entities/PersistConfigRole";
+import { PersistConfigRequiredRoleEntity } from "@/entities/PersistConfigRequiredRole";
+import { VerificationConfigRoleEntity } from "@/entities/VerificationConfigRole";
+import { VerificationConfigPingEntity } from "@/entities/VerificationConfigPing";
 
 export const configOptions: ConfigOptions = {
 	setupConfig: async (client, config) => {
 		config.guild = await client.guilds.fetch(config.guildId);
 		config.guildOwner = await client.users.fetch(config.guild.ownerId);
 		if (config.module)
-			config.isEnabled = await client.db.isModuleEnabled(
-				config.guildId,
-				config.module
-			);
+			config.isEnabled = await client.db.isModuleEnabled(config.guildId, config.module);
 
-		if (!config.option) config.option = 'overview';
+		if (!config.option) config.option = "overview";
 
 		return config;
 	},
 	pages: [
 		{
-			module: 'activity',
-			option: 'overview',
+			module: "activity",
+			option: "overview",
 			getPageData: async (client, config) => {
 				const { isEnabled } = config;
 
 				var description = [
 					`### Activity Module`,
-					`**Enabled:** ${isEnabled ? 'True' : 'False'}`,
+					`**Enabled:** ${isEnabled ? "True" : "False"}`,
 				];
 
 				var toggleModuleButton = buildButton(client, {
 					module: config.module,
 					option: config.option,
 					ownerId: config.pageOwner.id,
-					value: isEnabled ? 'false' : 'true',
-					label: `${isEnabled ? 'Disable' : 'Enable'} Module`,
+					value: isEnabled ? "false" : "true",
+					label: `${isEnabled ? "Disable" : "Enable"} Module`,
 					style: isEnabled ? ButtonStyle.Danger : ButtonStyle.Success,
 				});
 
@@ -100,17 +93,12 @@ export const configOptions: ConfigOptions = {
 			},
 			updateOption: async (client, guildId, values) => {
 				var value = values[0] || null;
-				await toggleModule(
-					client,
-					guildId,
-					'activity',
-					client.getBoolean(value)
-				);
+				await toggleModule(client, guildId, "activity", client.getBoolean(value));
 			},
 		},
 		{
-			module: 'activity',
-			option: 'logChannel',
+			module: "activity",
+			option: "logChannel",
 			getPageData: async (client, config) => {
 				const { guildId } = config;
 
@@ -120,16 +108,12 @@ export const configOptions: ConfigOptions = {
 
 				var description = [
 					`### Activity Module`,
-					`**Log Channel:** ${
-						actConf?.logChannel
-							? `<#${actConf.logChannel}>`
-							: 'None'
-					}`,
+					`**Log Channel:** ${actConf?.logChannel ? `<#${actConf.logChannel}>` : "None"}`,
 				];
 
 				var channelSelectMenu = buildChannelSelectMenu(client, {
-					module: 'activity',
-					option: 'logChannel',
+					module: "activity",
+					option: "logChannel",
 					ownerId: config.pageOwner.id,
 					defaultChannels: [actConf?.logChannel],
 				});
@@ -150,8 +134,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			module: 'activity',
-			option: 'dailyActiveRole',
+			module: "activity",
+			option: "dailyActiveRole",
 			getPageData: async (client, config) => {
 				const { guildId } = config;
 
@@ -162,15 +146,13 @@ export const configOptions: ConfigOptions = {
 				var description = [
 					`### Activity Module`,
 					`**Daily Active Role:** ${
-						actConf?.dailyActiveRole
-							? `<@&${actConf.dailyActiveRole}>`
-							: 'None'
+						actConf?.dailyActiveRole ? `<@&${actConf.dailyActiveRole}>` : "None"
 					}`,
 				];
 
 				var dailyActiveRoleSM = buildRoleSelectMenu(client, {
-					module: 'activity',
-					option: 'dailyActiveRole',
+					module: "activity",
+					option: "dailyActiveRole",
 					ownerId: config.pageOwner.id,
 					defaultRoles: [actConf?.dailyActiveRole],
 				});
@@ -191,8 +173,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			module: 'activity',
-			option: 'weeklyActiveRole',
+			module: "activity",
+			option: "weeklyActiveRole",
 			getPageData: async (client, config) => {
 				const { guildId } = config;
 
@@ -203,15 +185,13 @@ export const configOptions: ConfigOptions = {
 				var description = [
 					`### Activity Module`,
 					`**Weekly Active Role:** ${
-						actConf?.weeklyActiveRole
-							? `<@&${actConf.weeklyActiveRole}>`
-							: 'None'
+						actConf?.weeklyActiveRole ? `<@&${actConf.weeklyActiveRole}>` : "None"
 					}`,
 				];
 
 				var weeklyActiveRoleSM = buildRoleSelectMenu(client, {
-					module: 'activity',
-					option: 'dailyActiveRole',
+					module: "activity",
+					option: "weeklyActiveRole",
 					ownerId: config.pageOwner.id,
 					defaultRoles: [actConf?.weeklyActiveRole],
 				});
@@ -226,28 +206,28 @@ export const configOptions: ConfigOptions = {
 				});
 
 				if (actConf) {
-					actConf.dailyActiveRole = value;
+					actConf.weeklyActiveRole = value;
 					await client.db.repos.activityConfig.save(actConf);
 				}
 			},
 		},
 		{
-			module: 'list',
-			option: 'overview',
+			module: "list",
+			option: "overview",
 			async getPageData(client, config) {
 				const { isEnabled } = config;
 
 				var description = [
 					`### List Module`,
-					`**Enabled:** ${isEnabled ? 'True' : 'False'}`,
+					`**Enabled:** ${isEnabled ? "True" : "False"}`,
 				];
 
 				var toggleModuleButton = buildButton(client, {
 					module: config.module,
 					option: config.option,
 					ownerId: config.pageOwner.id,
-					value: isEnabled ? 'false' : 'true',
-					label: `${isEnabled ? 'Disable' : 'Enable'} Module`,
+					value: isEnabled ? "false" : "true",
+					label: `${isEnabled ? "Disable" : "Enable"} Module`,
 					style: isEnabled ? ButtonStyle.Danger : ButtonStyle.Success,
 				});
 
@@ -255,17 +235,12 @@ export const configOptions: ConfigOptions = {
 			},
 			updateOption: async (client, guildId, values) => {
 				var value = values[0] || null;
-				await toggleModule(
-					client,
-					guildId,
-					'list',
-					client.getBoolean(value)
-				);
+				await toggleModule(client, guildId, "list", client.getBoolean(value));
 			},
 		},
 		{
-			module: 'list',
-			option: 'logChannel',
+			module: "list",
+			option: "logChannel",
 			async getPageData(client, config) {
 				const { guildId } = config;
 
@@ -276,15 +251,13 @@ export const configOptions: ConfigOptions = {
 				var description = [
 					`### List Module`,
 					`**Log Channel:** ${
-						listConf?.logChannel
-							? `<#${listConf.logChannel}>`
-							: 'None'
+						listConf?.logChannel ? `<#${listConf.logChannel}>` : "None"
 					}`,
 				];
 
 				var channelSelectMenu = buildChannelSelectMenu(client, {
-					module: 'list',
-					option: 'logChannel',
+					module: "list",
+					option: "logChannel",
 					ownerId: config.pageOwner.id,
 					defaultChannels: [listConf?.logChannel],
 				});
@@ -305,22 +278,22 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			module: 'moderation',
-			option: 'overview',
+			module: "moderation",
+			option: "overview",
 			async getPageData(client, config) {
 				const { isEnabled } = config;
 
 				var description = [
 					`### Moderation Module`,
-					`**Enabled:** ${isEnabled ? 'True' : 'False'}`,
+					`**Enabled:** ${isEnabled ? "True" : "False"}`,
 				];
 
 				var toggleModuleButton = buildButton(client, {
 					module: config.module,
 					option: config.option,
 					ownerId: config.pageOwner.id,
-					value: isEnabled ? 'false' : 'true',
-					label: `${isEnabled ? 'Disable' : 'Enable'} Module`,
+					value: isEnabled ? "false" : "true",
+					label: `${isEnabled ? "Disable" : "Enable"} Module`,
 					style: isEnabled ? ButtonStyle.Danger : ButtonStyle.Success,
 				});
 
@@ -328,17 +301,12 @@ export const configOptions: ConfigOptions = {
 			},
 			updateOption: async (client, guildId, values) => {
 				var value = values[0] || null;
-				await toggleModule(
-					client,
-					guildId,
-					'moderation',
-					client.getBoolean(value)
-				);
+				await toggleModule(client, guildId, "moderation", client.getBoolean(value));
 			},
 		},
 		{
-			module: 'moderation',
-			option: 'logChannel',
+			module: "moderation",
+			option: "logChannel",
 			async getPageData(client, config) {
 				const { guildId } = config;
 
@@ -348,16 +316,12 @@ export const configOptions: ConfigOptions = {
 
 				var description = [
 					`### Moderation Module`,
-					`**Log Channel:** ${
-						modConf?.logChannel
-							? `<#${modConf.logChannel}>`
-							: 'None'
-					}`,
+					`**Log Channel:** ${modConf?.logChannel ? `<#${modConf.logChannel}>` : "None"}`,
 				];
 
 				var channelSelectMenu = buildChannelSelectMenu(client, {
-					module: 'moderation',
-					option: 'logChannel',
+					module: "moderation",
+					option: "logChannel",
 					ownerId: config.pageOwner.id,
 					defaultChannels: [modConf?.logChannel],
 				});
@@ -378,8 +342,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			module: 'moderation',
-			option: 'roles',
+			module: "moderation",
+			option: "roles",
 			async getPageData(client, config) {
 				const { guildId } = config;
 
@@ -387,24 +351,21 @@ export const configOptions: ConfigOptions = {
 					where: {
 						guildId: guildId,
 					},
-					relations: ['roles'],
+					relations: ["roles"],
 				});
 
-				var roleIds: Array<string> =
-					modConf?.roles?.map((role) => role.roleId) || [];
+				var roleIds: Array<string> = modConf?.roles?.map((role) => role.roleId) || [];
 
-				var roles = modConf?.roles
-					?.map((r) => `<@&${r.roleId}>`)
-					.join(', ');
+				var roles = modConf?.roles?.map((r) => `<@&${r.roleId}>`).join(", ");
 
 				var description = [
 					`### Moderation Module`,
-					`**Roles:** ${roles ? `${roles}` : 'None'}`,
+					`**Roles:** ${roles ? `${roles}` : "None"}`,
 				];
 
 				var moderationRolesSM = buildRoleSelectMenu(client, {
-					module: 'moderation',
-					option: 'roles',
+					module: "moderation",
+					option: "roles",
 					ownerId: config.pageOwner.id,
 					maxValues: 10,
 					defaultRoles: [...roleIds],
@@ -417,12 +378,10 @@ export const configOptions: ConfigOptions = {
 					where: {
 						guildId,
 					},
-					relations: ['roles'],
+					relations: ["roles"],
 				});
 
-				var oldRoles = modConf.roles?.filter(
-					(role) => !values.includes(role.roleId)
-				);
+				var oldRoles = modConf.roles?.filter((role) => !values.includes(role.roleId));
 
 				for (let oldRole of oldRoles) {
 					await client.db.repos.moderationConfig.delete(oldRole);
@@ -439,22 +398,22 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			module: 'persist',
-			option: 'overview',
+			module: "persist",
+			option: "overview",
 			async getPageData(client, config) {
 				const { isEnabled } = config;
 
 				var description = [
 					`### Persist Module`,
-					`**Enabled:** ${isEnabled ? 'True' : 'False'}`,
+					`**Enabled:** ${isEnabled ? "True" : "False"}`,
 				];
 
 				var toggleModuleButton = buildButton(client, {
 					module: config.module,
 					option: config.option,
 					ownerId: config.pageOwner.id,
-					value: isEnabled ? 'false' : 'true',
-					label: `${isEnabled ? 'Disable' : 'Enable'} Module`,
+					value: isEnabled ? "false" : "true",
+					label: `${isEnabled ? "Disable" : "Enable"} Module`,
 					style: isEnabled ? ButtonStyle.Danger : ButtonStyle.Success,
 				});
 
@@ -462,17 +421,12 @@ export const configOptions: ConfigOptions = {
 			},
 			updateOption: async (client, guildId, values) => {
 				var value = values[0] || null;
-				await toggleModule(
-					client,
-					guildId,
-					'persist',
-					client.getBoolean(value)
-				);
+				await toggleModule(client, guildId, "persist", client.getBoolean(value));
 			},
 		},
 		{
-			module: 'persist',
-			option: 'logChannel',
+			module: "persist",
+			option: "logChannel",
 			async getPageData(client, config) {
 				const { guildId } = config;
 
@@ -482,16 +436,12 @@ export const configOptions: ConfigOptions = {
 
 				var description = [
 					`### Persist Module`,
-					`**Log Channel:** ${
-						perConf?.logChannel
-							? `<#${perConf.logChannel}>`
-							: 'None'
-					}`,
+					`**Log Channel:** ${perConf?.logChannel ? `<#${perConf.logChannel}>` : "None"}`,
 				];
 
 				var channelSelectMenu = buildChannelSelectMenu(client, {
-					module: 'persist',
-					option: 'logChannel',
+					module: "persist",
+					option: "logChannel",
 					ownerId: config.pageOwner.id,
 					defaultChannels: [perConf?.logChannel],
 				});
@@ -512,8 +462,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			module: 'persist',
-			option: 'nicknames',
+			module: "persist",
+			option: "nicknames",
 			async getPageData(client, config) {
 				const { guildId } = config;
 
@@ -523,20 +473,16 @@ export const configOptions: ConfigOptions = {
 
 				var description = [
 					`### Persist Module`,
-					`**Nicknames:** ${perConf?.nicknames ? `True` : 'False'}`,
+					`**Nicknames:** ${perConf?.nicknames ? `True` : "False"}`,
 				];
 
 				var nicknamesButton = buildButton(client, {
 					module: config.module,
 					option: config.option,
 					ownerId: config.pageOwner.id,
-					value: perConf?.nicknames ? 'true' : 'false',
-					label: `${
-						perConf?.nicknames ? 'Disable' : 'Enable'
-					} Nicknames`,
-					style: perConf?.nicknames
-						? ButtonStyle.Danger
-						: ButtonStyle.Success,
+					value: perConf?.nicknames ? "true" : "false",
+					label: `${perConf?.nicknames ? "Disable" : "Enable"} Nicknames`,
+					style: perConf?.nicknames ? ButtonStyle.Danger : ButtonStyle.Success,
 				});
 
 				return { description, rows: [[nicknamesButton]] };
@@ -555,8 +501,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			module: 'persist',
-			option: 'requiredRoles',
+			module: "persist",
+			option: "requiredRoles",
 			async getPageData(client, config) {
 				const { guildId } = config;
 
@@ -564,24 +510,22 @@ export const configOptions: ConfigOptions = {
 					where: {
 						guildId: guildId,
 					},
-					relations: ['requiredRoles'],
+					relations: ["requiredRoles"],
 				});
 
 				var roleIds: Array<string> =
 					perConf?.requiredRoles?.map((role) => role.roleId) || [];
 
-				var roles = perConf?.requiredRoles
-					?.map((r) => `<@&${r.roleId}>`)
-					.join(', ');
+				var roles = perConf?.requiredRoles?.map((r) => `<@&${r.roleId}>`).join(", ");
 
 				var description = [
 					`### Persist Module`,
-					`**Required Roles:** ${roles ? `${roles}` : 'None'}`,
+					`**Required Roles:** ${roles ? `${roles}` : "None"}`,
 				];
 
 				var requiredRolesSM = buildRoleSelectMenu(client, {
-					module: 'persist',
-					option: 'requiredRoles',
+					module: "persist",
+					option: "requiredRoles",
 					ownerId: config.pageOwner.id,
 					maxValues: 10,
 					defaultRoles: [...roleIds],
@@ -594,7 +538,7 @@ export const configOptions: ConfigOptions = {
 					where: {
 						guildId,
 					},
-					relations: ['requiredRoles'],
+					relations: ["requiredRoles"],
 				});
 
 				var oldRoles = perConf.requiredRoles?.filter(
@@ -602,30 +546,22 @@ export const configOptions: ConfigOptions = {
 				);
 
 				for (let oldRole of oldRoles) {
-					await client.db.repos.persistConfigRequiredRole.delete(
-						oldRole
-					);
+					await client.db.repos.persistConfigRequiredRole.delete(oldRole);
 				}
 
 				for (let value of values) {
-					if (
-						!perConf.requiredRoles?.some(
-							(role) => role.roleId === value
-						)
-					) {
+					if (!perConf.requiredRoles?.some((role) => role.roleId === value)) {
 						let role = new PersistConfigRequiredRoleEntity();
 						role.roleId = value;
 						role.persistConfig = perConf;
-						await client.db.repos.persistConfigRequiredRole.save(
-							role
-						);
+						await client.db.repos.persistConfigRequiredRole.save(role);
 					}
 				}
 			},
 		},
 		{
-			module: 'persist',
-			option: 'persistRoles',
+			module: "persist",
+			option: "persistRoles",
 			async getPageData(client, config) {
 				const { guildId } = config;
 
@@ -633,24 +569,22 @@ export const configOptions: ConfigOptions = {
 					where: {
 						guildId: guildId,
 					},
-					relations: ['persistRoles'],
+					relations: ["persistRoles"],
 				});
 
 				var roleIds: Array<string> =
 					perConf?.persistRoles?.map((role) => role.roleId) || [];
 
-				var roles = perConf?.persistRoles
-					?.map((r) => `<@&${r.roleId}>`)
-					.join(', ');
+				var roles = perConf?.persistRoles?.map((r) => `<@&${r.roleId}>`).join(", ");
 
 				var description = [
 					`### Persist Module`,
-					`**Persist Roles:** ${roles ? `${roles}` : 'None'}`,
+					`**Persist Roles:** ${roles ? `${roles}` : "None"}`,
 				];
 
 				var persistRolesSM = buildRoleSelectMenu(client, {
-					module: 'persist',
-					option: 'persistRoles',
+					module: "persist",
+					option: "persistRoles",
 					ownerId: config.pageOwner.id,
 					maxValues: 10,
 					defaultRoles: [...roleIds],
@@ -663,7 +597,7 @@ export const configOptions: ConfigOptions = {
 					where: {
 						guildId,
 					},
-					relations: ['persistRoles'],
+					relations: ["persistRoles"],
 				});
 
 				var oldRoles = perConf.persistRoles?.filter(
@@ -675,11 +609,7 @@ export const configOptions: ConfigOptions = {
 				}
 
 				for (let value of values) {
-					if (
-						!perConf.persistRoles?.some(
-							(role) => role.roleId === value
-						)
-					) {
+					if (!perConf.persistRoles?.some((role) => role.roleId === value)) {
 						let role = new PersistConfigRoleEntity();
 						role.roleId = value;
 						role.persistConfig = perConf;
@@ -689,22 +619,22 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			module: 'verification',
-			option: 'overview',
+			module: "verification",
+			option: "overview",
 			async getPageData(client, config) {
 				const { isEnabled } = config;
 
 				var description = [
 					`### Verification Module`,
-					`**Enabled:** ${isEnabled ? 'True' : 'False'}`,
+					`**Enabled:** ${isEnabled ? "True" : "False"}`,
 				];
 
 				var toggleModuleButton = buildButton(client, {
 					module: config.module,
 					option: config.option,
 					ownerId: config.pageOwner.id,
-					value: isEnabled ? 'false' : 'true',
-					label: `${isEnabled ? 'Disable' : 'Enable'} Module`,
+					value: isEnabled ? "false" : "true",
+					label: `${isEnabled ? "Disable" : "Enable"} Module`,
 					style: isEnabled ? ButtonStyle.Danger : ButtonStyle.Success,
 				});
 
@@ -712,37 +642,27 @@ export const configOptions: ConfigOptions = {
 			},
 			updateOption: async (client, guildId, values) => {
 				var value = values[0] || null;
-				await toggleModule(
-					client,
-					guildId,
-					'verification',
-					client.getBoolean(value)
-				);
+				await toggleModule(client, guildId, "verification", client.getBoolean(value));
 			},
 		},
 		{
-			module: 'verification',
-			option: 'logChannel',
+			module: "verification",
+			option: "logChannel",
 			async getPageData(client, config) {
 				const { guildId } = config;
 
-				var verConf =
-					await client.db.repos.verificationConfig.findOneBy({
-						guildId: guildId,
-					});
+				var verConf = await client.db.repos.verificationConfig.findOneBy({
+					guildId: guildId,
+				});
 
 				var description = [
 					`### Verification Module`,
-					`**Log Channel:** ${
-						verConf?.logChannel
-							? `<#${verConf.logChannel}>`
-							: 'None'
-					}`,
+					`**Log Channel:** ${verConf?.logChannel ? `<#${verConf.logChannel}>` : "None"}`,
 				];
 
 				var channelSelectMenu = buildChannelSelectMenu(client, {
-					module: 'verification',
-					option: 'logChannel',
+					module: "verification",
+					option: "logChannel",
 					ownerId: config.pageOwner.id,
 					defaultChannels: [verConf?.logChannel],
 				});
@@ -752,10 +672,9 @@ export const configOptions: ConfigOptions = {
 			updateOption: async (client, guildId, values) => {
 				var value = values[0] || null;
 
-				var verConf =
-					await client.db.repos.verificationConfig.findOneBy({
-						guildId: guildId,
-					});
+				var verConf = await client.db.repos.verificationConfig.findOneBy({
+					guildId: guildId,
+				});
 
 				if (verConf) {
 					verConf.logChannel = value;
@@ -764,28 +683,25 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			module: 'verification',
-			option: 'pendingChannel',
+			module: "verification",
+			option: "pendingChannel",
 			async getPageData(client, config) {
 				const { guildId } = config;
 
-				var verConf =
-					await client.db.repos.verificationConfig.findOneBy({
-						guildId: guildId,
-					});
+				var verConf = await client.db.repos.verificationConfig.findOneBy({
+					guildId: guildId,
+				});
 
 				var description = [
 					`### Verification Module`,
 					`**Pending Channel:** ${
-						verConf?.pendingChannel
-							? `<#${verConf.pendingChannel}>`
-							: 'None'
+						verConf?.pendingChannel ? `<#${verConf.pendingChannel}>` : "None"
 					}`,
 				];
 
 				var channelSelectMenu = buildChannelSelectMenu(client, {
-					module: 'verification',
-					option: 'pendingChannel',
+					module: "verification",
+					option: "pendingChannel",
 					ownerId: config.pageOwner.id,
 					defaultChannels: [verConf?.pendingChannel],
 				});
@@ -795,10 +711,9 @@ export const configOptions: ConfigOptions = {
 			updateOption: async (client, guildId, values) => {
 				var value = values[0] || null;
 
-				var verConf =
-					await client.db.repos.verificationConfig.findOneBy({
-						guildId: guildId,
-					});
+				var verConf = await client.db.repos.verificationConfig.findOneBy({
+					guildId: guildId,
+				});
 
 				if (verConf) {
 					verConf.pendingChannel = value;
@@ -807,28 +722,25 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			module: 'verification',
-			option: 'pings',
+			module: "verification",
+			option: "pings",
 			async getPageData(client, config) {
 				const { guildId } = config;
 
 				var verConf = await client.db.getVerificationConfig(guildId);
 
-				var pingIds: Array<string> =
-					verConf?.pings?.map((ping) => ping.roleId) || [];
+				var pingIds: Array<string> = verConf?.pings?.map((ping) => ping.roleId) || [];
 
-				var pings = verConf?.pings
-					?.map((ping) => `<@&${ping.roleId}>`)
-					.join(', ');
+				var pings = verConf?.pings?.map((ping) => `<@&${ping.roleId}>`).join(", ");
 
 				var description = [
 					`### Verification Module`,
-					`**Pings:** ${pings ? `${pings}` : 'None'}`,
+					`**Pings:** ${pings ? `${pings}` : "None"}`,
 				];
 
 				var verificationRolesSM = buildRoleSelectMenu(client, {
-					module: 'verification',
-					option: 'pings',
+					module: "verification",
+					option: "pings",
 					ownerId: config.pageOwner.id,
 					maxValues: 5,
 					defaultRoles: [...pingIds],
@@ -839,14 +751,10 @@ export const configOptions: ConfigOptions = {
 			updateOption: async (client, guildId, values: string[]) => {
 				var verConf = await client.db.getVerificationConfig(guildId);
 
-				var oldPings = verConf.pings?.filter(
-					(ping) => !values.includes(ping.roleId)
-				);
+				var oldPings = verConf.pings?.filter((ping) => !values.includes(ping.roleId));
 
 				for (let oldPing of oldPings) {
-					await client.db.repos.verificationConfigPing.delete(
-						oldPing
-					);
+					await client.db.repos.verificationConfigPing.delete(oldPing);
 				}
 
 				for (let value of values) {
@@ -860,8 +768,8 @@ export const configOptions: ConfigOptions = {
 			},
 		},
 		{
-			module: 'verification',
-			option: 'roles',
+			module: "verification",
+			option: "roles",
 			async getPageData(client, config) {
 				const { guildId } = config;
 
@@ -869,24 +777,21 @@ export const configOptions: ConfigOptions = {
 					where: {
 						guildId: guildId,
 					},
-					relations: ['roles'],
+					relations: ["roles"],
 				});
 
-				var roleIds: Array<string> =
-					verConf?.roles?.map((role) => role.roleId) || [];
+				var roleIds: Array<string> = verConf?.roles?.map((role) => role.roleId) || [];
 
-				var roles = verConf?.roles
-					?.map((r) => `<@&${r.roleId}>`)
-					.join(', ');
+				var roles = verConf?.roles?.map((r) => `<@&${r.roleId}>`).join(", ");
 
 				var description = [
 					`### Verification Module`,
-					`**Roles:** ${roles ? `${roles}` : 'None'}`,
+					`**Roles:** ${roles ? `${roles}` : "None"}`,
 				];
 
 				var verificationRolesSM = buildRoleSelectMenu(client, {
-					module: 'verification',
-					option: 'roles',
+					module: "verification",
+					option: "roles",
 					ownerId: config.pageOwner.id,
 					maxValues: 10,
 					defaultRoles: [...roleIds],
@@ -899,17 +804,13 @@ export const configOptions: ConfigOptions = {
 					where: {
 						guildId,
 					},
-					relations: ['roles'],
+					relations: ["roles"],
 				});
 
-				var oldRoles = verConf.roles?.filter(
-					(role) => !values.includes(role.roleId)
-				);
+				var oldRoles = verConf.roles?.filter((role) => !values.includes(role.roleId));
 
 				for (let oldRole of oldRoles) {
-					await client.db.repos.verificationConfigRole.delete(
-						oldRole
-					);
+					await client.db.repos.verificationConfigRole.delete(oldRole);
 				}
 
 				for (let value of values) {
