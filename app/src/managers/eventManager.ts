@@ -24,12 +24,14 @@ export class EventManager {
 		client.ModuleManager.register();
 		client.CommandManager.unregisterAll();
 
-		client.ModuleManager.registerCommands([
-			...client.CommandManager.SlashCommands.values(),
-			...client.CommandManager.UserCommands.values(),
-		]);
-
 		for (let guild of await client.guilds.fetch()) {
+			await client.ModuleManager.registerCommands(
+				[
+					...client.CommandManager.SlashCommands.values(),
+					...client.CommandManager.UserCommands.values(),
+				],
+				guild[0]
+			);
 			client.emit(EventList.GuildReady, await guild[1].fetch());
 		}
 	}
