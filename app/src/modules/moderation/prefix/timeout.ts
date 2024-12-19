@@ -1,7 +1,7 @@
 import { PrefixCommand, ConfigOptionTypes } from "@/types/command";
 
 import { checkPermissions } from "../utils/checkPermissions";
-import { GuildMember, TextChannel } from "discord.js";
+import { GuildMember, TextChannel, EmbedBuilder } from "discord.js";
 
 /**
  * @type {PrefixCommand}
@@ -37,11 +37,46 @@ export const TimeoutPrefix: PrefixCommand = {
 					member.timeout(null);
 				} else {
 					var time = minutes * 60 * 1000;
-					member.timeout(minutes);
+					member.timeout(time);
 				}
 			} catch (err) {
 				console.log(err);
 				channel.send("I cannot timeout this user");
+				return;
+			}
+
+			try {
+				var timeoutEmbed = new EmbedBuilder()
+					.setTitle("User Timed Out")
+					.setColor(client.Colors.normal)
+					.addFields(
+						{
+							name: "User",
+							value: `<@${member.id}>\n${member.user.username}`,
+						},
+						{
+							name: "Moderator",
+							value: `<@${message.author.id}>\n${message.author.username}`,
+						},
+						{
+							name: "Duration",
+							value: `${minutes} minutes`,
+						}
+					);
+
+				channel.send({ embeds: [timeoutEmbed] });
+
+				var modConf = await client.db.getModerationConfig(message.guildId);
+
+				if (!modConf.logChannel) return;
+				var logChannel = (await message.guild.channels.fetch(
+					modConf.logChannel
+				)) as TextChannel;
+
+				if (!logChannel) return;
+				logChannel.send({ embeds: [timeoutEmbed] });
+			} catch (err) {
+				console.error(err);
 			}
 		}
 	},
