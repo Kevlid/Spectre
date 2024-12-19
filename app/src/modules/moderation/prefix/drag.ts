@@ -1,7 +1,7 @@
 import { PrefixCommand, ConfigOptionTypes } from "@/types/command";
 
 import { checkPermissions } from "../utils/checkPermissions";
-import { GuildMember } from "discord.js";
+import { GuildMember, EmbedBuilder, TextChannel } from "discord.js";
 
 /**
  * @type {PrefixCommand}
@@ -22,6 +22,7 @@ export const DragPrefix: PrefixCommand = {
 		return await checkPermissions(client, message.guildId, message.author.id);
 	},
 	async execute(client, message, commandOptions, member: GuildMember) {
+		var oldVoiceChannel = member.voice.channel;
 		if (!message.member.voice.channel) {
 			message.channel.send("You need to be in a voice channel to use this command.");
 			return;
@@ -36,6 +37,44 @@ export const DragPrefix: PrefixCommand = {
 		} catch (err) {
 			console.log(err);
 			message.channel.send("I cannot move this user.");
+		}
+
+		try {
+			var dragEmbed = new EmbedBuilder()
+				.setTitle("User Moved")
+				.setColor(client.Colors.normal)
+				.addFields(
+					{
+						name: "User",
+						value: `<@${member.id}>\n${member.user.username}`,
+					},
+					{
+						name: "Moderator",
+						value: `<@${message.author.id}>\n${message.author.username}`,
+					},
+					{
+						name: "Old Channel",
+						value: `<#${oldVoiceChannel.id}>\n${oldVoiceChannel.name}`,
+					},
+					{
+						name: "New Channel",
+						value: `<#${message.member.voice.channelId}>\n${message.member.voice.channel.name}`,
+					}
+				);
+
+			message.channel.send({ embeds: [dragEmbed] });
+
+			var modConf = await client.db.getModerationConfig(message.guildId);
+
+			if (!modConf.logChannel) return;
+			var logChannel = (await message.guild.channels.fetch(
+				modConf.logChannel
+			)) as TextChannel;
+
+			if (!logChannel) return;
+			logChannel.send({ embeds: [dragEmbed] });
+		} catch (err) {
+			console.log(err);
 		}
 	},
 };
