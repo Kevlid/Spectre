@@ -28,9 +28,8 @@ export const TimeoutPrefix: PrefixCommand = {
 		return await checkPermissions(client, message.guildId, message.author.id);
 	},
 	async execute(client, message, commandOptions, member: GuildMember, minutes: number) {
-		var channel = message.channel as TextChannel;
 		if (member.user.bot) {
-			channel.send("I cannot timeout this user");
+			commandOptions.channel.send("I cannot timeout this user");
 		} else {
 			try {
 				if (minutes <= 0) {
@@ -41,7 +40,7 @@ export const TimeoutPrefix: PrefixCommand = {
 				}
 			} catch (err) {
 				console.log(err);
-				channel.send("I cannot timeout this user");
+				commandOptions.channel.send("I cannot timeout this user");
 				return;
 			}
 
@@ -64,7 +63,7 @@ export const TimeoutPrefix: PrefixCommand = {
 						}
 					);
 
-				channel.send({ embeds: [timeoutEmbed] });
+				commandOptions.channel.send({ embeds: [timeoutEmbed] });
 
 				var modConf = await client.db.getModerationConfig(message.guildId);
 

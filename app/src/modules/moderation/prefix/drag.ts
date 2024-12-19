@@ -24,19 +24,19 @@ export const DragPrefix: PrefixCommand = {
 	async execute(client, message, commandOptions, member: GuildMember) {
 		var oldVoiceChannel = member.voice.channel;
 		if (!message.member.voice.channel) {
-			message.channel.send("You need to be in a voice channel to use this command.");
+			commandOptions.channel.send("You need to be in a voice channel to use this command.");
 			return;
 		}
 
 		if (!member.voice.channel) {
-			message.channel.send("This user is not in a voice channel.");
+			commandOptions.channel.send("This user is not in a voice channel.");
 			return;
 		}
 		try {
 			member.voice.setChannel(message.member.voice.channel);
 		} catch (err) {
 			console.log(err);
-			message.channel.send("I cannot move this user.");
+			commandOptions.channel.send("I cannot move this user.");
 		}
 
 		try {
@@ -62,7 +62,7 @@ export const DragPrefix: PrefixCommand = {
 					}
 				);
 
-			message.channel.send({ embeds: [dragEmbed] });
+			commandOptions.channel.send({ embeds: [dragEmbed] });
 
 			var modConf = await client.db.getModerationConfig(message.guildId);
 

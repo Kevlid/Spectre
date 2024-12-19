@@ -29,7 +29,7 @@ export const DisconnectPrefix: PrefixCommand = {
 			member.voice.disconnect();
 		} catch (err) {
 			console.log(err);
-			message.channel.send("I cannot disconnect this user.");
+			commandOptions.channel.send("I cannot disconnect this user.");
 			return;
 		}
 
@@ -52,7 +52,7 @@ export const DisconnectPrefix: PrefixCommand = {
 					}
 				);
 
-			message.channel.send({ embeds: [disconnectedEmbed] });
+			commandOptions.channel.send({ embeds: [disconnectedEmbed] });
 
 			var modConf = await client.db.getModerationConfig(message.guildId);
 
