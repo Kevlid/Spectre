@@ -1,5 +1,5 @@
-import { KiwiClient } from '@/client';
-import { Module } from './module';
+import { KiwiClient } from "@/client";
+import { Module } from "./module";
 
 import {
 	SlashCommandBuilder,
@@ -10,7 +10,8 @@ import {
 	GuildMember,
 	Channel,
 	Role,
-} from 'discord.js';
+	TextChannel,
+} from "discord.js";
 
 export interface PrefixCommand {
 	module?: Module;
@@ -55,6 +56,7 @@ export interface CommandOptions {
 	auther: string;
 	module: Module;
 	command: PrefixCommand;
+	channel: TextChannel;
 }
 
 export interface UserCommand {
@@ -71,14 +73,8 @@ export interface SlashCommand {
 	module?: Module;
 	level?: number;
 	config: SlashCommandBuilder | any;
-	autocomplete?: (
-		interaction: AutocompleteInteraction,
-		client: KiwiClient
-	) => Promise<void>;
-	execute: (
-		interaction: ChatInputCommandInteraction,
-		client: KiwiClient
-	) => Promise<void>;
+	autocomplete?: (interaction: AutocompleteInteraction, client: KiwiClient) => Promise<void>;
+	execute: (interaction: ChatInputCommandInteraction, client: KiwiClient) => Promise<void>;
 }
 
 export enum CommandTypes {
