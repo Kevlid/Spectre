@@ -1,18 +1,18 @@
-import { Module } from '@/types/module';
+import { Module } from "@/types/module";
 
 // Buttons
-import { ApproveUserButton } from './buttons/approveUser';
-import { DenyUserButton } from './buttons/denyUser';
+import { ApproveUserButton } from "./buttons/approveUser";
+import { DenyUserButton } from "./buttons/denyUser";
 
 // Events
-import { GuildMemberAdd } from './events/guildMemberAdd';
-import { GuildReady } from './events/guildReady';
+import { GuildMemberAdd } from "./events/guildMemberAdd";
+import { GuildReady } from "./events/guildReady";
 
 // Select Menus
-import { VerifyRoleSelectMenu } from './selectmenus/verifyRole';
+import { VerifyRoleSelectMenu } from "./selectmenus/verifyRole";
 
-export const verificationModule: Module = {
-	id: 'verification',
+export const VerificationModule: Module = {
+	id: "verification",
 	buttons: [ApproveUserButton, DenyUserButton],
 	events: [GuildMemberAdd, GuildReady],
 	selectMenus: [VerifyRoleSelectMenu],
