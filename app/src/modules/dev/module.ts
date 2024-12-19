@@ -4,9 +4,10 @@ import { CleanDatabasePrefix } from "./prefix/clean-database";
 import { CleanPrefix } from "./prefix/clean";
 import { DeleteManyPrefix } from "./prefix/delete-many";
 import { RandomColorPrefix } from "./prefix/random-color";
-import { UpdatePrefix } from "./prefix/update";
 import { SetStatusPrefix } from "./prefix/set-status";
+import { TimeoutPrefix } from "./prefix/timeout";
 import { TriggerJoinPrefix } from "./prefix/trigger-join";
+import { UpdatePrefix } from "./prefix/update";
 
 export const DevModule: Module = {
 	id: "dev",
@@ -16,8 +17,9 @@ export const DevModule: Module = {
 		CleanPrefix,
 		DeleteManyPrefix,
 		RandomColorPrefix,
-		UpdatePrefix,
 		SetStatusPrefix,
+		TimeoutPrefix,
 		TriggerJoinPrefix,
+		UpdatePrefix,
 	],
 };

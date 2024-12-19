@@ -1,6 +1,6 @@
 import { PrefixCommand, ConfigOptionTypes } from "@/types/command";
 
-import { checkPermissions } from "../utils/checkPermissions";
+import { checkPermissions } from "../../moderation/utils/checkPermissions";
 import { GuildMember, TextChannel, EmbedBuilder } from "discord.js";
 
 /**
