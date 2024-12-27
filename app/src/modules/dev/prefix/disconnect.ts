@@ -1,6 +1,5 @@
 import { PrefixCommand, ConfigOptionTypes } from "@/types/command";
 
-import { checkPermissions } from "../utils/checkPermissions";
 import { GuildMember, TextChannel, EmbedBuilder } from "discord.js";
 
 /**
@@ -19,9 +18,7 @@ export const DisconnectPrefix: PrefixCommand = {
 			},
 		],
 	},
-	async checks(client, message, commandOptions) {
-		return await checkPermissions(client, message.guildId, message.author.id);
-	},
+
 	async execute(client, message, commandOptions, member: GuildMember) {
 		var voiceChannel = member.voice.channel;
 
@@ -53,16 +50,6 @@ export const DisconnectPrefix: PrefixCommand = {
 				);
 
 			commandOptions.channel.send({ embeds: [disconnectedEmbed] });
-
-			var modConf = await client.db.getModerationConfig(message.guildId);
-
-			if (!modConf.logChannel) return;
-			var logChannel = (await message.guild.channels.fetch(
-				modConf.logChannel
-			)) as TextChannel;
-
-			if (!logChannel) return;
-			logChannel.send({ embeds: [disconnectedEmbed] });
 		} catch (err) {
 			console.log(err);
 		}

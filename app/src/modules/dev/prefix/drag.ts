@@ -1,6 +1,5 @@
 import { PrefixCommand, ConfigOptionTypes } from "@/types/command";
 
-import { checkPermissions } from "../utils/checkPermissions";
 import { GuildMember, EmbedBuilder, TextChannel } from "discord.js";
 
 /**
@@ -18,9 +17,7 @@ export const DragPrefix: PrefixCommand = {
 			},
 		],
 	},
-	async checks(client, message, commandOptions) {
-		return await checkPermissions(client, message.guildId, message.author.id);
-	},
+
 	async execute(client, message, commandOptions, member: GuildMember) {
 		var oldVoiceChannel = member.voice.channel;
 		if (!message.member.voice.channel) {
@@ -63,16 +60,6 @@ export const DragPrefix: PrefixCommand = {
 				);
 
 			commandOptions.channel.send({ embeds: [dragEmbed] });
-
-			var modConf = await client.db.getModerationConfig(message.guildId);
-
-			if (!modConf.logChannel) return;
-			var logChannel = (await message.guild.channels.fetch(
-				modConf.logChannel
-			)) as TextChannel;
-
-			if (!logChannel) return;
-			logChannel.send({ embeds: [dragEmbed] });
 		} catch (err) {
 			console.log(err);
 		}
