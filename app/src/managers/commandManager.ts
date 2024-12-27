@@ -31,6 +31,61 @@ export class CommandManager {
 		this.client.on(EventList.MessageCreate, this.onMessage.bind(this));
 	}
 
+	public async getUserId(message: Message, value: string) {
+		if (value.startsWith("<@") && value.endsWith(">") && !value.startsWith("<@&")) {
+			value = value.slice(2, -1);
+			if (value.startsWith("!")) {
+				value = value.slice(1);
+			}
+		} else if (value.includes("u") && message.reference) {
+			var messageReference = await message.fetchReference();
+			value = messageReference.author.id;
+		} else if (!/^\d{17,19}$/.test(value)) {
+			value = null;
+		}
+		return value;
+	}
+
+	public async getRoleId(message: Message, value: string) {
+		if (value.startsWith("<@&") && value.endsWith(">")) {
+			return value.slice(3, -1);
+		} else if (/^\d{17,19}$/.test(value)) {
+			return value;
+		} else {
+			var role = message.guild?.roles.cache.find((role) =>
+				role.name
+					.toLocaleLowerCase()
+					.replace(/\s+/g, "")
+					.includes(value.toLocaleLowerCase().replace(/\s+/g, ""))
+			);
+			if (role) {
+				return role.id;
+			} else {
+				return null;
+			}
+		}
+	}
+
+	public getChannelId(message: Message, value: string) {
+		if (value.startsWith("<#") && value.endsWith(">")) {
+			return value.slice(2, -1);
+		} else if (/^\d{17,19}$/.test(value)) {
+			return value;
+		} else {
+			var channel = message.guild?.channels.cache.find((channel) =>
+				channel.name
+					.toLocaleLowerCase()
+					.replace(/\s+/g, "")
+					.includes(value.toLocaleLowerCase().replace(/\s+/g, ""))
+			);
+			if (channel) {
+				return channel.id;
+			} else {
+				return null;
+			}
+		}
+	}
+
 	loadPrefix(command: PrefixCommand) {
 		this.PrefixCommands.set(command.config.name, command);
 		for (let alias of command.config.aliases || []) {
@@ -161,7 +216,13 @@ export class CommandManager {
 		let command = this.PrefixCommands.get(commandName);
 		if (!command) return;
 
-		var channel = message.channel as TextChannel;
+		var options: CommandOptions = {
+			commandName: commandName,
+			auther: message.author.id,
+			module: command.module,
+			command: command,
+			channel: message.channel as TextChannel,
+		};
 
 		if (command.config.autoDelete) {
 			message.delete();
@@ -174,25 +235,17 @@ export class CommandManager {
 				command.module
 			);
 			if (!checks.status) {
-				await channel.send(checks.response);
+				await options.channel.send(checks.response);
 				return;
 			}
 		}
-
-		var commandOptions: CommandOptions = {
-			commandName: commandName,
-			auther: message.author.id,
-			module: command.module,
-			command: command,
-			channel: message.channel as TextChannel,
-		};
 
 		var count = 0;
 		var args = new Array();
 		if (command.config.options) {
 			for (let option of command.config.options) {
 				if (!textArgs[count]) {
-					channel.send({
+					options.channel.send({
 						content: `You must provide a ${option.name}`,
 					});
 					return;
@@ -207,57 +260,93 @@ export class CommandManager {
 				} else if (option.type === ConfigOptionTypes.NUMBER) {
 					var number = parseInt(textArgs[count]);
 					if (isNaN(number)) {
-						channel.send({
+						options.channel.send({
 							content: `You must provide a valid number`,
 						});
 						return;
 					}
 					if (option.maxValue && number > option.maxValue) {
-						channel.send({
+						options.channel.send({
 							content: `You must provide a number less than ${option.maxValue}`,
 						});
 						return;
 					}
 					args.push(number);
-				} else {
-					var id = await this.client.getId(message, textArgs[count]);
-					if (!id) {
-						channel.send({
-							content: `You must provide a valid ${option.name}`,
+				}
+				if (option.type === ConfigOptionTypes.USER) {
+					var userId = await this.getUserId(message, textArgs[count]);
+					if (!userId) {
+						options.channel.send({
+							content: `You must provide a valid user`,
 						});
 						return;
 					}
-
-					var entry;
-					if (option.type === ConfigOptionTypes.USER) {
-						entry = await this.client.users.fetch(id);
-						args.push(entry);
-					} else if (option.type === ConfigOptionTypes.MEMBER) {
-						entry = await message.guild?.members.fetch(id);
-						args.push(entry);
-					} else if (option.type === ConfigOptionTypes.CHANNEL) {
-						entry = await message.guild?.channels.fetch(id);
-						args.push(entry);
-					} else if (option.type === ConfigOptionTypes.ROLE) {
-						entry = await message.guild?.roles.fetch(id);
-						args.push(entry);
-					}
-					if (!entry) {
-						channel.send({
-							content: `You must provide a valid ${option.name}`,
+					var user = await this.client.users.fetch(userId);
+					if (!user) {
+						options.channel.send({
+							content: `You must provide a valid user`,
 						});
 						return;
 					}
+					args.push(user);
+				} else if (option.type === ConfigOptionTypes.MEMBER) {
+					var memberId = await this.getUserId(message, textArgs[count]);
+					if (!memberId) {
+						options.channel.send({
+							content: `You must provide a valid member`,
+						});
+						return;
+					}
+					var member = await message.guild?.members.fetch(memberId);
+					if (!member) {
+						options.channel.send({
+							content: `You must provide a valid member`,
+						});
+						return;
+					}
+					args.push(member);
+				} else if (option.type === ConfigOptionTypes.CHANNEL) {
+					var channelId = this.getChannelId(message, textArgs[count]);
+					if (!channelId) {
+						options.channel.send({
+							content: `You must provide a valid channel`,
+						});
+						return;
+					}
+					var fetchedChannel = await message.guild?.channels.fetch(channelId);
+					if (!fetchedChannel) {
+						options.channel.send({
+							content: `You must provide a valid channel`,
+						});
+						return;
+					}
+					args.push(fetchedChannel);
+				} else if (option.type === ConfigOptionTypes.ROLE) {
+					var roleId = await this.getRoleId(message, textArgs[count]);
+					if (!roleId) {
+						options.channel.send({
+							content: `You must provide a valid role`,
+						});
+						return;
+					}
+					var fetchedRole = await message.guild?.roles.fetch(roleId);
+					if (!fetchedRole) {
+						options.channel.send({
+							content: `You must provide a valid role`,
+						});
+						return;
+					}
+					args.push(fetchedRole);
 				}
 				count++;
 			}
 		}
 
 		try {
-			await command.execute(this.client, message, commandOptions, ...args);
+			await command.execute(this.client, message, options, ...args);
 		} catch (error) {
 			console.error(error);
-			await channel.send("There is an issue!");
+			await options.channel.send("There is an issue!");
 		}
 	}
 }
