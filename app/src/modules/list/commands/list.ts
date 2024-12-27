@@ -1,4 +1,4 @@
-import { KiwiClient } from '@/client';
+import { KiwiClient } from "@/client";
 
 import {
 	ActionRowBuilder,
@@ -7,26 +7,23 @@ import {
 	ChatInputCommandInteraction,
 	SlashCommandBuilder,
 	StringSelectMenuBuilder,
-} from 'discord.js';
-import { SlashCommand } from '@/types/command';
+} from "discord.js";
+import { SlashCommand } from "@/types/command";
 
-import { UpdateListButton } from '../buttons/updateList';
+import { UpdateListButton } from "../buttons/updateList";
 
-/**
- * @type {SlashCommand}
- */
 export const ListSlash: SlashCommand = {
 	config: new SlashCommandBuilder()
-		.setName('list')
-		.setDescription('Manage lists')
+		.setName("list")
+		.setDescription("Manage lists")
 		.addSubcommand((subcommand) =>
 			subcommand
-				.setName('create')
-				.setDescription('Create a list')
+				.setName("create")
+				.setDescription("Create a list")
 				.addStringOption((option) =>
 					option
-						.setName('users')
-						.setDescription('Users to add to the list')
+						.setName("users")
+						.setDescription("Users to add to the list")
 						.setRequired(true)
 				)
 		),
@@ -35,25 +32,20 @@ export const ListSlash: SlashCommand = {
 	 * @param {ChatInputCommandInteraction} interaction
 	 * @param {KiwiClient} client
 	 */
-	async execute(
-		interaction: ChatInputCommandInteraction,
-		client: KiwiClient
-	): Promise<void> {
+	async execute(interaction: ChatInputCommandInteraction, client: KiwiClient): Promise<void> {
 		switch (interaction.options.getSubcommand()) {
-			case 'create': {
+			case "create": {
 				var rows = [];
 				var buttons = [];
 				var users = interaction.options
-					.getString('users')
-					.split(',')
+					.getString("users")
+					.split(",")
 					.slice(0, 15)
-					.filter((user) => user.trim() !== '');
+					.filter((user) => user.trim() !== "");
 
-				for (let user of [...users].sort((a, b) =>
-					a.localeCompare(b)
-				)) {
+				for (let user of [...users].sort((a, b) => a.localeCompare(b))) {
 					if (!user) break;
-					var customId = await client.createCustomId({
+					var customId = await client.ComponentManager.createCustomId({
 						customId: UpdateListButton.customId,
 						value: user,
 					});
@@ -66,15 +58,11 @@ export const ListSlash: SlashCommand = {
 				}
 
 				for (var i = 0; i < buttons.length; i += 3) {
-					rows.push(
-						new ActionRowBuilder().addComponents(
-							buttons.slice(i, i + 3)
-						)
-					);
+					rows.push(new ActionRowBuilder().addComponents(buttons.slice(i, i + 3)));
 				}
 
 				interaction.reply({
-					content: users.join('\n'),
+					content: users.join("\n"),
 					components: rows,
 					ephemeral: false,
 				});

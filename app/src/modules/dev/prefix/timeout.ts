@@ -1,11 +1,7 @@
 import { PrefixCommand, ConfigOptionTypes } from "@/types/command";
 
-import { checkPermissions } from "../../moderation/utils/checkPermissions";
 import { GuildMember, TextChannel, EmbedBuilder } from "discord.js";
 
-/**
- * @type {PrefixCommand}
- */
 export const TimeoutPrefix: PrefixCommand = {
 	config: {
 		name: "timeout",
@@ -24,9 +20,7 @@ export const TimeoutPrefix: PrefixCommand = {
 			},
 		],
 	},
-	async checks(client, message, commandOptions) {
-		return await checkPermissions(client, message.guildId, message.author.id);
-	},
+
 	async execute(client, message, commandOptions, member: GuildMember, minutes: number) {
 		if (member.user.bot) {
 			commandOptions.channel.send("I cannot timeout this user");
@@ -64,16 +58,6 @@ export const TimeoutPrefix: PrefixCommand = {
 					);
 
 				commandOptions.channel.send({ embeds: [timeoutEmbed] });
-
-				var modConf = await client.db.getModerationConfig(message.guildId);
-
-				if (!modConf.logChannel) return;
-				var logChannel = (await message.guild.channels.fetch(
-					modConf.logChannel
-				)) as TextChannel;
-
-				if (!logChannel) return;
-				logChannel.send({ embeds: [timeoutEmbed] });
 			} catch (err) {
 				console.error(err);
 			}

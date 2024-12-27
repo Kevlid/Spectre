@@ -1,27 +1,25 @@
-import { DataSource, FindOptionsWhere, Repository, DeepPartial } from 'typeorm';
-import { KiwiClient } from '@/client';
+import { DataSource, FindOptionsWhere, Repository, DeepPartial } from "typeorm";
+import { KiwiClient } from "@/client";
 
-import { dataSource } from '@/datasource';
+import { dataSource } from "@/datasource";
 
-import { ActivityConfigEntity } from '@/entities/ActivityConfig';
-import { ActivityMessageEntity } from '@/entities/ActivityMessage';
-import { ActivityPresenceEntity } from '@/entities/ActivityPresence';
-import { ActivityStatusEntity } from '@/entities/ActivityStatus';
-import { ActivityVoiceEntity } from '@/entities/ActivityVoice';
-import { ActivityVoicestateEntity } from '@/entities/ActivityVoicestate';
-import { GuildModuleEntity } from '@/entities/GuildModule';
-import { ListConfigEntity } from '@/entities/ListConfig';
-import { ModerationConfigEntity } from '@/entities/ModerationConfig';
-import { ModerationConfigRoleEntity } from '@/entities/ModerationConfigRole';
-import { PersistConfigEntity } from '@/entities/PersistConfig';
-import { PersistConfigRequiredRoleEntity } from '@/entities/PersistConfigRequiredRole';
-import { PersistConfigRoleEntity } from '@/entities/PersistConfigRole';
-import { PersistNicknameEntity } from '@/entities/PersistNickname';
-import { PersistUserRoleEntity } from '@/entities/PresistUserRole';
-import { VerificationConfigEntity } from '@/entities/VerificationConfig';
-import { VerificationConfigPingEntity } from '@/entities/VerificationConfigPing';
-import { VerificationConfigRoleEntity } from '@/entities/VerificationConfigRole';
-import { VerificationPendingMessageEntity } from '@/entities/VerificationPendingMessage';
+import { ActivityConfigEntity } from "@/entities/ActivityConfig";
+import { ActivityMessageEntity } from "@/entities/ActivityMessage";
+import { ActivityPresenceEntity } from "@/entities/ActivityPresence";
+import { ActivityStatusEntity } from "@/entities/ActivityStatus";
+import { ActivityVoiceEntity } from "@/entities/ActivityVoice";
+import { ActivityVoicestateEntity } from "@/entities/ActivityVoicestate";
+import { GuildModuleEntity } from "@/entities/GuildModule";
+import { ListConfigEntity } from "@/entities/ListConfig";
+import { PersistConfigEntity } from "@/entities/PersistConfig";
+import { PersistConfigRequiredRoleEntity } from "@/entities/PersistConfigRequiredRole";
+import { PersistConfigRoleEntity } from "@/entities/PersistConfigRole";
+import { PersistNicknameEntity } from "@/entities/PersistNickname";
+import { PersistUserRoleEntity } from "@/entities/PresistUserRole";
+import { VerificationConfigEntity } from "@/entities/VerificationConfig";
+import { VerificationConfigPingEntity } from "@/entities/VerificationConfigPing";
+import { VerificationConfigRoleEntity } from "@/entities/VerificationConfigRole";
+import { VerificationPendingMessageEntity } from "@/entities/VerificationPendingMessage";
 
 export class DatabaseManager {
 	public dataSource: DataSource;
@@ -35,8 +33,6 @@ export class DatabaseManager {
 		activityVoicestates?: Repository<ActivityVoicestateEntity>;
 		guildModules?: Repository<GuildModuleEntity>;
 		listConfig?: Repository<ListConfigEntity>;
-		moderationConfig?: Repository<ModerationConfigEntity>;
-		moderationConfigRole?: Repository<ModerationConfigRoleEntity>;
 		persistConfig?: Repository<PersistConfigEntity>;
 		persistConfigRequiredRole?: Repository<PersistConfigRequiredRoleEntity>;
 		persistConfigRole?: Repository<PersistConfigRoleEntity>;
@@ -57,52 +53,22 @@ export class DatabaseManager {
 
 	private async onCreate() {
 		this.repos = {
-			activityConfig: await this.dataSource.getRepository(
-				ActivityConfigEntity
-			),
-			activityMessages: await this.dataSource.getRepository(
-				ActivityMessageEntity
-			),
-			activityPresence: await this.dataSource.getRepository(
-				ActivityPresenceEntity
-			),
-			activityStatus: await this.dataSource.getRepository(
-				ActivityStatusEntity
-			),
-			activityVoice: await this.dataSource.getRepository(
-				ActivityVoiceEntity
-			),
-			activityVoicestates: await this.dataSource.getRepository(
-				ActivityVoicestateEntity
-			),
-			guildModules: await this.dataSource.getRepository(
-				GuildModuleEntity
-			),
+			activityConfig: await this.dataSource.getRepository(ActivityConfigEntity),
+			activityMessages: await this.dataSource.getRepository(ActivityMessageEntity),
+			activityPresence: await this.dataSource.getRepository(ActivityPresenceEntity),
+			activityStatus: await this.dataSource.getRepository(ActivityStatusEntity),
+			activityVoice: await this.dataSource.getRepository(ActivityVoiceEntity),
+			activityVoicestates: await this.dataSource.getRepository(ActivityVoicestateEntity),
+			guildModules: await this.dataSource.getRepository(GuildModuleEntity),
 			listConfig: await this.dataSource.getRepository(ListConfigEntity),
-			moderationConfig: await this.dataSource.getRepository(
-				ModerationConfigEntity
-			),
-			moderationConfigRole: await this.dataSource.getRepository(
-				ModerationConfigRoleEntity
-			),
-			persistConfig: await this.dataSource.getRepository(
-				PersistConfigEntity
-			),
+			persistConfig: await this.dataSource.getRepository(PersistConfigEntity),
 			persistConfigRequiredRole: await this.dataSource.getRepository(
 				PersistConfigRequiredRoleEntity
 			),
-			persistConfigRole: await this.dataSource.getRepository(
-				PersistConfigRoleEntity
-			),
-			persistNickname: await this.dataSource.getRepository(
-				PersistNicknameEntity
-			),
-			persistUserRole: await this.dataSource.getRepository(
-				PersistUserRoleEntity
-			),
-			verificationConfig: await this.dataSource.getRepository(
-				VerificationConfigEntity
-			),
+			persistConfigRole: await this.dataSource.getRepository(PersistConfigRoleEntity),
+			persistNickname: await this.dataSource.getRepository(PersistNicknameEntity),
+			persistUserRole: await this.dataSource.getRepository(PersistUserRoleEntity),
+			verificationConfig: await this.dataSource.getRepository(VerificationConfigEntity),
 			verificationConfigPing: await this.dataSource.getRepository(
 				VerificationConfigPingEntity
 			),
@@ -132,15 +98,6 @@ export class DatabaseManager {
 			let listConf = new ListConfigEntity();
 			listConf.guildId = guildId;
 			await this.repos.listConfig.save(listConf);
-		}
-
-		var moderationConfig = await this.repos.moderationConfig.findOne({
-			where: { guildId },
-		});
-		if (!moderationConfig) {
-			let modConf = new ModerationConfigEntity();
-			modConf.guildId = guildId;
-			await this.repos.moderationConfig.save(modConf);
 		}
 
 		var persistConfig = await this.repos.persistConfig.findOne({
@@ -179,17 +136,10 @@ export class DatabaseManager {
 		return await this.repos.listConfig.findOne({ where: { guildId } });
 	}
 
-	public async getModerationConfig(guildId: string) {
-		return await this.repos.moderationConfig.findOne({
-			where: { guildId },
-			relations: ['roles'],
-		});
-	}
-
 	public async getPersistConfig(guildId: string) {
 		return await this.repos.persistConfig.findOne({
 			where: { guildId },
-			relations: ['roles', 'requiredRoles'],
+			relations: ["roles", "requiredRoles"],
 		});
 	}
 
@@ -198,13 +148,11 @@ export class DatabaseManager {
 	public async getVerificationConfig(guildId: string) {
 		return await this.repos.verificationConfig.findOne({
 			where: { guildId },
-			relations: ['pings', 'roles'],
+			relations: ["pings", "roles"],
 		});
 	}
 
-	public async createPendingMessage(
-		options: DeepPartial<VerificationPendingMessageEntity>
-	) {
+	public async createPendingMessage(options: DeepPartial<VerificationPendingMessageEntity>) {
 		return await this.repos.verificationPendingMessage.insert(options);
 	}
 

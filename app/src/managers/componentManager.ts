@@ -1,13 +1,8 @@
-import {
-	Collection,
-	Guild,
-	MessageComponentInteraction,
-	User,
-} from 'discord.js';
-import { KiwiClient } from '@/client';
-import { SelectMenu, Button, CustomOptions } from '@/types/component';
-import { EventList } from '@/types/event';
-import { Module } from '@/types/module';
+import { Collection, Guild, MessageComponentInteraction, User } from "discord.js";
+import { KiwiClient } from "@/client";
+import { SelectMenu, Button, CustomOptions } from "@/types/component";
+import { EventList } from "@/types/event";
+import { Module } from "@/types/module";
 
 export class ComponentManager {
 	private client: KiwiClient;
@@ -23,18 +18,15 @@ export class ComponentManager {
 		this.SelectMenus = new Collection();
 		this.Buttons = new Collection();
 
-		this.client.on(
-			EventList.InteractionCreate,
-			this.onInteraction.bind(this)
-		);
+		this.client.on(EventList.InteractionCreate, this.onInteraction.bind(this));
 
 		this.shortKeys = {
-			customId: 'ci',
-			ownerId: 'oi',
-			module: 'mo',
-			option: 'op',
-			userId: 'ui',
-			memberId: 'mi',
+			customId: "ci",
+			ownerId: "oi",
+			module: "mo",
+			option: "op",
+			userId: "ui",
+			memberId: "mi",
 		};
 	}
 
@@ -43,16 +35,25 @@ export class ComponentManager {
 	}
 
 	public getKeyFromShort(key: string): string {
-		key = Object.keys(this.shortKeys).find(
-			(newKey) => this.shortKeys[newKey] === key
-		);
+		key = Object.keys(this.shortKeys).find((newKey) => this.shortKeys[newKey] === key);
 		return key;
+	}
+
+	public createCustomId(options: CustomOptions): string {
+		var customId = new Array<string>();
+		for (var [key, value] of Object.entries(options)) {
+			if (customId.includes("&")) continue;
+			if (!key || !value) continue;
+			key = this.getShortKey(key);
+			customId.push(`${key}=${value}`);
+		}
+		return customId.join("&");
 	}
 
 	public decodeCustomId(customId: string): CustomOptions {
 		let config = {};
-		for (const x of customId.split('&')) {
-			let [key, value] = x.split('=');
+		for (const x of customId.split("&")) {
+			let [key, value] = x.split("=");
 			key = this.getKeyFromShort(key) ?? key;
 			config[key] = value;
 		}
@@ -106,7 +107,7 @@ export class ComponentManager {
 			} catch (error) {
 				console.error(error);
 				await interaction.reply({
-					content: 'There is an issue!',
+					content: "There is an issue!",
 					ephemeral: true,
 				});
 			}
@@ -142,7 +143,7 @@ export class ComponentManager {
 			} catch (error) {
 				console.error(error);
 				await interaction.reply({
-					content: 'There is an issue!',
+					content: "There is an issue!",
 					ephemeral: true,
 				});
 			}

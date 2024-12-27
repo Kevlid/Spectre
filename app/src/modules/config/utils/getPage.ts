@@ -1,4 +1,4 @@
-import { KiwiClient } from '@/client';
+import { KiwiClient } from "@/client";
 import {
 	ActionRowBuilder,
 	AnyComponentBuilder,
@@ -9,36 +9,31 @@ import {
 	StringSelectMenuBuilder,
 	User,
 	UserSelectMenuBuilder,
-} from 'discord.js';
+} from "discord.js";
 
-import { configOptions, Config } from './configOptions';
+import { configOptions, Config } from "./configOptions";
 
-import { ConfigModuleSelectMenu as ConfigModuleSM } from '../selectmenus/configModule';
-import { ConfigOptionSelectMenu as ConfigOptionSM } from '../selectmenus/configOption';
-import { ButtonBuilder } from '@discordjs/builders';
+import { ConfigModuleSelectMenu as ConfigModuleSM } from "../selectmenus/configModule";
+import { ConfigOptionSelectMenu as ConfigOptionSM } from "../selectmenus/configOption";
+import { ButtonBuilder } from "@discordjs/builders";
 
 export async function getPage(client: KiwiClient, config: Config) {
 	config = await configOptions.setupConfig(client, config);
 
 	var pageData = await configOptions.pages
-		.find(
-			(page) =>
-				page.module === config.module && page.option === config.option
-		)
+		.find((page) => page.module === config.module && page.option === config.option)
 		.getPageData(client, config);
 
 	var description = Array.isArray(pageData.description)
-		? pageData.description.join('\n')
+		? pageData.description.join("\n")
 		: pageData.description;
 
 	var em = new EmbedBuilder()
 		.setColor(client.Settings.color)
-		.setTitle('Server Configuration')
+		.setTitle("Server Configuration")
 		.setThumbnail(config.guild.iconURL())
 		.setFooter({
-			text: `Requested by ${client.capitalize(
-				config.pageOwner.username
-			)}`,
+			text: `Requested by ${client.capitalize(config.pageOwner.username)}`,
 			iconURL: config.pageOwner.displayAvatarURL(),
 		})
 		.setDescription(description);
@@ -49,12 +44,12 @@ export async function getPage(client: KiwiClient, config: Config) {
 
 	var configModuleSM = new StringSelectMenuBuilder()
 		.setCustomId(
-			client.createCustomId({
+			client.ComponentManager.createCustomId({
 				customId: ConfigModuleSM.customId,
 				ownerId: config.pageOwner.id,
 			})
 		)
-		.setPlaceholder('Select a module')
+		.setPlaceholder("Select a module")
 		.addOptions(
 			allModules.map((module) => {
 				return {
@@ -76,13 +71,13 @@ export async function getPage(client: KiwiClient, config: Config) {
 
 	var configOptionSM = new StringSelectMenuBuilder()
 		.setCustomId(
-			client.createCustomId({
+			client.ComponentManager.createCustomId({
 				customId: ConfigOptionSM.customId,
 				module: config.module,
 				ownerId: config.pageOwner.id,
 			})
 		)
-		.setPlaceholder('Select an option')
+		.setPlaceholder("Select an option")
 		.addOptions(
 			allOptions.map((page) => {
 				return {
@@ -114,12 +109,8 @@ export async function getPage(client: KiwiClient, config: Config) {
 		rows: [
 			...rows,
 			//new ActionRowBuilder().addComponents(pageData.componenets),
-			new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
-				configModuleSM
-			),
-			new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
-				configOptionSM
-			),
+			new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(configModuleSM),
+			new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(configOptionSM),
 		],
 	} as {
 		embeds: EmbedBuilder[];

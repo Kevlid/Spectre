@@ -1,6 +1,5 @@
 import { PrefixCommand, ConfigOptionTypes } from "@/types/command";
 
-import { checkPermissions } from "../../moderation/utils/checkPermissions";
 import { TextChannel } from "discord.js";
 
 /**
@@ -19,9 +18,7 @@ export const CleanPrefix: PrefixCommand = {
 			},
 		],
 	},
-	async checks(client, message, commandOptions) {
-		return await checkPermissions(client, message.guildId, message.author.id);
-	},
+
 	async execute(client, message, commandOptions, amount: number) {
 		amount = Math.min(amount, 100);
 

@@ -1,8 +1,8 @@
-import { Guild, TextChannel } from 'discord.js';
-import { KiwiClient } from '@/client';
-import { Event, EventList } from '@/types/event';
+import { Guild, TextChannel } from "discord.js";
+import { KiwiClient } from "@/client";
+import { Event, EventList } from "@/types/event";
 
-import { buildPendingMessage } from '../utils/buildPendingMessage';
+import { buildPendingMessage } from "../utils/buildPendingMessage";
 
 export const GuildReady: Event = {
 	name: EventList.GuildReady,
@@ -17,9 +17,7 @@ export const GuildReady: Event = {
 			guildId: guild.id,
 		});
 		for (var oldPendingMessage of oldPendingMessages) {
-			let member = await guild.members
-				.fetch(oldPendingMessage.userId)
-				.catch(() => {});
+			let member = await guild.members.fetch(oldPendingMessage.userId).catch(() => {});
 			let pendingChannel = (await guild.channels.fetch(
 				verConf.pendingChannel
 			)) as TextChannel;
@@ -31,16 +29,13 @@ export const GuildReady: Event = {
 					guildId: guild.id,
 					userId: oldPendingMessage.userId,
 				});
-				if (pendingMessage)
-					await pendingMessage.delete().catch(() => {});
+				if (pendingMessage) await pendingMessage.delete().catch(() => {});
 			}
 		}
 
 		for (var [id, member] of guild.members.cache) {
 			if (
-				member.roles.cache.hasAny(
-					...verConf.roles.map((role) => role.roleId)
-				) ||
+				member.roles.cache.hasAny(...verConf.roles.map((role) => role.roleId)) ||
 				member.user.bot ||
 				verConf.roles.length <= 0
 			) {
@@ -53,15 +48,9 @@ export const GuildReady: Event = {
 			});
 			if (oldPendingMessage) continue;
 
-			var { content, embeds, components } = await buildPendingMessage(
-				client,
-				guild,
-				member
-			);
-			var pendingChannel = guild.channels.cache.get(
-				verConf.pendingChannel
-			);
-			if (!pendingChannel || !pendingChannel.isSendable()) continue;
+			var { content, embeds, components } = await buildPendingMessage(client, guild, member);
+			var pendingChannel = guild.channels.cache.get(verConf.pendingChannel) as TextChannel;
+			if (!pendingChannel) continue;
 			var pendingMessage = await pendingChannel.send({
 				content,
 				embeds: [...embeds],

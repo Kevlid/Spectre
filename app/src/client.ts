@@ -98,42 +98,12 @@ export class KiwiClient extends Client {
 		return value.replace(/([A-Z])/g, " $1").trim();
 	}
 
-	public createCustomId(options: CustomOptions): string {
-		var customId = new Array<string>();
-		for (var [key, value] of Object.entries(options)) {
-			if (customId.includes("&")) continue;
-			if (!key || !value) continue;
-			key = this.ComponentManager.getShortKey(key);
-			customId.push(`${key}=${value}`);
-		}
-		return customId.join("&");
-	}
-
 	public getBoolean(value: string) {
 		if (value.toLowerCase() === "true") {
 			return true;
 		} else {
 			return false;
 		}
-	}
-
-	public async getId(message: Message, value: string): Promise<string> {
-		if (value.startsWith("<@") && value.endsWith(">") && !value.startsWith("<@&")) {
-			value = value.slice(2, -1);
-			if (value.startsWith("!")) {
-				value = value.slice(1);
-			}
-		} else if (value.startsWith("<#") && value.endsWith(">")) {
-			value = value.slice(2, -1);
-		} else if (value.startsWith("<@&") && value.endsWith(">")) {
-			value = value.slice(3, -1);
-		} else if (value.includes("u") && message.reference) {
-			var messageReference = await message.fetchReference();
-			value = messageReference.author.id;
-		} else if (!/^\d{17,19}$/.test(value)) {
-			value = null;
-		}
-		return value;
 	}
 
 	public createMessageUrl(guildId: string, channelId: string, messageId: string): string {

@@ -51,7 +51,6 @@ import { buildChannelSelectMenu } from "./buildChannelSelectMenu";
 import { buildRoleSelectMenu } from "./buildRoleSelectMenu";
 import { buildButton } from "./buildButton";
 
-import { ModerationConfigRoleEntity } from "@/entities/ModerationConfigRole";
 import { PersistConfigRoleEntity } from "@/entities/PersistConfigRole";
 import { PersistConfigRequiredRoleEntity } from "@/entities/PersistConfigRequiredRole";
 import { VerificationConfigRoleEntity } from "@/entities/VerificationConfigRole";
@@ -274,126 +273,6 @@ export const configOptions: ConfigOptions = {
 				if (listConf) {
 					listConf.logChannel = value;
 					await client.db.repos.listConfig.save(listConf);
-				}
-			},
-		},
-		{
-			module: "moderation",
-			option: "overview",
-			async getPageData(client, config) {
-				const { isEnabled } = config;
-
-				var description = [
-					`### Moderation Module`,
-					`**Enabled:** ${isEnabled ? "True" : "False"}`,
-				];
-
-				var toggleModuleButton = buildButton(client, {
-					module: config.module,
-					option: config.option,
-					ownerId: config.pageOwner.id,
-					value: isEnabled ? "false" : "true",
-					label: `${isEnabled ? "Disable" : "Enable"} Module`,
-					style: isEnabled ? ButtonStyle.Danger : ButtonStyle.Success,
-				});
-
-				return { description, rows: [[toggleModuleButton]] };
-			},
-			updateOption: async (client, guildId, values) => {
-				var value = values[0] || null;
-				await toggleModule(client, guildId, "moderation", client.getBoolean(value));
-			},
-		},
-		{
-			module: "moderation",
-			option: "logChannel",
-			async getPageData(client, config) {
-				const { guildId } = config;
-
-				var modConf = await client.db.repos.moderationConfig.findOneBy({
-					guildId: guildId,
-				});
-
-				var description = [
-					`### Moderation Module`,
-					`**Log Channel:** ${modConf?.logChannel ? `<#${modConf.logChannel}>` : "None"}`,
-				];
-
-				var channelSelectMenu = buildChannelSelectMenu(client, {
-					module: "moderation",
-					option: "logChannel",
-					ownerId: config.pageOwner.id,
-					defaultChannels: [modConf?.logChannel],
-				});
-
-				return { description, rows: [[channelSelectMenu]] };
-			},
-			updateOption: async (client, guildId, values) => {
-				var value = values[0] || null;
-
-				var modConf = await client.db.repos.moderationConfig.findOneBy({
-					guildId: guildId,
-				});
-
-				if (modConf) {
-					modConf.logChannel = value;
-					await client.db.repos.moderationConfig.save(modConf);
-				}
-			},
-		},
-		{
-			module: "moderation",
-			option: "roles",
-			async getPageData(client, config) {
-				const { guildId } = config;
-
-				var modConf = await client.db.repos.moderationConfig.findOne({
-					where: {
-						guildId: guildId,
-					},
-					relations: ["roles"],
-				});
-
-				var roleIds: Array<string> = modConf?.roles?.map((role) => role.roleId) || [];
-
-				var roles = modConf?.roles?.map((r) => `<@&${r.roleId}>`).join(", ");
-
-				var description = [
-					`### Moderation Module`,
-					`**Roles:** ${roles ? `${roles}` : "None"}`,
-				];
-
-				var moderationRolesSM = buildRoleSelectMenu(client, {
-					module: "moderation",
-					option: "roles",
-					ownerId: config.pageOwner.id,
-					maxValues: 10,
-					defaultRoles: [...roleIds],
-				});
-
-				return { description, rows: [[moderationRolesSM]] };
-			},
-			updateOption: async (client, guildId, values: string[]) => {
-				var modConf = await client.db.repos.moderationConfig.findOne({
-					where: {
-						guildId,
-					},
-					relations: ["roles"],
-				});
-
-				var oldRoles = modConf.roles?.filter((role) => !values.includes(role.roleId));
-
-				for (let oldRole of oldRoles) {
-					await client.db.repos.moderationConfig.delete(oldRole);
-				}
-
-				for (let value of values) {
-					if (!modConf.roles?.some((role) => role.roleId === value)) {
-						let role = new ModerationConfigRoleEntity();
-						role.roleId = value;
-						role.moderationConfig = modConf;
-						await client.db.repos.moderationConfigRole.save(role);
-					}
 				}
 			},
 		},

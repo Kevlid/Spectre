@@ -1,7 +1,7 @@
-import { KiwiClient } from '@/client';
-import { ButtonBuilder } from '@discordjs/builders';
-import { ButtonStyle } from 'discord.js';
-import { ConfigButton } from '../buttons/configButton';
+import { KiwiClient } from "@/client";
+import { ButtonBuilder } from "@discordjs/builders";
+import { ButtonStyle } from "discord.js";
+import { ConfigButton } from "../buttons/configButton";
 
 interface ButtonConfig {
 	module: string;
@@ -13,14 +13,11 @@ interface ButtonConfig {
 	disabled?: boolean;
 }
 
-export const buildButton = (
-	client: KiwiClient,
-	config: ButtonConfig
-): ButtonBuilder => {
+export const buildButton = (client: KiwiClient, config: ButtonConfig): ButtonBuilder => {
 	var button = new ButtonBuilder();
 
 	button.setCustomId(
-		client.createCustomId({
+		client.ComponentManager.createCustomId({
 			customId: ConfigButton.customId,
 			module: config.module,
 			option: config.option,

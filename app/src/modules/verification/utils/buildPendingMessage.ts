@@ -1,4 +1,4 @@
-import { KiwiClient } from '@/client';
+import { KiwiClient } from "@/client";
 import {
 	StringSelectMenuBuilder,
 	ChannelType,
@@ -9,14 +9,14 @@ import {
 	ButtonStyle,
 	ActionRowBuilder,
 	ButtonBuilder,
-} from 'discord.js';
+} from "discord.js";
 
-import { buildStringSelectMenu } from '@/utils/buildStringSelectMenu';
-import { buildButton } from '@/utils/buildButton';
+import { buildStringSelectMenu } from "@/utils/buildStringSelectMenu";
+import { buildButton } from "@/utils/buildButton";
 
-import { VerifyRoleSelectMenu as VerifyRoleSM } from '../selectmenus/verifyRole';
-import { ApproveUserButton } from '../buttons/approveUser';
-import { DenyUserButton } from '../buttons/denyUser';
+import { VerifyRoleSelectMenu as VerifyRoleSM } from "../selectmenus/verifyRole";
+import { ApproveUserButton } from "../buttons/approveUser";
+import { DenyUserButton } from "../buttons/denyUser";
 
 export const buildPendingMessage = async (
 	client: KiwiClient,
@@ -36,24 +36,24 @@ export const buildPendingMessage = async (
 	if (verifyRoles.length <= 0) return; // Use a new logging system for all modules to log errors in log channels
 
 	var pendingEmbed = new EmbedBuilder()
-		.setTitle('Pending Verification')
+		.setTitle("Pending Verification")
 		.setThumbnail(member.user.avatarURL())
 		.setColor(client.Settings.color)
 		.addFields(
-			{ name: 'ID', value: `${member.user.id}` },
-			{ name: 'User', value: `<@${member.user.id}>` },
+			{ name: "ID", value: `${member.user.id}` },
+			{ name: "User", value: `<@${member.user.id}>` },
 			{
-				name: 'Username',
+				name: "Username",
 				value: `${client.capitalize(member.user.username)}`,
 			}
 		);
 
 	var roleSelectMenu = buildStringSelectMenu({
-		customId: client.createCustomId({
+		customId: client.ComponentManager.createCustomId({
 			customId: VerifyRoleSM.customId,
 			memberId: member.id,
 		}),
-		placeholder: 'Select a role',
+		placeholder: "Select a role",
 		options: verifyRoles.map((role) => ({
 			label: role.name,
 			value: role.id,
@@ -63,40 +63,38 @@ export const buildPendingMessage = async (
 	});
 
 	var ApproveButton = buildButton({
-		customId: client.createCustomId({
+		customId: client.ComponentManager.createCustomId({
 			customId: ApproveUserButton.customId,
 			roleId: verifyRole,
 			memberId: member.id,
 		}),
-		label: 'Approve',
+		label: "Approve",
 		style: ButtonStyle.Success,
 	});
 	var DenyButton = buildButton({
-		customId: client.createCustomId({
+		customId: client.ComponentManager.createCustomId({
 			customId: DenyUserButton.customId,
 			memberId: member.id,
 		}),
-		label: 'Deny',
+		label: "Deny",
 		style: ButtonStyle.Danger,
 	});
 	var ViewProfileButton = buildButton({
-		label: 'View Profile',
+		label: "View Profile",
 		style: ButtonStyle.Link,
 		url: `https://discord.com/users/${member.user.id}`,
 	});
 
-	var content = '';
+	var content = "";
 	if (verConf.pings) {
-		content = verConf.pings?.map((ping) => `<@&${ping.roleId}>`).join(' ');
+		content = verConf.pings?.map((ping) => `<@&${ping.roleId}>`).join(" ");
 	}
 
 	return {
 		content,
 		embeds: [pendingEmbed],
 		components: [
-			new ActionRowBuilder<StringSelectMenuBuilder>().addComponents([
-				roleSelectMenu,
-			]),
+			new ActionRowBuilder<StringSelectMenuBuilder>().addComponents([roleSelectMenu]),
 			new ActionRowBuilder<ButtonBuilder>().addComponents([
 				ApproveButton,
 				DenyButton,

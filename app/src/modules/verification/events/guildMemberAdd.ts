@@ -1,22 +1,8 @@
-import {
-	ActionRowBuilder,
-	EmbedBuilder,
-	ButtonBuilder,
-	GuildMember,
-	TextChannel,
-	ButtonStyle,
-	Role,
-	StringSelectMenuBuilder,
-} from 'discord.js';
-import { KiwiClient } from '@/client';
-import { Event, EventList } from '@/types/event';
-import { buildButton } from '@/utils/buildButton';
+import { GuildMember, TextChannel } from "discord.js";
+import { KiwiClient } from "@/client";
+import { Event, EventList } from "@/types/event";
 
-import { VerifyRoleSelectMenu as VerifyRoleSM } from '../selectmenus/verifyRole';
-import { ApproveUserButton } from '../buttons/approveUser';
-import { DenyUserButton } from '../buttons/denyUser';
-import { buildStringSelectMenu } from '@/utils/buildStringSelectMenu';
-import { buildPendingMessage } from '../utils/buildPendingMessage';
+import { buildPendingMessage } from "../utils/buildPendingMessage";
 
 export const GuildMemberAdd: Event = {
 	name: EventList.GuildMemberAdd,
@@ -35,9 +21,7 @@ export const GuildMemberAdd: Event = {
 		if (oldPendingMessage) return;
 
 		var verConf = await client.db.getVerificationConfig(member.guild.id);
-		var pendingChannel = member.guild.channels.cache.get(
-			verConf.pendingChannel
-		);
+		var pendingChannel = member.guild.channels.cache.get(verConf.pendingChannel) as TextChannel;
 		if (!pendingChannel) return;
 
 		var { content, embeds, components } = await buildPendingMessage(
@@ -46,7 +30,6 @@ export const GuildMemberAdd: Event = {
 			member
 		);
 
-		if (!pendingChannel.isSendable()) return;
 		var pendingMessage = await pendingChannel.send({
 			content,
 			embeds: [...embeds],

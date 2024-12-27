@@ -1,11 +1,7 @@
 import { PrefixCommand, ConfigOptionTypes } from "@/types/command";
 
-import { checkPermissions } from "../../moderation/utils/checkPermissions";
 import { GuildMember, GuildTextBasedChannel, TextChannel, User } from "discord.js";
 
-/**
- * @type {PrefixCommand}
- */
 export const DeleteManyPrefix: PrefixCommand = {
 	config: {
 		name: "delete-many",
@@ -23,9 +19,7 @@ export const DeleteManyPrefix: PrefixCommand = {
 			},
 		],
 	},
-	async checks(client, message, commandOptions) {
-		return await checkPermissions(client, message.guildId, message.author.id);
-	},
+
 	async execute(client, message, commandOptions, user: GuildMember, amount: number) {
 		amount = Math.min(amount, 100);
 		let fetchedMessages;

@@ -1,6 +1,6 @@
-import { KiwiClient } from '@/client';
-import { ChannelSelectMenuBuilder, ChannelType } from 'discord.js';
-import { ConfigChannelSelectMenu } from '../selectmenus/configChannel';
+import { KiwiClient } from "@/client";
+import { ChannelSelectMenuBuilder, ChannelType } from "discord.js";
+import { ConfigChannelSelectMenu } from "../selectmenus/configChannel";
 
 interface SelectMenuConfig {
 	module: string;
@@ -18,7 +18,7 @@ export const buildChannelSelectMenu = (
 	var SelectMenu = new ChannelSelectMenuBuilder();
 
 	SelectMenu.setCustomId(
-		client.createCustomId({
+		client.ComponentManager.createCustomId({
 			customId: ConfigChannelSelectMenu.customId,
 			module: config.module,
 			option: config.option,
@@ -26,7 +26,7 @@ export const buildChannelSelectMenu = (
 		})
 	);
 
-	SelectMenu.setPlaceholder('Select a channel');
+	SelectMenu.setPlaceholder("Select a channel");
 
 	SelectMenu.setMinValues(0);
 	if (config.maxValues) {

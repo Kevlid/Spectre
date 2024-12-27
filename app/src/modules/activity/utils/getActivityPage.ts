@@ -4,14 +4,14 @@ import {
 	User,
 	ActivityType,
 	EmbedBuilder,
-} from 'discord.js';
-import { KiwiClient } from '@/client';
-import { Emojis } from '@/emojis';
+} from "discord.js";
+import { KiwiClient } from "@/client";
+import { Emojis } from "@/emojis";
 
-import { ActivitySelectMenu as ActivitySM } from '../selectmenus/activityType';
-import { getVoice } from './getVoice';
+import { ActivitySelectMenu as ActivitySM } from "../selectmenus/activityType";
+import { getVoice } from "./getVoice";
 
-import { buildStringSelectMenu } from '@/utils/buildStringSelectMenu';
+import { buildStringSelectMenu } from "@/utils/buildStringSelectMenu";
 
 export const getActivityPage = async (
 	client: KiwiClient,
@@ -25,11 +25,11 @@ export const getActivityPage = async (
 	const { guildId, page, pageOwner, user } = config;
 	var guild = await client.guilds.fetch(guildId);
 
-	const hours = new Intl.NumberFormat('en-US', {
+	const hours = new Intl.NumberFormat("en-US", {
 		minimumFractionDigits: 1,
 		maximumFractionDigits: 2,
 	});
-	const minutes = new Intl.NumberFormat('en-US', {
+	const minutes = new Intl.NumberFormat("en-US", {
 		minimumFractionDigits: 0,
 		maximumFractionDigits: 0,
 	});
@@ -41,7 +41,7 @@ export const getActivityPage = async (
 	var embedFields = [];
 
 	switch (page) {
-		case 'status': {
+		case "status": {
 			var userStatus = await client.db.repos.activityStatus.findBy({
 				userId: user.id,
 			});
@@ -54,16 +54,14 @@ export const getActivityPage = async (
 						name: `**${client.capitalize(status.name)}**`,
 						value: `<t:${Math.floor(
 							new Date(status.timestamp).getTime() / 1000
-						)}:f> (<t:${Math.floor(
-							new Date(status.timestamp).getTime() / 1000
-						)}:R>)`,
+						)}:f> (<t:${Math.floor(new Date(status.timestamp).getTime() / 1000)}:R>)`,
 					});
 				});
 			}
 			break;
 		}
 
-		case 'presence': {
+		case "presence": {
 			var userPresence = await client.db.repos.activityPresence.findBy({
 				userId: user.id,
 			});
@@ -74,9 +72,7 @@ export const getActivityPage = async (
 			} else {
 				userPresence.forEach((presence) => {
 					embedFields.push({
-						name: `${ActivityType[presence.type]} **${
-							presence.name
-						}**`,
+						name: `${ActivityType[presence.type]} **${presence.name}**`,
 						value: `<t:${Math.floor(
 							new Date(presence.startTimestamp).getTime() / 1000
 						)}:f> (<t:${Math.floor(
@@ -88,36 +84,20 @@ export const getActivityPage = async (
 			break;
 		}
 
-		case 'voice': {
+		case "voice": {
 			var voice = await getVoice(client, guildId, user.id);
 			if (voice) {
-				var totalFormattedHours = hours.format(
-					voice.totalSeconds / (60 * 60)
-				);
-				var totalFormattedMinutes = minutes.format(
-					voice.totalSeconds / 60
-				);
+				var totalFormattedHours = hours.format(voice.totalSeconds / (60 * 60));
+				var totalFormattedMinutes = minutes.format(voice.totalSeconds / 60);
 
-				var dailyFormattedHours = hours.format(
-					voice.dailySeconds / (60 * 60)
-				);
-				var dailyFormattedMinutes = minutes.format(
-					voice.dailySeconds / 60
-				);
+				var dailyFormattedHours = hours.format(voice.dailySeconds / (60 * 60));
+				var dailyFormattedMinutes = minutes.format(voice.dailySeconds / 60);
 
-				var weeklyFormattedHours = hours.format(
-					voice.weeklySeconds / (60 * 60)
-				);
-				var weeklyFormattedMinutes = minutes.format(
-					voice.weeklySeconds / 60
-				);
+				var weeklyFormattedHours = hours.format(voice.weeklySeconds / (60 * 60));
+				var weeklyFormattedMinutes = minutes.format(voice.weeklySeconds / 60);
 
-				var monthlyFormattedHours = hours.format(
-					voice.monthlySeconds / (60 * 60)
-				);
-				var monthlyFormattedMinutes = minutes.format(
-					voice.monthlySeconds / 60
-				);
+				var monthlyFormattedHours = hours.format(voice.monthlySeconds / (60 * 60));
+				var monthlyFormattedMinutes = minutes.format(voice.monthlySeconds / 60);
 
 				embedDescription.push(
 					`### Voice Activity`,
@@ -135,10 +115,11 @@ export const getActivityPage = async (
 			break;
 		}
 
-		case 'message': {
-			var userMessages = await client.db.repos.activityMessages.findOneBy(
-				{ guildId: guildId, userId: user.id }
-			);
+		case "message": {
+			var userMessages = await client.db.repos.activityMessages.findOneBy({
+				guildId: guildId,
+				userId: user.id,
+			});
 			if (!userMessages) {
 				embedDescription.push(
 					`### Message Activity`,
@@ -160,12 +141,12 @@ export const getActivityPage = async (
 	embeds.push(
 		new EmbedBuilder()
 			.setAuthor({
-				name: `${client.capitalize(
-					user.displayName
-				)} (${client.capitalize(user.username)})`,
+				name: `${client.capitalize(user.displayName)} (${client.capitalize(
+					user.username
+				)})`,
 				iconURL: user.avatarURL(),
 			})
-			.setDescription(embedDescription.join('\n'))
+			.setDescription(embedDescription.join("\n"))
 			.setThumbnail(guild.iconURL())
 			.addFields(embedFields)
 			.setFooter({
@@ -177,7 +158,7 @@ export const getActivityPage = async (
 	var { options } = ActivitySM.config as StringSelectMenuBuilder;
 
 	var moduleSelectMenu = buildStringSelectMenu({
-		customId: client.createCustomId({
+		customId: client.ComponentManager.createCustomId({
 			customId: ActivitySM.customId,
 			ownerId: pageOwner.id,
 			userId: user.id,
@@ -193,11 +174,7 @@ export const getActivityPage = async (
 		defaults: [page],
 	});
 
-	rows.push(
-		new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
-			moduleSelectMenu
-		)
-	);
+	rows.push(new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(moduleSelectMenu));
 
 	return { embeds, rows };
 };
