@@ -1,10 +1,8 @@
 FROM node:20
+USER node
 
-WORKDIR /app
+COPY --chown=node:node . /spectre
+COPY --chown=node:node .env /spectre/app/.env
+WORKDIR /spectre/app
 
-ENV NODE_ENV production
-
-COPY . .
-
-RUN npm install && npm run build
-CMD ["npm", "run", "start"]
+RUN npm ci && npm run build
