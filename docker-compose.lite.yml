@@ -3,14 +3,12 @@ name: "spectre-lite"
 
 services:
     migrate:
-        container_name: migrate
         build:
             context: .
             dockerfile: ./app/Dockerfile
         command: ["npm", "run", "migrate:run"]
 
     app:
-        container_name: app
         restart: unless-stopped
         build:
             context: .
