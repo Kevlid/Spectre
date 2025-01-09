@@ -11,7 +11,7 @@ export const env = {
 
 	RESTART_WEBHOOK_URL: process.env.RESTART_WEBHOOK_URL as string,
 
-	DB_HOST: (process.env.DATABASE_HOST || "mysql") as string,
+	DB_HOST: process.env.DATABASE_HOST as string,
 	DB_PORT: process.env.DATABASE_PORT as string,
 	DB_USER: process.env.DATABASE_USER as string,
 	DB_PASSWORD: process.env.DATABASE_PASSWORD as string,

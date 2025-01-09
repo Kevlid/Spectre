@@ -3,7 +3,7 @@ import { env } from "./env";
 
 export const dataSourceOptions: DataSourceOptions = {
 	type: "mysql",
-	host: env.DB_HOST,
+	host: env.DB_HOST || "mysql",
 	port: parseInt(env.DB_PORT || "3306"),
 	username: env.DB_USER,
 	password: env.DB_PASSWORD,
