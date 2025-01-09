@@ -1,6 +1,6 @@
 {
-  "name": "spectre-app",
-  "version": "5.0.0",
+  "name": "spectre",
+  "version": "1.0.0",
   "scripts": {
     "start": "node -r ./register-tsconfig-paths.js dist/index.js",
     "dev": "ts-node -r tsconfig-paths/register src/index.ts",
