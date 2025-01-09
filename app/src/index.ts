@@ -1,8 +1,11 @@
-import { KiwiClient } from './client';
-import { env } from './env';
+import { dataSource } from "./datasource";
+import { KiwiClient } from "./client";
+import { env } from "./env";
 
-import { dataSource } from './datasource';
-dataSource.initialize();
+async function bootstrap() {
+	await dataSource.initialize();
 
-const client = new KiwiClient();
-client.login(env.CLIENT_TOKEN);
+	const client = new KiwiClient();
+	await client.login(env.CLIENT_TOKEN);
+}
+bootstrap();
