@@ -27,7 +27,7 @@ async function bootstrap() {
     }
 
     for (let command of qewi.commandHandler.globalCommands.values()) {
-        console.log(`Successfully Loaded Global Command '${command.id}'`);
+        console.log(`Successfully Loaded Global Command '${command.config.name}'`);
     }
 
     for (const [guildId, guild] of await client.guilds.fetch()) {

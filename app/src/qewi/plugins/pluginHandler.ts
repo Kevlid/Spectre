@@ -91,7 +91,7 @@ export class PluginHandler {
                 this.qewi.eventHandler.loadGuildEvent(guildId, event);
             }
             for (const command of plugin.commands ?? []) {
-                this.qewi.commandHandler.loadGuildCommand(guildId, command.id, command);
+                this.qewi.commandHandler.loadGuildCommand(guildId, command.config.name, command);
             }
         }
     }
@@ -107,7 +107,7 @@ export class PluginHandler {
                 this.qewi.eventHandler.unloadGuildEvent(guildId, event.id);
             }
             for (const command of plugin.commands ?? []) {
-                this.qewi.commandHandler.unloadGuildCommand(guildId, command.id);
+                this.qewi.commandHandler.unloadGuildCommand(guildId, command.config.name);
             }
         }
     }

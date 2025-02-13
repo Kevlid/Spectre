@@ -2,7 +2,7 @@ import { Qewi } from "../qewi";
 import { Default } from "../types";
 import { Plugin } from "../plugins/pluginTypes";
 
-import { ChatInputCommandInteraction, Guild } from "discord.js";
+import { ChatInputCommandInteraction, Guild, PermissionResolvable } from "discord.js";
 
 type CommandPayload = (ctx: Context, data: Data) => Promise<void> | void;
 
@@ -20,27 +20,41 @@ export interface Data {
 }
 
 export interface Command {
-    id: string;
-    description: string;
+    config: CommandConfig;
     pluginId?: string;
-    type: CommandTypes;
 
     default?: Default;
-
-    /* TODO: Add in command options for both slash commands and prefix commands */
-    /* TODO: Add in both command so its slash and prefix */
-
-    options?: Array<CommandOption>;
 
     beforeTrigger?: CommandPayload;
     trigger: CommandPayload;
     afterTrigger?: CommandPayload;
 }
 
+export interface CommandConfig {
+    name: string;
+    description: string;
+    type: CommandTypes;
+    default_member_permissions?: PermissionResolvable;
+    contexts?: Array<CommandContexts>;
+    integration_types?: Array<IntegrationTypes>;
+    options?: Array<CommandOption>;
+}
+
 export enum CommandTypes {
     ChatInput = 1,
     User = 3,
     Message = 3,
+}
+
+export enum CommandContexts {
+    Guild = 0,
+    BotDM = 1,
+    PrivateChannel = 2,
+}
+
+export enum IntegrationTypes {
+    Guild = 0,
+    User = 1,
 }
 
 export interface CommandOption {
@@ -58,4 +72,16 @@ export interface CommandOption {
     autocomplete?: boolean;
 }
 
-export enum CommandOptionTypes {}
+export enum CommandOptionTypes {
+    SubCommand = 1,
+    SubCommandGroup = 2,
+    String = 3,
+    Integer = 4,
+    Boolean = 5,
+    User = 6,
+    Channel = 7,
+    Role = 8,
+    Mentionable = 9,
+    Number = 10,
+    Attachment = 11,
+}

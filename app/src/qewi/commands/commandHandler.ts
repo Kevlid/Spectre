@@ -93,53 +93,22 @@ export class CommandHandler {
 
     /* Register command */
     private async _registerCommand(command: Command, guildId?: string): Promise<void> {
-        const commandData: any = {
-            name: command.id,
-            description: command.description,
-            type: command.type,
-            options: command.options,
-        };
-
-        // Fix all of the options in commandData
-        if (commandData.options) {
-            for (let option of commandData.options) {
-                option.channelTypes = option.channel_type;
-                option.minValue = option.min_value;
-                option.maxValue = option.max_value;
-                option.minLength = option.min_length;
-                option.maxLength = option.max_length;
-            }
-        }
+        const commandData = command.config;
 
         try {
-            if (!guildId) {
-                await axios.put(
-                    this.qewi.apiUrl + Routes.applicationGuildCommands(this.qewi.client.user.id, guildId),
-                    [commandData],
-                    {
-                        headers: {
-                            Authorization: `Bot ${this.qewi.config.token}`,
-                            "Content-Type": "application/json",
-                        },
-                    }
-                );
+            // Use guild commands if a guildId is provided; otherwise, use global commands.
+            if (guildId) {
+                await this.qewi.rest.post(Routes.applicationGuildCommands(this.qewi.client.user.id, guildId), {
+                    body: commandData,
+                });
             } else {
-                await axios.put(
-                    this.qewi.apiUrl + Routes.applicationCommands(this.qewi.client.user.id),
-                    [commandData],
-                    {
-                        headers: {
-                            Authorization: `Bot ${this.qewi.config.token}`,
-                            "Content-Type": "application/json",
-                        },
-                    }
-                );
+                await this.qewi.rest.post(Routes.applicationCommands(this.qewi.client.user.id), {
+                    body: commandData,
+                });
             }
-            console.info(`Successfully registered command ${command.id} (${guildId})`);
-        } catch (error) {
-            console.error(`Failed to register command ${command.id} (${guildId})`);
-            console.error(error.response.data);
-            console.log(commandData);
+            console.info(`Successfully registered command ${commandData.name} (${guildId ?? "global"})`);
+        } catch (error: any) {
+            console.error(`Failed to register command ${commandData.name} (${guildId ?? "global"})`);
         }
     }
 
