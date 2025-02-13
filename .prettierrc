@@ -1,6 +1,6 @@
 {
-    "printWidth": 100,
-    "doubleQuote": true,
+    "printWidth": 120,
     "tabWidth": 4,
-    "useTabs": true
+    "useTabs": false,
+    "doubleQuote": true
 }

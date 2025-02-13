@@ -1,112 +1,77 @@
-import {
-	Client,
-	GatewayIntentBits,
-	Partials,
-	ColorResolvable,
-	ClientPresenceStatus,
-	Message,
-	TextChannel,
-} from "discord.js";
+import { Client, GatewayIntentBits, Partials } from "discord.js";
 
-import { DatabaseManager } from "./managers/databaseManager";
+//import { EventManager } from "./managers/eventManager";
+//import { ComponentManager } from "./managers/componentManager";
+//import { CommandManager } from "./managers/commandManager";
+//import { ScheduleManager } from "./managers/scheduleManager";
+//import { ModuleManager } from "./managers/moduleManager";
 
-import { EventManager } from "./managers/eventManager";
-import { ComponentManager } from "./managers/componentManager";
-import { CommandManager } from "./managers/commandManager";
-import { ScheduleManager } from "./managers/scheduleManager";
-import { ModuleManager } from "./managers/moduleManager";
-import { CustomOptions } from "./types/component";
+export class DiscordClient extends Client {
+    //public EventManager: EventManager;
+    //public ComponentManager: ComponentManager;
+    //public CommandManager: CommandManager;
+    //public ScheduleManager: ScheduleManager;
+    //public ModuleManager: ModuleManager;
 
-export class KiwiClient extends Client {
-	public Settings: {
-		color: ColorResolvable;
-	};
-	public Colors: {
-		fail: ColorResolvable;
-		success: ColorResolvable;
-		normal: ColorResolvable;
-	};
-	public db: DatabaseManager;
+    constructor() {
+        super({
+            intents: [
+                GatewayIntentBits.Guilds,
+                GatewayIntentBits.GuildMembers,
+                GatewayIntentBits.GuildMessages,
+                GatewayIntentBits.GuildModeration,
+                GatewayIntentBits.GuildVoiceStates,
+                GatewayIntentBits.GuildPresences,
+                GatewayIntentBits.MessageContent,
+                GatewayIntentBits.AutoModerationExecution,
+                GatewayIntentBits.AutoModerationConfiguration,
+            ],
+            partials: [
+                Partials.ThreadMember,
+                Partials.GuildMember,
+                Partials.Reaction,
+                Partials.Channel,
+                Partials.Message,
+                Partials.User,
+            ],
+            allowedMentions: {
+                parse: [],
+                repliedUser: true,
+            },
+        });
 
-	public EventManager: EventManager;
-	public ComponentManager: ComponentManager;
-	public CommandManager: CommandManager;
-	public ScheduleManager: ScheduleManager;
-	public ModuleManager: ModuleManager;
+        // Event Manager
+        //this.EventManager = new EventManager(this);
 
-	private _logChannel: TextChannel;
+        // Component Manager
+        //this.ComponentManager = new ComponentManager(this);
 
-	constructor() {
-		super({
-			intents: [
-				GatewayIntentBits.Guilds,
-				GatewayIntentBits.GuildMembers,
-				GatewayIntentBits.GuildMessages,
-				GatewayIntentBits.GuildModeration,
-				GatewayIntentBits.GuildVoiceStates,
-				GatewayIntentBits.GuildPresences,
-				GatewayIntentBits.MessageContent,
-				//GatewayIntentBits.AutoModerationExecution,
-				//GatewayIntentBits.AutoModerationConfiguration,
-			],
-			partials: [
-				Partials.ThreadMember,
-				Partials.GuildMember,
-				Partials.Reaction,
-				Partials.Channel,
-				Partials.Message,
-				Partials.User,
-			],
-			presence: {
-				status: "online" as ClientPresenceStatus,
-			},
-		});
+        // Command Manager
+        //this.CommandManager = new CommandManager(this);
 
-		this.Settings = {
-			color: "#7289DA",
-		};
+        // Schedule Manager
+        //this.ScheduleManager = new ScheduleManager(this);
 
-		this.Colors = {
-			fail: "#ff474d",
-			success: "#90ee90",
-			normal: "#7289DA",
-		};
+        //this.ModuleManager = new ModuleManager(this);
+    }
 
-		// Database Manager
-		this.db = new DatabaseManager(this);
+    public capitalize(str: string): string {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
 
-		// Event Manager
-		this.EventManager = new EventManager(this);
+    public addSpace(value: string) {
+        return value.replace(/([A-Z])/g, " $1").trim();
+    }
 
-		// Component Manager
-		this.ComponentManager = new ComponentManager(this);
+    public getBoolean(value: string) {
+        if (value.toLowerCase() === "true") {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-		// Command Manager
-		this.CommandManager = new CommandManager(this);
-
-		// Schedule Manager
-		this.ScheduleManager = new ScheduleManager(this);
-
-		this.ModuleManager = new ModuleManager(this);
-	}
-
-	public capitalize(str: string): string {
-		return str.charAt(0).toUpperCase() + str.slice(1);
-	}
-
-	public addSpace(value: string) {
-		return value.replace(/([A-Z])/g, " $1").trim();
-	}
-
-	public getBoolean(value: string) {
-		if (value.toLowerCase() === "true") {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public createMessageUrl(guildId: string, channelId: string, messageId: string): string {
-		return `https://discord.com/channels/${guildId}/${channelId}/${messageId}`;
-	}
+    public createMessageUrl(guildId: string, channelId: string, messageId: string): string {
+        return `https://discord.com/channels/${guildId}/${channelId}/${messageId}`;
+    }
 }
