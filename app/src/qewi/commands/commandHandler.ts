@@ -2,6 +2,7 @@ import { Qewi } from "../qewi";
 import { PluginHandler } from "../plugins/pluginHandler";
 import { Command, Context, Data } from "./commandTypes";
 import { ChatInputCommandInteraction, GuildMember, Routes } from "discord.js";
+import axios from "axios";
 
 export class CommandHandler {
     public globalCommands = new Map<string, Command>();
@@ -91,28 +92,54 @@ export class CommandHandler {
     }
 
     /* Register command */
-
     private async _registerCommand(command: Command, guildId?: string): Promise<void> {
-        const commandData = {
+        const commandData: any = {
             name: command.id,
             description: command.description,
             type: command.type,
             options: command.options,
         };
 
+        // Fix all of the options in commandData
+        if (commandData.options) {
+            for (let option of commandData.options) {
+                option.channelTypes = option.channel_type;
+                option.minValue = option.min_value;
+                option.maxValue = option.max_value;
+                option.minLength = option.min_length;
+                option.maxLength = option.max_length;
+            }
+        }
+
         try {
             if (!guildId) {
-                await this.qewi.rest.post(Routes.applicationCommands(this.qewi.client.user.id), {
-                    body: [command],
-                });
+                await axios.put(
+                    this.qewi.apiUrl + Routes.applicationGuildCommands(this.qewi.client.user.id, guildId),
+                    [commandData],
+                    {
+                        headers: {
+                            Authorization: `Bot ${this.qewi.config.token}`,
+                            "Content-Type": "application/json",
+                        },
+                    }
+                );
             } else {
-                await this.qewi.rest.post(Routes.applicationGuildCommands(this.qewi.client.user.id, guildId), {
-                    body: [command],
-                });
+                await axios.put(
+                    this.qewi.apiUrl + Routes.applicationCommands(this.qewi.client.user.id),
+                    [commandData],
+                    {
+                        headers: {
+                            Authorization: `Bot ${this.qewi.config.token}`,
+                            "Content-Type": "application/json",
+                        },
+                    }
+                );
             }
+            console.info(`Successfully registered command ${command.id} (${guildId})`);
         } catch (error) {
-            console.error(`Failed to register command ${command.id} in guild ${guildId}`);
-            console.error(error);
+            console.error(`Failed to register command ${command.id} (${guildId})`);
+            console.error(error.response.data);
+            console.log(commandData);
         }
     }
 

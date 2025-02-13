@@ -3,7 +3,7 @@ export { Qewi } from "./qewi";
 // Export all types
 export * from "./plugins/pluginTypes";
 export { EventList } from "./events/eventTypes";
-export { CommandOptionType } from "./commands/commandTypes";
+export { Command, CommandTypes, CommandOptionTypes } from "./commands/commandTypes";
 
 // Export all functions
 export { definePlugin } from "./plugins/definePlugin";

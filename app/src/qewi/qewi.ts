@@ -12,6 +12,7 @@ export class Qewi {
     public config: QewiConfig;
 
     public rest: REST;
+    public apiUrl: string;
 
     public pluginHandler: PluginHandler;
     public eventHandler: EventHandler;
@@ -22,6 +23,7 @@ export class Qewi {
         this.config = config;
 
         this.rest = new REST({ version: "10" }).setToken(config.token);
+        this.apiUrl = `https://discord.com/api/v10`;
 
         this.pluginHandler = new PluginHandler(this);
         this.eventHandler = new EventHandler(this);
