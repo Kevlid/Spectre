@@ -5,7 +5,6 @@ export const configCommand = defineCommand({
         name: "cfg",
         description: "..",
         type: CommandTypes.ChatInput,
-        default_member_permissions: null,
     },
 
     trigger: async function (ctx, data) {
