@@ -74,20 +74,26 @@ export class CommandHandler {
         }
 
         let hasAccess = false;
-        // Check roles
-        for (const roleId of requiredRoles) {
-            if (member.roles.cache.has(roleId)) {
-                hasAccess = true;
-                break;
+        if (requiredRoles.length > 0) {
+            // Check roles
+            for (const roleId of requiredRoles) {
+                if (member.roles.cache.has(roleId)) {
+                    hasAccess = true;
+                    break;
+                }
             }
-        }
-        // Check permissions
-        for (const permission of requiredPermissions) {
-            if (member.permissions.has(permission)) {
-                hasAccess = true;
-                break;
+        } else if (requiredPermissions.length > 0) {
+            // Check permissions
+            for (const permission of requiredPermissions) {
+                if (member.permissions.has(permission)) {
+                    hasAccess = true;
+                    break;
+                }
             }
+        } else {
+            hasAccess = true;
         }
+
         return hasAccess;
     }
 

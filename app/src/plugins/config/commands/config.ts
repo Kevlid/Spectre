@@ -8,7 +8,6 @@ export const configCommand = defineCommand({
     },
 
     trigger: async function (ctx, data) {
-        console.log("Config command triggered");
-        console.log(data, "\n--------------\n", ctx);
+        data.interaction.reply("Config command triggered");
     },
 });
