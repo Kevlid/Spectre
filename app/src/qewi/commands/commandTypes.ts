@@ -64,11 +64,11 @@ export interface CommandOption {
     required?: boolean;
     choices?: Array<{ name: string; value: string }>;
     options?: Array<CommandOption>;
-    channelTypes?: Array<string>;
-    minValue?: number;
-    maxValue?: number;
-    minLength?: number;
-    maxLength?: number;
+    channel_types?: Array<string>;
+    min_value?: number;
+    max_value?: number;
+    min_length?: number;
+    max_length?: number;
     autocomplete?: boolean;
 }
 

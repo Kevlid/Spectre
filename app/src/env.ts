@@ -8,8 +8,11 @@ export const env = {
 
     PREFIX: "!",
     STAFF_USERS: (process.env.STAFF_USERS?.split(",") || []) as string[],
+    STAFF_SERVERS: (process.env.STAFF_SERVERS?.split(",") || []) as string[],
 
-    RESTART_WEBHOOK_URL: process.env.RESTART_WEBHOOK_URL as string,
-
-    DATABASE_URL: process.env.DATABASE_URL as string,
+    POSTGRES_HOST: process.env.POSTGRES_HOST as string,
+    POSTGRES_PORT: parseInt(process.env.POSTGRES_PORT as string, 10),
+    POSTGRES_USER: process.env.POSTGRES_USER as string,
+    POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD as string,
+    POSTGRES_DB: process.env.POSTGRES_DB as string,
 };

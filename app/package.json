@@ -30,6 +30,7 @@
     "mongoose": "^8.10.0",
     "mysql2": "^3.9.4",
     "node-schedule": "^2.1.1",
+    "pg": "^8.13.3",
     "tsconfig-paths": "^4.2.0",
     "typeorm": "^0.3.20"
   }

@@ -1,6 +1,6 @@
 import { env } from "./env";
 
-import { connectDB } from "./database";
+import { dataSource } from "./datasource";
 
 import { DiscordClient } from "./client";
 import { Qewi, PluginTypes } from "@/qewi";
@@ -8,8 +8,7 @@ import { Qewi, PluginTypes } from "@/qewi";
 import { plugins } from "./plugins/plugins";
 
 async function bootstrap() {
-    // Connect to MongoDB
-    connectDB();
+    await dataSource.initialize();
 
     const client = new DiscordClient();
     await client.login(env.CLIENT_TOKEN);
