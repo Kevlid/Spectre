@@ -1,8 +1,9 @@
 import { Qewi } from "../qewi";
 import { PluginHandler } from "../plugins/pluginHandler";
-import { Command, Context, Data } from "./commandTypes";
-import { ChatInputCommandInteraction, GuildMember, Routes } from "discord.js";
-import axios from "axios";
+import { Command, Context, Data, Interactions } from "./commandTypes";
+import { AutocompleteInteraction, ChatInputCommandInteraction, GuildMember, Routes } from "discord.js";
+
+import { defaultGlobalCommands, defaultGuildCommands } from "./defaultCommand";
 
 export class CommandHandler {
     public globalCommands = new Map<string, Command>();
@@ -14,12 +15,61 @@ export class CommandHandler {
         this.qewi = qewi;
         this.pluginHandler = qewi.pluginHandler;
 
+        this._loadDefaultCommands();
+
         // Listen for slash command interactions
-        this.qewi.client.on("interactionCreate", async (interaction) => {
+        this.qewi.client.on("interactionCreate", async (interaction: Interactions) => {
             if (interaction.isChatInputCommand()) {
                 await this._onSlashCommand(interaction);
+            } else if (interaction.isAutocomplete()) {
+                await this._onAutocomplete(interaction);
             }
         });
+    }
+
+    private async _loadDefaultCommands(): Promise<void> {
+        // Global Commands
+        for (const dgc of defaultGlobalCommands) {
+            this.loadGlobalCommand(dgc.config.name, dgc);
+            this._registerCommand(dgc);
+        }
+
+        // Guild Commands
+        const guilds = await this.qewi.client.guilds.fetch();
+        for (const [guildId, guild] of guilds) {
+            for (const dgc of defaultGlobalCommands) {
+                this.loadGuildCommand(guildId, dgc.config.name, dgc);
+                this._registerCommand(dgc, guildId);
+            }
+        }
+    }
+
+    private async _getContextAndData(command: Command, interaction: Interactions): Promise<[Context, Data]> {
+        const plugin = this.pluginHandler.getPlugin(command.pluginId, interaction.guildId);
+
+        const ctx: Context = {
+            qewi: this.qewi,
+            plugin: plugin,
+            command: command,
+            guild: interaction.guild,
+        };
+
+        const data: Data = {
+            guildId: interaction.guildId,
+            authorId: interaction.user.id,
+        };
+
+        return [ctx, data];
+    }
+
+    private async _onAutocomplete(interaction: AutocompleteInteraction): Promise<void> {
+        const commandId = interaction.commandName;
+        const command = this.getCommand(commandId, interaction.guildId);
+        if (!command) return;
+
+        const [ctx, data] = await this._getContextAndData(command, interaction);
+
+        await command.autocomplete(ctx, data, interaction);
     }
 
     private async _onSlashCommand(interaction: ChatInputCommandInteraction): Promise<void> {
@@ -27,37 +77,24 @@ export class CommandHandler {
         const command = this.getCommand(commandId, interaction.guildId);
         if (!command) return;
 
-        const plugin = this.pluginHandler.getPlugin(command.pluginId, interaction.guildId);
+        const [ctx, data] = await this._getContextAndData(command, interaction);
 
-        const ctx: Context = {
-            qewi: this.qewi,
-            plugin: plugin,
-            command: command,
-            guildId: interaction.guildId,
-        };
-
-        const data: Data = {
-            interaction: interaction,
-            guild: interaction.guild,
-            authorId: interaction.user.id,
-        };
-
-        if (!this._isAllowed(ctx, data)) {
+        if (!this._isAllowed(ctx, data, interaction)) {
             await interaction.reply({ content: "You do not have permission to use this command.", ephemeral: true });
             return;
         }
 
         if (command.beforeTrigger) {
-            await command.beforeTrigger(ctx, data);
+            await command.beforeTrigger(ctx, data, interaction);
         }
-        await command.trigger(ctx, data);
+        await command.trigger(ctx, data, interaction);
         if (command.afterTrigger) {
-            await command.afterTrigger(ctx, data);
+            await command.afterTrigger(ctx, data, interaction);
         }
     }
 
-    private _isAllowed(ctx: Context, data: Data): boolean {
-        const member = data.interaction.member as GuildMember;
+    private _isAllowed(ctx: Context, data: Data, interaction: Interactions): boolean {
+        const member = interaction.member as GuildMember;
         if (!member) return false;
 
         let requiredRoles: string[] = [];

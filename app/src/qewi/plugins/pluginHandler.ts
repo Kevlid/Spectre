@@ -59,7 +59,7 @@ export class PluginHandler {
 
     /* Guild Plugins */
 
-    private _getGuildPlugins(guildId: string): Map<string, Plugin> {
+    public getGuildPlugins(guildId: string): Map<string, Plugin> {
         var pluginsMap = this.guildPlugins.get(guildId);
         if (!pluginsMap) {
             pluginsMap = new Map<string, Plugin>();
@@ -68,11 +68,11 @@ export class PluginHandler {
     }
 
     private _getGuildPlugin(guildId: string, pluginId: string): Plugin | null {
-        return this._getGuildPlugins(guildId).get(pluginId) || null;
+        return this.getGuildPlugins(guildId).get(pluginId) || null;
     }
 
     private _setGuildPlugin(guildId: string, pluginId: string, plugin: Plugin): void {
-        const guildPlugins = this._getGuildPlugins(guildId);
+        const guildPlugins = this.getGuildPlugins(guildId);
         guildPlugins.set(pluginId, plugin);
         this.guildPlugins.set(guildId, guildPlugins);
     }
@@ -102,7 +102,7 @@ export class PluginHandler {
             throw new Error(`Plugin ${pluginId} is not loaded in guild ${guildId}`);
         } else {
             if (plugin.beforeUnload) plugin.beforeUnload(plugin);
-            this._getGuildPlugins(guildId).delete(pluginId); // Remove plugin from guild (PROBABLY WONT WORK)
+            this.getGuildPlugins(guildId).delete(pluginId); // Remove plugin from guild (PROBABLY WONT WORK)
             for (const event of plugin.events ?? []) {
                 this.qewi.eventHandler.unloadGuildEvent(guildId, event.id);
             }

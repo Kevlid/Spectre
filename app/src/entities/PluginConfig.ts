@@ -8,7 +8,7 @@ export class PluginConfig {
     @Column({ name: "guild_name" })
     guildName: string;
 
-    @Column({ name: "config" })
+    @Column({ name: "config", type: "json" })
     config: any;
 
     @CreateDateColumn({ name: "created_at" })

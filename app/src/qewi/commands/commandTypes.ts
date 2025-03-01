@@ -2,20 +2,20 @@ import { Qewi } from "../qewi";
 import { Default } from "../types";
 import { Plugin } from "../plugins/pluginTypes";
 
-import { ChatInputCommandInteraction, Guild, PermissionResolvable } from "discord.js";
+import { AutocompleteInteraction, ChatInputCommandInteraction, Guild, PermissionResolvable } from "discord.js";
 
-type CommandPayload = (ctx: Context, data: Data) => Promise<void> | void;
+export type Interactions = AutocompleteInteraction | CommandInteractions;
+export type CommandInteractions = ChatInputCommandInteraction;
 
 export interface Context {
     qewi: Qewi;
     plugin: Plugin;
     command: Command;
-    guildId: string;
+    guild: Guild;
 }
 
 export interface Data {
-    interaction: ChatInputCommandInteraction;
-    guild: Guild;
+    guildId: string;
     authorId: string;
 }
 
@@ -25,9 +25,11 @@ export interface Command {
 
     default?: Default;
 
-    beforeTrigger?: CommandPayload;
-    trigger: CommandPayload;
-    afterTrigger?: CommandPayload;
+    autocomplete?: (ctx: Context, data: Data, interaction: AutocompleteInteraction) => Promise<void> | void;
+
+    beforeTrigger?: (ctx: Context, data: Data, interaction: CommandInteractions) => Promise<void> | void;
+    trigger: (ctx: Context, data: Data, interaction: CommandInteractions) => Promise<void> | void;
+    afterTrigger?: (ctx: Context, data: Data, interaction: CommandInteractions) => Promise<void> | void;
 }
 
 export interface CommandConfig {
