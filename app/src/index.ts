@@ -20,6 +20,9 @@ async function bootstrap() {
     const GlobalPlugins = plugins.filter((plugin) => plugin.type === PluginTypes.Global);
     const GuildPlugins = plugins.filter((plugin) => plugin.type === PluginTypes.Guild);
 
+    // Clear all of the old commands
+    await qewi.commandHandler.clearCommands();
+
     for (let plugin of GlobalPlugins) {
         await qewi.pluginHandler.loadGlobalPlugin(plugin.id, plugin);
         console.log(`Successfully Loaded Global Plugin '${plugin.id}'`);
@@ -30,6 +33,9 @@ async function bootstrap() {
     }
 
     for (const [guildId, guild] of await client.guilds.fetch()) {
+        // Clear all the old commands
+        await qewi.commandHandler.clearCommands(guildId);
+
         for (let plugin of GuildPlugins) {
             await qewi.pluginHandler.loadGuildPlugin(guildId, plugin.id, plugin);
             console.log(`Successfully Loaded Guild Plugin '${plugin.id}' for Guild '${guild.name}' (${guildId})`);

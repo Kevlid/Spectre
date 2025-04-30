@@ -44,7 +44,7 @@ export interface CommandConfig {
 
 export enum CommandTypes {
     ChatInput = 1,
-    User = 3,
+    User = 2,
     Message = 3,
 }
 

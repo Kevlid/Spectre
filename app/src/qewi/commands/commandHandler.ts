@@ -155,6 +155,21 @@ export class CommandHandler {
         }
     }
 
+    /* Clear commands */
+    public async clearCommands(guildId?: string): Promise<void> {
+        try {
+            if (guildId) {
+                await this.qewi.rest.put(Routes.applicationGuildCommands(this.qewi.client.user.id, guildId));
+                console.info(`Successfully cleared commands for guild ${guildId}`);
+            } else {
+                await this.qewi.rest.put(Routes.applicationCommands(this.qewi.client.user.id));
+                console.info(`Successfully cleared global commands`);
+            }
+        } catch (error: any) {
+            console.error(`Failed to clear commands (${guildId ?? "global"})`);
+        }
+    }
+
     /* Command lookup and management (global/guild) remains the same */
 
     public getCommand(commandId: string, guildId?: string | null): Command | null {
