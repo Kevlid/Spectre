@@ -7,6 +7,10 @@ export interface Plugin {
     type: PluginTypes;
     description?: string;
 
+    settings?: {
+        [key: string]: PluginSettings;
+    };
+
     default?: Default;
 
     commands?: Array<Command>;
@@ -21,4 +25,19 @@ export interface Plugin {
 export enum PluginTypes {
     Global = "global",
     Guild = "guild",
+}
+
+export interface PluginSettings {
+    types: PluginSettingsTypes[];
+    default: any;
+}
+
+export enum PluginSettingsTypes {
+    String = "string",
+    Number = "number",
+    Boolean = "boolean",
+    Array = "array",
+    Object = "object",
+    Any = "any",
+    Null = "null",
 }

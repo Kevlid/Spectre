@@ -193,4 +193,4 @@ const configCommand = defineCommand({
 });
 
 export const defaultGlobalCommands: Array<Command> = [];
-export const defaultGuildCommands: Array<Command> = [configCommand];
+export const defaultGuildCommands: Array<Command> = [];

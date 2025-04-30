@@ -37,11 +37,12 @@ export class CommandHandler {
         // Guild Commands
         const guilds = await this.qewi.client.guilds.fetch();
         for (const [guildId, guild] of guilds) {
-            for (const dgc of defaultGlobalCommands) {
+            for (const dgc of defaultGuildCommands) {
                 this.loadGuildCommand(guildId, dgc.config.name, dgc);
                 this._registerCommand(dgc, guildId);
             }
         }
+        console.info("Successfully loaded default commands");
     }
 
     private async _getContextAndData(command: Command, interaction: Interactions): Promise<[Context, Data]> {
