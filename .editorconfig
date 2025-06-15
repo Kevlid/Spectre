@@ -1,0 +1,23 @@
+# Root EditorConfig file
+root = true
+
+# Default settings for all files
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+
+# Markdown: allow trailing whitespace for line breaks
+[*.md]
+trim_trailing_whitespace = false
+
+# JSON: still 4 spaces, but Prettier might override this
+[*.json]
+indent_size = 4
+
+# YAML (if used): 2 is standard, but can be 4 if you prefer
+[*.yml]
+indent_size = 4

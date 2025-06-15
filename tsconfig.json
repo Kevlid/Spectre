@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": true,
+    "alwaysStrict": true,
+    "skipLibCheck": true,
+    "noImplicitAny": false,
+    "emitDecoratorMetadata": true,
+    "resolveJsonModule": true,
+    "strictPropertyInitialization": false,
+    "sourceMap": true,
+    "inlineSources": true,
+    "sourceRoot": "/",
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "plugins": [
+        {
+            "name": "typescript-plugin-paths",
+            "transform": "typescript-transform-paths"
+        }
+    ]
+  },
+  "include": ["src"]
+}

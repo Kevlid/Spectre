@@ -15,8 +15,8 @@ Custom Discord application designed for stuff I need.
 Steps to install your project locally:
 
 ```bash
-git clone https://github.com/kewwie/spectre.git
-cd spectre
+git clone https://github.com/Kewwie/Spectre.git
+cd Spectre
 ```
 
 ## Features

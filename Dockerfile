@@ -11,7 +11,7 @@ RUN npm install
 COPY . .
 
 # Compile TypeScript to JavaScript (ensure you have a "build" script in package.json)
-RUN npm run build
+RUN pnpm build
 
 # Stage 2: Create the production image
 FROM node:18-alpine
@@ -25,8 +25,5 @@ COPY --from=builder /app/package*.json ./
 # Install only production dependencies
 RUN npm install --only=production
 
-# Expose the port your app runs on (adjust if needed)
-EXPOSE 3000
-
 # Run the app (change the entry point if necessary)
-CMD ["npm", "run", "start"]
+CMD ["pnpm", "start"]
