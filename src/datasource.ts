@@ -3,15 +3,18 @@ import { env } from "./env";
 
 export const dataSourceOptions: DataSourceOptions = {
     type: "postgres",
-    host: env.DB_HOST,
-    port: parseInt(env.DB_PORT || "5432"),
-    username: env.DB_USER,
-    password: env.DB_PASSWORD,
-    database: env.DB_NAME,
-    entities: [__dirname + "/**/entities/*.ts", __dirname + "/**/entities/*.js"],
-    migrations: [__dirname + "/**/migrations/*.ts", __dirname + "/**/migrations/*.js"],
-    logging: ["error", "query"],
+    host: env.POSTGRES_HOST,
+    port: parseInt(env.POSTGRES_PORT || "5432"),
+    username: env.POSTGRES_USER,
+    password: env.POSTGRES_PASSWORD,
+    database: env.POSTGRES_DB,
     synchronize: false,
+    logging: false,
+    entities: [__dirname + "/entities/*{.ts,.js}"],
+    migrations: [__dirname + "/migrations/*{.ts,.js}"],
+    subscribers: [
+        // Add your subscribers here
+    ],
 };
 
 export const dataSource = new DataSource(dataSourceOptions);

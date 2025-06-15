@@ -8,9 +8,9 @@ export const env = {
 
     PREFIX: process.env.PREFIX || "?",
 
-    DB_HOST: process.env.DATABASE_HOST as string,
-    DB_PORT: process.env.DATABASE_PORT as string,
-    DB_USER: process.env.DATABASE_USER as string,
-    DB_PASSWORD: process.env.DATABASE_PASSWORD as string,
-    DB_NAME: process.env.DATABASE_NAME as string,
+    POSTGRES_HOST: process.env.POSTGRES_HOST as string,
+    POSTGRES_PORT: process.env.POSTGRES_PORT as string,
+    POSTGRES_USER: process.env.POSTGRES_USER as string,
+    POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD as string,
+    POSTGRES_NAME: process.env.POSTGRES_NAME as string,
 };
