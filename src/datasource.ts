@@ -7,7 +7,7 @@ export const dataSourceOptions: DataSourceOptions = {
     port: parseInt(env.POSTGRES_PORT || "5432"),
     username: env.POSTGRES_USER,
     password: env.POSTGRES_PASSWORD,
-    database: env.POSTGRES_DB,
+    database: env.POSTGRES_NAME,
     synchronize: false,
     logging: false,
     entities: [__dirname + "/entities/*{.ts,.js}"],
