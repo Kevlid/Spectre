@@ -1,15 +1,13 @@
 # syntax=docker/dockerfile:1
 FROM node:20
 
+# Install deps first (better cache)
+COPY --chown=node:node . /
+COPY --chown=node:node .env /app/.env
 WORKDIR /app
 
-# Install deps first (better cache)
-COPY package*.json ./
-RUN npm ci
-
-# Copy source and build
-COPY . .
-RUN npm run build
+# Install and build
+RUN npm ci && npm run build
 
 # Migrations
 RUN npm run migrate:run
