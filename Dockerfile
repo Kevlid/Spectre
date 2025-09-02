@@ -10,7 +10,7 @@ WORKDIR /app
 RUN npm ci && npm run build
 
 # Migrations
-RUN npm run migrate:run
+#RUN npm run migrate:run
 
 # Run the compiled JS
 CMD ["npm", "run", "start"]
