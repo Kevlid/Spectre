@@ -1,11 +1,11 @@
 # syntax=docker/dockerfile:1
-FROM node:20-alpine
+FROM node:20
 
 WORKDIR /app
 
 # Install deps first (better cache)
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 # Copy source and build
 COPY . .
